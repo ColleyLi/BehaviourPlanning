@@ -1,0 +1,82 @@
+{
+  "crs": {
+    "properties": {
+      "name": "urn:ogc:def:crs:EPSG::32639"
+    },
+    "type": "name"
+  },
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              358439.222662164,
+              6180839.47003167
+            ],
+            [
+              358416.575086379,
+              6180829.82656477
+            ]
+          ]
+        ],
+        "type": "MultiLineString"
+      },
+      "properties": {
+        "layer": "Rule",
+        "type": "no_stopping"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              358494.136088244,
+              6180763.04182633
+            ],
+            [
+              358588.373079071,
+              6180720.83348186
+            ],
+            [
+              358666.961551665,
+              6180685.3196619
+            ]
+          ]
+        ],
+        "type": "MultiLineString"
+      },
+      "properties": {
+        "layer": "Rule",
+        "type": "no_parking"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              358503.452977146,
+              6180967.41039786
+            ],
+            [
+              358497.212214241,
+              6180953.46563026
+            ]
+          ]
+        ],
+        "type": "MultiLineString"
+      },
+      "properties": {
+        "layer": "Rule",
+        "type": "bus_only"
+      },
+      "type": "Feature"
+    }
+  ],
+  "name": "Rule",
+  "type": "FeatureCollection"
+}
