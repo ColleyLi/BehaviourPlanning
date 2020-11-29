@@ -110,13 +110,21 @@ Stage::StageStatus MyLaneFollowStage::Process(const TrajectoryPoint& planning_st
 {
   ADEBUG << "Number of reference lines:\t" << frame->mutable_reference_line_info()->size();
   bool has_drivable_lane = false;
-  
-  behaviour_tree_->Process(frame);
 
-  ADEBUG << "Reference lines after planning: ";
+  // Refresh states
   for (auto& ref_line : *frame->mutable_reference_line_info()) 
   {
-    ADEBUG << "Id: " << ref_line.Lanes().Id() << " Cost: " << ref_line.Cost() << " Drivable: " << ref_line.IsDrivable();
+    ref_line.SetDrivable(false);
+    ref_line.SetCost(0.0);
+
+  } 
+
+  behaviour_tree_->Process(frame);
+
+  AERROR << "Reference lines after planning: ";
+  for (auto& ref_line : *frame->mutable_reference_line_info()) 
+  {
+    AERROR << "Id: " << ref_line.Lanes().Id() << " Cost: " << ref_line.Cost() << " IsDrivable: " << ref_line.IsDrivable() << " IsChangeLane: " << ref_line.IsChangeLanePath();
     if (ref_line.IsDrivable())
     {
       ref_line.set_trajectory_type(ADCTrajectory::NORMAL);

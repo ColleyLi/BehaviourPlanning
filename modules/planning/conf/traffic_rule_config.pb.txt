@@ -34,7 +34,7 @@ config:
 config: 
 {
   rule_id: CROSSWALK
-  enabled: true
+  enabled: false
   crosswalk {
     stop_distance: 1.0
     max_stop_deceleration: 6.0
@@ -79,7 +79,7 @@ config: {
 
 config: {
   rule_id: STOP_SIGN
-  enabled: true
+  enabled: false
   stop_sign: {
     stop_distance: 1.0
   }
@@ -87,7 +87,7 @@ config: {
 
 config: {
   rule_id: TRAFFIC_LIGHT
-  enabled: true
+  enabled: false
   traffic_light {
     stop_distance: 1.0
     max_stop_deceleration: 6.0

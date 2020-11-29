@@ -11,10 +11,10 @@ default_task_config:
   task_type: DP_ST_SPEED_OPTIMIZER
   dp_st_speed_config 
   {
-    matrix_dimension_s: 300
+    matrix_dimension_s: 100
     matrix_dimension_t: 8
 
-    speed_weight: 0.0
+    speed_weight: 5.0
     accel_weight: 10.0
     jerk_weight: 10.0
     obstacle_weight: 1.0
@@ -35,8 +35,8 @@ default_task_config:
     positive_jerk_coeff: 1.0
     negative_jerk_coeff: 1.0
 
-    max_acceleration: 3.0
-    max_deceleration: -4.0
+    max_acceleration: 1.0
+    max_deceleration: -0.7
   }
 }
 

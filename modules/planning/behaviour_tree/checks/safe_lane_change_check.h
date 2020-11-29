@@ -11,9 +11,9 @@ using apollo::common::Status;
 
 class SafeLaneChangeCheck: public BTNode
 {
+  public:
     Status Process(Frame* frame);
     Status Process(Frame* frame, ReferenceLineInfo* reference_line_info);
 };
-
 }
 }
