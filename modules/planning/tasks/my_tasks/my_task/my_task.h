@@ -18,5 +18,5 @@ class MyTask : public Task
   apollo::common::Status Process(Frame *frame, ReferenceLineInfo *reference_line_info);
 };
 
-}  // namespace planning
+}  // namespace planning:
 }  // namespace apollo

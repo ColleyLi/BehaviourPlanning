@@ -306,6 +306,10 @@ DEFINE_string(planning_config_file,
               "/apollo/modules/planning/conf/planning_config.pb.txt",
               "planning config file");
 
+DEFINE_string(behaviour_tree_config_file,
+             "/apollo/modules/planning/conf/behaviour_tree_config.pb.txt",
+             "behaviour tree config file");
+
 DEFINE_int32(trajectory_point_num_for_debug, 10,
              "number of output trajectory points for debugging");
 

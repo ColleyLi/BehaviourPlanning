@@ -22,6 +22,7 @@ DECLARE_bool(planning_test_mode);
 DECLARE_double(test_duration);
 
 DECLARE_string(planning_config_file);
+DECLARE_string(behaviour_tree_config_file);
 
 // scenarios related
 DECLARE_string(scenario_bare_intersection_unprotected_config_file);

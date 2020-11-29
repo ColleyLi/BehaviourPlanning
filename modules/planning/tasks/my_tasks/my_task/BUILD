@@ -17,8 +17,10 @@ cc_library(
         "//modules/planning/common:speed_profile_generator",
         "//modules/planning/common/util:common_lib",
         "//modules/planning/common/util:util_lib",
-        "//modules/planning/scenarios/util:scenario_util_lib",
-        "//modules/planning/tasks/deciders:decider_base",
+        # "//modules/planning/scenarios/util:scenario_util_lib",
+        # "//modules/planning/tasks/deciders:decider_base",
+        "//modules/planning/tasks:task",
+        "//modules/planning/behaviour_tree:bt_node",
     ],
 )
 

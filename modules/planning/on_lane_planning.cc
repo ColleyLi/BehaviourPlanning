@@ -323,7 +323,7 @@ void OnLanePlanning::RunOnce(const LocalView& local_view,
     return;
   }
 
-  /*
+  
   for (auto& ref_line_info : *frame_->mutable_reference_line_info()) 
   {
     TrafficDecider traffic_decider;
@@ -337,7 +337,7 @@ void OnLanePlanning::RunOnce(const LocalView& local_view,
             << " traffic decider failed";
     }
   }
-  */
+  
   
 
   status = Plan(start_timestamp, stitching_trajectory, ptr_trajectory_pb);

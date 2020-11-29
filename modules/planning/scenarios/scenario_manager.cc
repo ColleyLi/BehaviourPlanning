@@ -52,6 +52,12 @@ bool ScenarioManager::Init(
   // default_scenario_type_ = ScenarioConfig::LANE_FOLLOW;
   default_scenario_type_ = ScenarioConfig::MY_LANE_FOLLOW;
   supported_scenarios_ = supported_scenarios;
+
+  if (supported_scenarios_.size() == 1)
+  {
+    default_scenario_type_ = *supported_scenarios_.begin();
+  }
+
   current_scenario_ = CreateScenario(default_scenario_type_);
   return true;
 }

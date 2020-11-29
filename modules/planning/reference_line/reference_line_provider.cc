@@ -593,7 +593,7 @@ bool ReferenceLineProvider::CreateReferenceLine(
     return false;
   }
 
-  AERROR << "RouteSegments size: " << segments->size();
+  // AERROR << "RouteSegments size: " << segments->size();
 
   if (is_new_routing || !FLAGS_enable_reference_line_stitching) 
   {

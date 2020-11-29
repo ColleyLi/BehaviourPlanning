@@ -15,7 +15,7 @@
 #include "modules/planning/reference_line/reference_point.h"
 #include "modules/planning/scenarios/scenario.h"
 #include "modules/planning/scenarios/stage.h"
-#include "modules/planning/tasks/task.h"
+#include "modules/planning/behaviour_tree/bt_node.h"
 
 namespace apollo 
 {
@@ -34,32 +34,10 @@ class MyLaneFollowStage : public Stage
     StageStatus Process(const common::TrajectoryPoint& planning_init_point,
                         Frame* frame) override;
 
-    common::Status PlanOnReferenceLine(
-        const common::TrajectoryPoint& planning_start_point, Frame* frame,
-        ReferenceLineInfo* reference_line_info);
-
-    void PlanFallbackTrajectory(
-        const common::TrajectoryPoint& planning_start_point, Frame* frame,
-        ReferenceLineInfo* reference_line_info);
-
-    void GenerateFallbackPathProfile(const ReferenceLineInfo* reference_line_info,
-                                     PathData* path_data);
-
-    bool RetrieveLastFramePathProfile(
-        const ReferenceLineInfo* reference_line_info, const Frame* frame,
-        PathData* path_data);
-
-    common::SLPoint GetStopSL(const ObjectStop& stop_decision,
-                              const ReferenceLine& reference_line) const;
-
-    void RecordObstacleDebugInfo(ReferenceLineInfo* reference_line_info);
-
-    void RecordDebugInfo(ReferenceLineInfo* reference_line_info,
-                         const std::string& name, const double time_diff_ms);
-
  private:
     ScenarioConfig config_;
     std::unique_ptr<Stage> stage_;
+    std::unique_ptr<BTNode> behaviour_tree_;
 };
 
 }  // namespace lane_follow
