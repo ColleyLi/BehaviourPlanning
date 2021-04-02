@@ -1,4 +1,4 @@
-﻿# Innopolis Simulator Apollo integration
+﻿# Running Apollo with Innopolis Simulator
 
 In this section we will see how to run the Apollo framework along with the Innopolis Simulator.
 
@@ -35,7 +35,7 @@ In order to connect Apollo with the simulator we will use the Cyber Bridge.
 -  Make `bridge.sh` executable with `chmod +x apollo/scripts/bridge.sh`
 
 ### Adding map protobuf files
-Innopolis map are customized Apollo maps. So, we will have to update the map module protobufs in order to use Innopolis maps.
+Innopolis maps are customized Apollo maps. So, we will have to update the map module protobufs in order to use Innopolis maps.
 
 - Replace the `apollo/modules/map/proto` folder with the `proto` folder from `additional_files`
 - Add the `innopolis_map` folder from `additional_files` into `apollo/modules/map/data/`
@@ -111,7 +111,7 @@ Now you can send a target point to the vehicle. In order to do that, open **Rout
 
 Car should autonomously reach the target point. Cool, you can enjoy the simulator now!
 
-## List of useful commands
+## List of useful commands:
 - `bash docker/scripts/dev_start.sh` - to create Docker container
 - `bash docker/scripts/dev_into.sh` - to get into the Docker container
 - `./scripts/bootstrap.sh [start or stop or restart]` - to start/stop/restart Dreamview
@@ -119,8 +119,10 @@ Car should autonomously reach the target point. Cool, you can enjoy the simulato
 
 Note, that Apollo 5 uses CyberRT, not ROS. So, you will have to use CyberRT. The good thing is, CyberRT tools are very much like ROS tools. 
 
-- `cyber_monitor` - to see all available topics. Like `rostopic list`
-- `mainboard -d path/to/dag/file.dag` - to launch your module. Like `roslaunch package_name file.launch`
+- `cyber_monitor` - interactive topic monitoring
+- `cyber_channel list` - to see all available topics. Like `rostopic list`
+- `cyber_launch start path/to/launch/file.launch` - to launch your module. Like `roslaunch package_name file.launch`
+- `mainboard -d path/to/dag/file.dag` - to launch dag file
  
 ## Some tips
 - Apollo creates huge log files. If you see no free space on your hard drive, consider cleaning the `apollo/data/` folder.

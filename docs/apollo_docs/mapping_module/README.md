@@ -1,4 +1,4 @@
-# Map module
+# Apollo Map module
 
 The main task of the map module is to read a high-precision map from files and convert it into the map data structure for further use by planning module. The description of the data structure can be found into the `/apollo/modules/map/proto` folder
 
