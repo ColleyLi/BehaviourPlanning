@@ -1,5 +1,7 @@
-from modules.perception.proto.perception_obstacle_pb2 import PerceptionObstacles, PerceptionObstacle
-
+from modules.perception.proto.perception_obstacle_pb2 import (
+    PerceptionObstacles,
+    PerceptionObstacle
+)
 from cyber_py import cyber
 import time
 import math
@@ -9,6 +11,7 @@ sys.path.append("../")
 # apollo.perception.PerceptionObstacles
 
 VEHICLE = 5
+
 
 def main():
     obstacles_msg = PerceptionObstacles()
@@ -29,38 +32,38 @@ def main():
     obstacle.velocity.z = 0.0
     obstacles_msg.perception_obstacle.extend([obstacle])
 
-    # Obstacle (2 lanes left near)
-    obstacle = PerceptionObstacle()
-    obstacle.id = 123
-    obstacle.type = VEHICLE
-    obstacle.length = 4
-    obstacle.width = 2
-    obstacle.height = 1
-    obstacle.position.x = 358508.72
-    obstacle.position.y = 6180759.0
-    obstacle.position.z = 0.84
-    obstacle.theta = -0.4
-    speed = 3.0
-    obstacle.velocity.x = speed * math.cos(obstacle.theta)
-    obstacle.velocity.y = speed * math.sin(obstacle.theta)
-    obstacle.velocity.z = 0.0
-    obstacles_msg.perception_obstacle.extend([obstacle])
-
+    # # Obstacle (2 lanes left near)
     # obstacle = PerceptionObstacle()
-    # obstacle.id = 11
+    # obstacle.id = 123
     # obstacle.type = VEHICLE
     # obstacle.length = 4
     # obstacle.width = 2
     # obstacle.height = 1
-    # obstacle.position.x = 358580.72
-    # obstacle.position.y = 6180726.5
+    # obstacle.position.x = 358508.72
+    # obstacle.position.y = 6180759.0
     # obstacle.position.z = 0.84
     # obstacle.theta = -0.4
-    # speed = 0.0
+    # speed = 3.0
     # obstacle.velocity.x = speed * math.cos(obstacle.theta)
     # obstacle.velocity.y = speed * math.sin(obstacle.theta)
     # obstacle.velocity.z = 0.0
-    # obstacles_msg.perception_obstacle.extend([obstacle]) 
+    # obstacles_msg.perception_obstacle.extend([obstacle])
+
+    obstacle = PerceptionObstacle()
+    obstacle.id = 11
+    obstacle.type = VEHICLE
+    obstacle.length = 4
+    obstacle.width = 2
+    obstacle.height = 1
+    obstacle.position.x = 358580.72
+    obstacle.position.y = 6180726.5
+    obstacle.position.z = 0.84
+    obstacle.theta = -0.4
+    speed = 0.0
+    obstacle.velocity.x = speed * math.cos(obstacle.theta)
+    obstacle.velocity.y = speed * math.sin(obstacle.theta)
+    obstacle.velocity.z = 0.0
+    obstacles_msg.perception_obstacle.extend([obstacle])
 
     test_node = cyber.Node("test_perception_writer")
 

@@ -4,8 +4,7 @@ standard_planning_config
   planner_type: MY_PLANNER
   planner_scenarios 
   {
-     scenario_type: MY_LANE_FOLLOW
-     # scenario_type: LANE_FOLLOW
+     scenario_type: LANE_FOLLOW
      # scenario_type: BARE_INTERSECTION_UNPROTECTED
      # scenario_type: PULL_OVER
      # scenario_type: STOP_SIGN_UNPROTECTED
@@ -16,21 +15,16 @@ standard_planning_config
   }
 }
 
-default_task_config: 
-{
+default_task_config: {
   task_type: PIECEWISE_JERK_PATH_OPTIMIZER
-  piecewise_jerk_path_config 
-  {
-    default_path_config 
-    {
+  piecewise_jerk_path_config {
+    default_path_config {
       l_weight: 1.0
       dl_weight: 20.0
       ddl_weight: 1000.0
       dddl_weight: 50000.0
     }
-    
-    lane_change_path_config
-    {
+    lane_change_path_config {
       l_weight: 1.0
       dl_weight: 5.0
       ddl_weight: 800.0
@@ -38,25 +32,19 @@ default_task_config:
     }
   }
 }
-
-default_task_config: 
-{
+default_task_config: {
   task_type: PIECEWISE_JERK_SPEED_OPTIMIZER
-  piecewise_jerk_speed_config 
-  {
+  piecewise_jerk_speed_config {
     acc_weight: 1.0
     jerk_weight: 3.0
     dkappa_penalty_weight: 2000.0
     ref_s_weight: 10.0
-    ref_v_weight: 10.0
+    ref_v_weight: 50.0
   }
 }
-
-default_task_config: 
-{
+default_task_config: {
   task_type: DP_ST_SPEED_OPTIMIZER
-  dp_st_speed_config 
-  {
+  dp_st_speed_config {
     matrix_dimension_s: 300
     matrix_dimension_t: 8
 
@@ -85,17 +73,12 @@ default_task_config:
     max_deceleration: -4.0
   }
 }
-
-default_task_config: 
-{
+default_task_config: {
   task_type: SPEED_DECIDER
 }
-
-default_task_config: 
-{
+default_task_config: {
   task_type: RULE_BASED_STOP_DECIDER
-  rule_based_stop_decider_config 
-  {
+  rule_based_stop_decider_config {
     max_adc_stop_speed: 0.5
     max_valid_stop_distance: 0.5
     search_beam_length: 20.0
@@ -104,12 +87,9 @@ default_task_config:
     is_block_angle_threshold: 0.5
   }
 }
-
-default_task_config: 
-{
+default_task_config: {
   task_type: SPEED_BOUNDS_PRIORI_DECIDER
-  speed_bounds_decider_config 
-  {
+  speed_bounds_decider_config {
     total_time: 7.0
     boundary_buffer: 0.25
     high_speed_centric_acceleration_limit: 2.0
@@ -125,12 +105,9 @@ default_task_config:
     centri_jerk_speed_coeff: 1.0
   }
 }
-
-default_task_config: 
-{
+default_task_config: {
   task_type: SPEED_BOUNDS_FINAL_DECIDER
-  speed_bounds_decider_config 
-  {
+  speed_bounds_decider_config {
     total_time: 7.0
     boundary_buffer: 0.1
     high_speed_centric_acceleration_limit: 2.0
@@ -146,26 +123,17 @@ default_task_config:
     centri_jerk_speed_coeff: 1.0
   }
 }
-
-default_task_config: 
-{
+default_task_config: {
   task_type: OPEN_SPACE_PRE_STOP_DECIDER
-  open_space_pre_stop_decider_config: 
-  {
+  open_space_pre_stop_decider_config: {
   }
 }
-
-default_task_config: 
-{
+default_task_config: {
   task_type: OPEN_SPACE_TRAJECTORY_PROVIDER
-  open_space_trajectory_provider_config 
-  {
-    open_space_trajectory_optimizer_config 
-    {
-      planner_open_space_config 
-      {
-        warm_start_config 
-        {
+  open_space_trajectory_provider_config {
+    open_space_trajectory_optimizer_config {
+      planner_open_space_config {
+        warm_start_config {
           xy_grid_resolution: 0.3
           phi_grid_resolution: 0.1
           next_node_num: 10
@@ -178,8 +146,7 @@ default_task_config:
           grid_a_star_xy_resolution: 0.25
           node_radius: 0.5
         }
-        dual_variable_warm_start_config 
-        {
+        dual_variable_warm_start_config {
           weight_d: 1.0
           ipopt_config {
             ipopt_print_level: 0
@@ -286,9 +253,7 @@ default_task_config:
     }
   }
 }
-
-default_task_config: 
-{
+default_task_config: {
   task_type: OPEN_SPACE_TRAJECTORY_PARTITION
   open_space_trajectory_partition_config {
     gear_shift_max_t: 3.0
@@ -306,9 +271,7 @@ default_task_config:
     linear_velocity_threshold_on_ego: 0.2
   }
 }
-
-default_task_config: 
-{
+default_task_config: {
   task_type: OPEN_SPACE_ROI_DECIDER
   open_space_roi_decider_config {
     roi_longitudinal_range: 15
@@ -323,9 +286,7 @@ default_task_config:
     curb_heading_tangent_change_uppper_limit: 0.4
   }
 }
-
-default_task_config: 
-{
+default_task_config: {
   task_type: OPEN_SPACE_FALLBACK_DECIDER
   open_space_fallback_decider_config {
     open_space_prediction_time_period: 5.0
@@ -334,9 +295,7 @@ default_task_config:
     open_space_fallback_collision_time_buffer: 5.0
   }
 }
-
-default_task_config: 
-{
+default_task_config: {
   task_type: PATH_BOUNDS_DECIDER
   path_bounds_decider_config {
     is_lane_borrowing: false
@@ -346,21 +305,15 @@ default_task_config:
     pull_over_road_edge_buffer: 0.15
   }
 }
-
-default_task_config: 
-{
+default_task_config: {
   task_type: PATH_LANE_BORROW_DECIDER
-  path_lane_borrow_decider_config 
-  {
+  path_lane_borrow_decider_config {
     allow_lane_borrowing: false
   }
 }
-
-default_task_config: 
-{
+default_task_config: {
   task_type: LANE_CHANGE_DECIDER
-  lane_change_decider_config 
-  {
+  lane_change_decider_config {
     enable_lane_change_urgency_check: false
   }
 }

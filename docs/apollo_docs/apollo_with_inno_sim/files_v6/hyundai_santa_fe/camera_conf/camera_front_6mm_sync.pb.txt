@@ -1,0 +1,77 @@
+frame_id: "camera_front_6mm"
+channel_name: "/apollo/sensor/camera/front_6mm/image"
+compress_conf {
+    output_channel: "/apollo/sensor/camera/front_6mm/image/compressed"
+    image_pool_size: 100
+    idr_period: 30
+    # YUV444 contains more detail about color, but YUV420 has smaller size
+    nvenc_color_model: YUV444
+    nvenc_quality_preset: HIGH_QUALITY
+    # 0 is the best, 51 is the worst
+    target_quality: 18
+}
+
+device_wait_ms: 2000
+
+# set width/2 if binning_vertical=2
+width: 1920
+# width: 960
+
+# set height/2 if binning_vertical=2
+height: 1080
+# height: 540
+
+output_type: RGB
+bytes_per_pixel: 3
+
+spin_rate: 0
+frame_rate: 5
+# fake_sync: true
+
+gain: 9
+auto_exposure: true
+exposure: 20000 # Exposure time when auto_exposure = false
+
+ip_camera {
+    # address: "10.85.4.27"
+    display_name: "sf_stereo_right"
+    retrieve_interfaces_timeout_ms: 100
+    retrieve_devices_timeout_ms: 100
+    data_stream_buffers_count: 4
+    data_stream_fill_buffer_timeout_ms: 10000
+
+    reverse_x: true
+    reverse_y: true
+
+    # set width/2 if binning_vertical=2
+    binning_horizontal: 1
+    # binning_horizontal: 2
+
+    # set height/2 if binning_vertical=2
+    binning_vertical: 1
+    # binning_vertical: 2
+
+    binning_mode: BINNING_SUM
+
+    lut_enable: true
+    gamma: 0.9
+    brightness_auto_nominal_value: 50
+    auto_feature_region_select: BRIGHTNESS_AUTO
+    brightness_auto_priority: EXPOSURE_AUTO
+    gain_auto: true
+    exposure_auto_max_value: 19000
+    exposure_auto_min_value: 35
+    gain_auto_max_value: 25
+    gain_auto_min_value: 1
+
+    # set trigger_source to INTERNAL, if there is no external trigger
+    # set trigger_source to LINE_IN, if external trigger is generated
+    trigger_source: LINE_IN
+    # trigger_source: INTERNAL
+
+    input_line: "Line0"
+
+    packet_size: 1500
+    set_inter_packet_delay: true
+    total_cameras: 6
+}

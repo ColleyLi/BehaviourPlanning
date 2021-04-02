@@ -115,8 +115,8 @@ Stage::StageStatus MyLaneFollowStage::Process(const TrajectoryPoint& planning_st
   for (auto& ref_line : *frame->mutable_reference_line_info()) 
   {
     ref_line.SetDrivable(false);
+    ref_line.set_is_path_lane_borrow(true);
     ref_line.SetCost(0.0);
-
   } 
 
   behaviour_tree_->Process(frame);

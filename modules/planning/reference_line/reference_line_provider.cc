@@ -187,22 +187,34 @@ void ReferenceLineProvider::UpdateReferenceLine(
   }
 }
 
-void ReferenceLineProvider::GenerateThread() {
-  while (!is_stop_) {
+void ReferenceLineProvider::GenerateThread() 
+{
+  while (!is_stop_)
+  {
     constexpr int32_t kSleepTime = 50;  // milliseconds
     cyber::SleepFor(std::chrono::milliseconds(kSleepTime));
     const double start_time = Clock::NowInSeconds();
-    if (!has_routing_) {
+
+    if (!has_routing_) 
+    {
       AERROR << "Routing is not ready.";
       continue;
     }
+
     std::list<ReferenceLine> reference_lines;
     std::list<hdmap::RouteSegments> segments;
-    if (!CreateReferenceLine(&reference_lines, &segments)) {
+    if (!CreateReferenceLine(&reference_lines, &segments))
+    {
       AERROR << "Fail to get reference line";
       continue;
     }
+
+    // AERROR << "In Thread ref lines size before update: " << reference_lines.size();
+    
     UpdateReferenceLine(reference_lines, segments);
+
+    // AERROR << "In Thread ref lines size after update: " << reference_lines.size();
+
     const double end_time = Clock::NowInSeconds();
     std::lock_guard<std::mutex> lock(reference_lines_mutex_);
     last_calculation_time_ = end_time - start_time;
@@ -540,7 +552,9 @@ bool ReferenceLineProvider::GetNearestWayPointFromNavigationPath(
 
 bool ReferenceLineProvider::CreateRouteSegments(
     const common::VehicleState &vehicle_state,
-    std::list<hdmap::RouteSegments> *segments) {
+    std::list<hdmap::RouteSegments> *segments) 
+{
+  AERROR << "Segments size after map->GetRouteSegments: " << segments->size();
   {
     std::lock_guard<std::mutex> lock(pnc_map_mutex_);
     if (!pnc_map_->GetRouteSegments(vehicle_state, segments)) {
@@ -549,7 +563,10 @@ bool ReferenceLineProvider::CreateRouteSegments(
     }
   }
 
-  if (FLAGS_prioritize_change_lane) {
+  AERROR << "Segments size after map->GetRouteSegments: " << segments->size();
+
+  if (FLAGS_prioritize_change_lane)
+  {
     PrioritzeChangeLane(segments);
   }
   return !segments->empty();
@@ -587,14 +604,18 @@ bool ReferenceLineProvider::CreateReferenceLine(
     }
   }
 
+  AERROR << "RouteSegments size before route segments creation: " << segments->size();
+  AERROR << "RefLine size before route segments creation: " << reference_lines->size();
+  
   if (!CreateRouteSegments(vehicle_state, segments))
   {
     AERROR << "Failed to create reference line from routing";
     return false;
   }
 
-  // AERROR << "RouteSegments size: " << segments->size();
-
+  AERROR << "RouteSegments size after route segments creation: " << segments->size();
+  AERROR << "RefLine size after route segments creation: " << reference_lines->size();
+  
   if (is_new_routing || !FLAGS_enable_reference_line_stitching) 
   {
     for (auto iter = segments->begin(); iter != segments->end();) 

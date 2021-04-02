@@ -1,5 +1,6 @@
 from modules.perception.proto.perception_obstacle_pb2 import (
-    PerceptionObstacles, PerceptionObstacle
+    PerceptionObstacles,
+    # PerceptionObstacle
 )
 from modules.localization.proto.imu_pb2 import CorrectedImu
 from modules.drivers.gnss.proto.ins_pb2 import InsStat
@@ -8,7 +9,6 @@ from modules.canbus.proto.chassis_pb2 import Chassis
 
 from cyber_py import cyber
 import time
-import math
 import sys
 sys.path.append("../")
 
@@ -104,29 +104,29 @@ def main():
     # obstacle.theta = -0.4
     # obstacles_msg.perception_obstacle.extend([obstacle])
 
-    # Obstacle (2 lanes right front medium)
-    obstacle = PerceptionObstacle()
-    obstacle.id = 119
-    obstacle.type = VEHICLE
-    obstacle.length = 4
-    obstacle.width = 2
-    obstacle.height = 1
-    obstacle.position.x = 358530.72
-    obstacle.position.y = 6180745.5
-    obstacle.position.z = 0.84
-    obstacle.theta = -0.4
-    speed = 3.0
-    obstacle.velocity.x = speed * math.cos(obstacle.theta)
-    obstacle.velocity.y = speed * math.sin(obstacle.theta)
-    obstacle.velocity.z = 0.0
-    obstacles_msg.perception_obstacle.extend([obstacle])
+    # # Obstacle (2 lanes right front medium)
+    # obstacle = PerceptionObstacle()
+    # obstacle.id = 119
+    # obstacle.type = VEHICLE
+    # obstacle.length = 4
+    # obstacle.width = 2
+    # obstacle.height = 1
+    # obstacle.position.x = 358530.72
+    # obstacle.position.y = 6180745.5
+    # obstacle.position.z = 0.84
+    # obstacle.theta = -0.4
+    # speed = 3.0
+    # obstacle.velocity.x = speed * math.cos(obstacle.theta)
+    # obstacle.velocity.y = speed * math.sin(obstacle.theta)
+    # obstacle.velocity.z = 0.0
+    # obstacles_msg.perception_obstacle.extend([obstacle])
 
     odometry_msg = Gps()
 
-    # Right lane (2 lanes)
-    odometry_msg.localization.position.x = 358504.72
-    odometry_msg.localization.position.y = 6180757.72
-    odometry_msg.localization.position.z = 0.84
+    # # Right lane (2 lanes)
+    # odometry_msg.localization.position.x = 358504.72
+    # odometry_msg.localization.position.y = 6180757.72
+    # odometry_msg.localization.position.z = 0.84
 
     # Left lane (2 lanes)
     odometry_msg.localization.position.x = 358508.72
@@ -200,8 +200,8 @@ def main():
         timestamp = time.time()
 
         obstacles_msg.header.timestamp_sec = timestamp
-        odometry_msg.header.timestamp_sec = timestamp - 0.1
-        status_msg.header.timestamp_sec = timestamp - 0.1
+        odometry_msg.header.timestamp_sec = timestamp
+        status_msg.header.timestamp_sec = timestamp
         imu_msg.header.timestamp_sec = timestamp
         chassis_msg.header.timestamp_sec = timestamp
 

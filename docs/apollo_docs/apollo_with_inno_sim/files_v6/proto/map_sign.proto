@@ -1,0 +1,34 @@
+syntax = "proto2";
+
+package apollo.hdmap;
+
+import "modules/common/proto/geometry.proto";
+import "modules/map/proto/map_geometry.proto";
+import "modules/map/proto/map_id.proto";
+
+message Sign {
+  optional Id id = 1;
+
+  optional apollo.common.PointENU position = 2;
+  optional double heading = 3 [default = 0.0];
+
+  repeated Id overlap_id = 4;
+
+  enum Category {
+    WARNING      = 0;
+    PROHIBIT     = 1;
+    PRIORITY     = 2;
+    MANDRATORY   = 3;
+    INFORMATIO   = 4;
+    SPECIAL      = 5;
+    ADDITIONAL   = 6;
+    OTHER        = 7;
+  }
+  optional Category category = 5;
+  required string article = 6;
+  optional string aux = 7;
+
+  repeated Id group = 8; // Group of sign on single rod
+
+  repeated Curve stop_line = 9; // Used for stop signs
+}
