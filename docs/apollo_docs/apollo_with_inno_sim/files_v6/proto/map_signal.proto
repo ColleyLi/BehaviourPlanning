@@ -1,0 +1,64 @@
+syntax = "proto2";
+
+package apollo.hdmap;
+
+import "modules/common/proto/geometry.proto";
+import "modules/map/proto/map_geometry.proto";
+import "modules/map/proto/map_id.proto";
+
+message Subsignal {
+  enum Type {
+    UNKNOWN = 0;
+    CIRCLE = 1;
+    ARROW_LEFT = 2;
+    ARROW_FORWARD = 3;
+    ARROW_RIGHT = 4;
+    ARROW_LEFT_AND_FORWARD = 5;
+    ARROW_RIGHT_AND_FORWARD = 6;
+    ARROW_U_TURN = 7;
+  };
+
+  optional Id id = 1;
+  optional Type type = 2;
+
+  // Location of the center of the bulb. now no data support.
+  optional apollo.common.PointENU location = 3;
+}
+
+message SignInfo {
+  enum Type {
+    None = 0;
+    NO_RIGHT_TURN_ON_RED = 1;
+  };
+
+  optional Type type = 1;
+}
+
+message Signal {
+  enum Type {
+    UNKNOWN = 0;
+    MIX_2_HORIZONTAL = 1;
+    MIX_2_VERTICAL = 2;
+    MIX_3_HORIZONTAL = 3;
+    MIX_3_VERTICAL = 4;
+    MIX_3_VERTICAL_LEFT = 5;
+    MIX_3_VERTICAL_RIGHT = 6;
+    MIX_3_VERTICAL_LR = 7;
+    SINGLE = 8;
+    SEMAPHORE = 9; // For crossing railroad
+    TRAM = 10;
+  };
+
+
+  optional Id id = 1;
+  optional Polygon boundary = 2;
+  repeated Subsignal subsignal = 3;
+
+  // TODO: add orientation. now no data support.
+  repeated Id overlap_id = 4;
+  optional Type type = 5;
+  // stop line
+  repeated Curve stop_line = 6;
+
+  repeated SignInfo sign_info = 7;
+}

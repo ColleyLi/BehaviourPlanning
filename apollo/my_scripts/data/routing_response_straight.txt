@@ -1,0 +1,66 @@
+header 
+{
+  timestamp_sec: 1603177787.56
+  module_name: "routing"
+  sequence_num: 2
+}
+
+road
+{
+  id: "road_10"
+  passage
+  {
+    segment 
+    {
+      id: "lane_249"
+      start_s: 5.97805979826
+      end_s: 32.3795353118
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+
+measurement 
+{
+  distance: 26.4014755135
+}
+
+routing_request 
+{
+  header 
+  {
+    timestamp_sec: 1603177787.56
+    module_name: "dreamview"
+    sequence_num: 2
+  }
+
+  waypoint
+  {
+    id: "lane_249"
+    s: 5.97805979826
+    pose
+    {
+      x: 358504.719849
+      y: 6180757.72229
+    }
+  }
+
+  waypoint 
+  {
+    id: "lane_249"
+    s: 32.3795353118
+    pose 
+    {
+      x: 358528.636398
+      y: 6180746.53254
+    }
+  }
+}
+
+map_version: ""
+status 
+{
+  error_code: OK
+  msg: "Success!"
+}

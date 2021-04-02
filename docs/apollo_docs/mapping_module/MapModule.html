@@ -1,0 +1,864 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>@font-face {
+  font-family: octicons-anchor;
+  src: url(https://cdnjs.cloudflare.com/ajax/libs/octicons/4.4.0/font/octicons.woff) format('woff');
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    width: 980px;
+    margin-right: auto;
+    margin-left: auto;
+    color:#333;
+    background:#fff;
+}
+
+body .markdown-body {
+    padding: 45px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    word-wrap: break-word;
+}
+
+pre {
+    font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+.markdown-body {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  color: #333;
+  font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 16px;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.markdown-body a {
+  background-color: transparent;
+}
+
+.markdown-body a:active,
+.markdown-body a:hover {
+  outline: 0;
+}
+
+.markdown-body strong {
+  font-weight: bold;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+.markdown-body img {
+  border: 0;
+}
+
+.markdown-body hr {
+  box-sizing: content-box;
+  height: 0;
+}
+
+.markdown-body pre {
+  overflow: auto;
+}
+
+.markdown-body code,
+.markdown-body kbd,
+.markdown-body pre {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+.markdown-body input {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+
+.markdown-body html input[disabled] {
+  cursor: default;
+}
+
+.markdown-body input {
+  line-height: normal;
+}
+
+.markdown-body input[type="checkbox"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.markdown-body table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.markdown-body td,
+.markdown-body th {
+  padding: 0;
+}
+
+.markdown-body input {
+  font: 13px / 1.4 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.markdown-body a {
+  color: #4078c0;
+  text-decoration: none;
+}
+
+.markdown-body a:hover,
+.markdown-body a:active {
+  text-decoration: underline;
+}
+
+.markdown-body hr {
+  height: 0;
+  margin: 15px 0;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.markdown-body hr:before {
+  display: table;
+  content: "";
+}
+
+.markdown-body hr:after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  line-height: 1.1;
+}
+
+.markdown-body h1 {
+  font-size: 30px;
+}
+
+.markdown-body h2 {
+  font-size: 21px;
+}
+
+.markdown-body h3 {
+  font-size: 16px;
+}
+
+.markdown-body h4 {
+  font-size: 14px;
+}
+
+.markdown-body h5 {
+  font-size: 12px;
+}
+
+.markdown-body h6 {
+  font-size: 11px;
+}
+
+.markdown-body blockquote {
+  margin: 0;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body ol ol,
+.markdown-body ul ol {
+  list-style-type: lower-roman;
+}
+
+.markdown-body ul ul ol,
+.markdown-body ul ol ol,
+.markdown-body ol ul ol,
+.markdown-body ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+.markdown-body dd {
+  margin-left: 0;
+}
+
+.markdown-body code {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 12px;
+}
+
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 0;
+  font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+.markdown-body .select::-ms-expand {
+  opacity: 0;
+}
+
+.markdown-body .octicon {
+  font: normal normal normal 16px/1 octicons-anchor;
+  display: inline-block;
+  text-decoration: none;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.markdown-body .octicon-link:before {
+  content: '\f05c';
+}
+
+.markdown-body:before {
+  display: table;
+  content: "";
+}
+
+.markdown-body:after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.markdown-body>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-body a:not([href]) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.markdown-body .anchor {
+  display: inline-block;
+  padding-right: 2px;
+  margin-left: -18px;
+}
+
+.markdown-body .anchor:focus {
+  outline: none;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  margin-top: 1em;
+  margin-bottom: 16px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.markdown-body h1 .octicon-link,
+.markdown-body h2 .octicon-link,
+.markdown-body h3 .octicon-link,
+.markdown-body h4 .octicon-link,
+.markdown-body h5 .octicon-link,
+.markdown-body h6 .octicon-link {
+  color: #000;
+  vertical-align: middle;
+  visibility: hidden;
+}
+
+.markdown-body h1:hover .anchor,
+.markdown-body h2:hover .anchor,
+.markdown-body h3:hover .anchor,
+.markdown-body h4:hover .anchor,
+.markdown-body h5:hover .anchor,
+.markdown-body h6:hover .anchor {
+  text-decoration: none;
+}
+
+.markdown-body h1:hover .anchor .octicon-link,
+.markdown-body h2:hover .anchor .octicon-link,
+.markdown-body h3:hover .anchor .octicon-link,
+.markdown-body h4:hover .anchor .octicon-link,
+.markdown-body h5:hover .anchor .octicon-link,
+.markdown-body h6:hover .anchor .octicon-link {
+  visibility: visible;
+}
+
+.markdown-body h1 {
+  padding-bottom: 0.3em;
+  font-size: 2.25em;
+  line-height: 1.2;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h1 .anchor {
+  line-height: 1;
+}
+
+.markdown-body h2 {
+  padding-bottom: 0.3em;
+  font-size: 1.75em;
+  line-height: 1.225;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h2 .anchor {
+  line-height: 1;
+}
+
+.markdown-body h3 {
+  font-size: 1.5em;
+  line-height: 1.43;
+}
+
+.markdown-body h3 .anchor {
+  line-height: 1.2;
+}
+
+.markdown-body h4 {
+  font-size: 1.25em;
+}
+
+.markdown-body h4 .anchor {
+  line-height: 1.2;
+}
+
+.markdown-body h5 {
+  font-size: 1em;
+}
+
+.markdown-body h5 .anchor {
+  line-height: 1.1;
+}
+
+.markdown-body h6 {
+  font-size: 1em;
+  color: #777;
+}
+
+.markdown-body h6 .anchor {
+  line-height: 1.1;
+}
+
+.markdown-body p,
+.markdown-body blockquote,
+.markdown-body ul,
+.markdown-body ol,
+.markdown-body dl,
+.markdown-body table,
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body hr {
+  height: 4px;
+  padding: 0;
+  margin: 16px 0;
+  background-color: #e7e7e7;
+  border: 0 none;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 2em;
+}
+
+.markdown-body ul ul,
+.markdown-body ul ol,
+.markdown-body ol ol,
+.markdown-body ol ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li>p {
+  margin-top: 16px;
+}
+
+.markdown-body dl {
+  padding: 0;
+}
+
+.markdown-body dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.markdown-body blockquote {
+  padding: 0 15px;
+  color: #777;
+  border-left: 4px solid #ddd;
+}
+
+.markdown-body blockquote>:first-child {
+  margin-top: 0;
+}
+
+.markdown-body blockquote>:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  word-break: normal;
+  word-break: keep-all;
+}
+
+.markdown-body table th {
+  font-weight: bold;
+}
+
+.markdown-body table th,
+.markdown-body table td {
+  padding: 6px 13px;
+  border: 1px solid #ddd;
+}
+
+.markdown-body table tr {
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  box-sizing: content-box;
+  background-color: #fff;
+}
+
+.markdown-body code {
+  padding: 0;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(0,0,0,0.04);
+  border-radius: 3px;
+}
+
+.markdown-body code:before,
+.markdown-body code:after {
+  letter-spacing: -0.2em;
+  content: "\00a0";
+}
+
+.markdown-body pre>code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.markdown-body .highlight {
+  margin-bottom: 16px;
+}
+
+.markdown-body .highlight pre,
+.markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f7f7f7;
+  border-radius: 3px;
+}
+
+.markdown-body .highlight pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.markdown-body pre {
+  word-wrap: normal;
+}
+
+.markdown-body pre code {
+  display: inline;
+  max-width: initial;
+  padding: 0;
+  margin: 0;
+  overflow: initial;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+
+.markdown-body pre code:before,
+.markdown-body pre code:after {
+  content: normal;
+}
+
+.markdown-body kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font-size: 11px;
+  line-height: 10px;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #bbb;
+}
+
+.markdown-body .pl-c {
+  color: #969896;
+}
+
+.markdown-body .pl-c1,
+.markdown-body .pl-s .pl-v {
+  color: #0086b3;
+}
+
+.markdown-body .pl-e,
+.markdown-body .pl-en {
+  color: #795da3;
+}
+
+.markdown-body .pl-s .pl-s1,
+.markdown-body .pl-smi {
+  color: #333;
+}
+
+.markdown-body .pl-ent {
+  color: #63a35c;
+}
+
+.markdown-body .pl-k {
+  color: #a71d5d;
+}
+
+.markdown-body .pl-pds,
+.markdown-body .pl-s,
+.markdown-body .pl-s .pl-pse .pl-s1,
+.markdown-body .pl-sr,
+.markdown-body .pl-sr .pl-cce,
+.markdown-body .pl-sr .pl-sra,
+.markdown-body .pl-sr .pl-sre {
+  color: #183691;
+}
+
+.markdown-body .pl-v {
+  color: #ed6a43;
+}
+
+.markdown-body .pl-id {
+  color: #b52a1d;
+}
+
+.markdown-body .pl-ii {
+  background-color: #b52a1d;
+  color: #f8f8f8;
+}
+
+.markdown-body .pl-sr .pl-cce {
+  color: #63a35c;
+  font-weight: bold;
+}
+
+.markdown-body .pl-ml {
+  color: #693a17;
+}
+
+.markdown-body .pl-mh,
+.markdown-body .pl-mh .pl-en,
+.markdown-body .pl-ms {
+  color: #1d3e81;
+  font-weight: bold;
+}
+
+.markdown-body .pl-mq {
+  color: #008080;
+}
+
+.markdown-body .pl-mi {
+  color: #333;
+  font-style: italic;
+}
+
+.markdown-body .pl-mb {
+  color: #333;
+  font-weight: bold;
+}
+
+.markdown-body .pl-md {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.markdown-body .pl-mi1 {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.markdown-body .pl-mdr {
+  color: #795da3;
+  font-weight: bold;
+}
+
+.markdown-body .pl-mo {
+  color: #1d3e81;
+}
+
+.markdown-body kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  line-height: 10px;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #bbb;
+}
+
+.markdown-body .plan-price-unit {
+  color: #767676;
+  font-weight: normal;
+}
+
+.markdown-body .task-list-item {
+  list-style-type: none;
+}
+
+.markdown-body .task-list-item+.task-list-item {
+  margin-top: 3px;
+}
+
+.markdown-body .task-list-item input {
+  margin: 0 0.35em 0.25em -1.6em;
+  vertical-align: middle;
+}
+
+.markdown-body .plan-choice {
+  padding: 15px;
+  padding-left: 40px;
+  display: block;
+  border: 1px solid #e0e0e0;
+  position: relative;
+  font-weight: normal;
+  background-color: #fafafa;
+}
+
+.markdown-body .plan-choice.open {
+  background-color: #fff;
+}
+
+.markdown-body .plan-choice.open .plan-choice-seat-breakdown {
+  display: block;
+}
+
+.markdown-body .plan-choice-free {
+  border-radius: 3px 3px 0 0;
+}
+
+.markdown-body .plan-choice-paid {
+  border-radius: 0 0 3px 3px;
+  border-top: 0;
+  margin-bottom: 20px;
+}
+
+.markdown-body .plan-choice-radio {
+  position: absolute;
+  left: 15px;
+  top: 18px;
+}
+
+.markdown-body .plan-choice-exp {
+  color: #999;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.markdown-body .plan-choice-seat-breakdown {
+  margin-top: 10px;
+  display: none;
+}
+
+.markdown-body :checked+.radio-label {
+  z-index: 1;
+  position: relative;
+  border-color: #4078c0;
+}
+
+@media print {
+  body .markdown-body {
+    padding: 0;
+    border: none;
+  }
+}
+</style><title>MapModule</title></head><body><article class="markdown-body"><h1>
+<a id="user-content-map-module" class="anchor" href="#map-module" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Map module</h1>
+<p>The main task of the map module is to read a high-precision map from files and convert it into the map data structure for further use by planning module. The description of the data structure can be found into the <code>/apollo/modules/map/proto</code> folder</p>
+<p><strong>The module does not create maps, it only reads them</strong></p>
+<h2>
+<a id="user-content-module-folder-structure" class="anchor" href="#module-folder-structure" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Module folder structure</h2>
+<pre><code>/apollo/modules/map/
+│ 
+├── data - Folder for maps
+│   └── innopolis - Map of Innopolis
+├── hdmap - HD map processing modules
+│   ├── adapter - Module to read OpenDrive xml map
+│   │   └── xml_parser
+│   └── test-data
+├── pnc_map - Map processing for the planning module
+│   └── testdata
+├── proto - Map elements message definition
+├── relative_map - Relative map modules
+│   ├── common
+│   ├── conf
+│   ├── dag
+│   ├── launch
+│   ├── proto
+│   ├── testdata
+│   │   └── multi_lane_map
+│   └── tools
+└── tools - Several useful tools to work with map files
+</code></pre>
+<h2>
+<a id="user-content-folder-descriptions" class="anchor" href="#folder-descriptions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Folder descriptions</h2>
+<h3>
+<a id="user-content-data" class="anchor" href="#data" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>data</code>
+</h3>
+<p>Contains maps to use</p>
+<p>Apollo uses modified OpenDrive format a. k. a. Apollo OpenDrive. Checkout <strong>Links</strong> section for more information on the (Apollo) OpenDrive format.</p>
+<p><a href="/home/sarrasor/Documents/Projects/SelfDriving/PathPlanning/docs/images/elements_apollo_map.png" target="_blank" rel="noopener noreferrer"><img src="/home/sarrasor/Documents/Projects/SelfDriving/PathPlanning/docs/images/elements_apollo_map.png" alt="Apollo map elements" style="max-width:100%;"></a></p>
+<p>Every map is described by at least three files:</p>
+<ul>
+<li>
+<strong>Base map</strong> - is the most complete map that has all roads, lane geometry, and labels. The other maps are generated based on it</li>
+<li>
+<strong>Routing map</strong> - has the topology of lanes from the base map</li>
+<li>
+<strong>Sim map</strong> - a light version of the base map for Dreamview visualization. Has reduced data density for faster performance</li>
+</ul>
+<p>There are tools to convert Base map to Routing or Sim map. Check out <code>/apollo/modules/map/data/README.md</code></p>
+<h4>
+<a id="user-content-additional-files" class="anchor" href="#additional-files" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Additional files</h4>
+<p>You can add additional files:</p>
+<p><code>metaInfo.json</code> - describes map offset to be applied</p>
+<p><strong>This can influence the ability of finding the nearest lane for routing, use carefully</strong></p>
+<p>Example:</p>
+<pre><code>{
+    "offsets": 
+    {
+        "xoffset": 0.5,
+        "yoffset": 0.2
+    }
+}
+</code></pre>
+<p><code>default_end_way_point.txt</code> - describes default ending way point</p>
+<p>Example:</p>
+<pre><code>landmark {
+    name: "endpoint",
+    waypoint {
+        id: "endpoint"
+        s: 153.0
+        pose {
+            x: 586367.706490
+            y: 4140785.357946
+        }
+    }
+}
+</code></pre>
+<hr>
+<h3>
+<a id="user-content-hdmap" class="anchor" href="#hdmap" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>hdmap</code>
+</h3>
+<p>Parses map and provides an API for other modules.</p>
+<p>The parser is located in <code>hdmap/adapter</code>. The most interesting files are in <code>hdmap/adapter/xml_parser</code> and <code>hdmap/opendrive_adapter.cc</code>.</p>
+<p>The API is defined in <code>hdmap/hdmap_impl.cc</code>. It consists of basic functions like <code>GetLanes()</code> and <code>GetCrosswalks()</code></p>
+<hr>
+<h3>
+<a id="user-content-pnc_map" class="anchor" href="#pnc_map" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>pnc_map</code>
+</h3>
+<p><a href="/home/sarrasor/Documents/Projects/SelfDriving/PathPlanning/docs/images/pnc_map_call.png" target="_blank" rel="noopener noreferrer"><img src="/home/sarrasor/Documents/Projects/SelfDriving/PathPlanning/docs/images/pnc_map_call.png" alt="PNC Map call" style="max-width:100%;"></a></p>
+<p>Module that is being called by <code>reference_line_provider.cc</code> when the <code>Frame</code> data structure gets updated (it is updated on each iteration of planning cycle in <code>on_lane_planning.cc</code>). Extracts reference lanes and segments for the planning module.</p>
+<p>The planning module then shrinks reference lines and segments with look forward/backward distances, and initializes current frame with them + future route waypoints</p>
+<hr>
+<h3>
+<a id="user-content-proto" class="anchor" href="#proto" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>proto</code>
+</h3>
+<p>Contains protobuf message defintions. You can find more information about the meaning of messages <a href="https://github.com/daohu527/Dig-into-Apollo/tree/master/modules/map#%E5%9C%B0%E5%9B%BE%E4%BF%A1%E6%81%AF%E5%A4%B4">here</a></p>
+<hr>
+<h3>
+<a id="user-content-tools" class="anchor" href="#tools" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>tools</code>
+</h3>
+<p>Tools for map editing</p>
+<pre><code>/apollo/modules/map/tools
+│ 
+├── bin_map_generator.cc - Converts base_map.txt to base_map.bin
+├── map_datachecker - 
+├── map_tool.cc - Generates map with given x-y offset
+├── map_xysl.cc - Several functions such as "GetElementByID" or "XY -&gt; SL"
+├── proto_map_generator.cc - Converts opendrive base_map.xml to protobuf base_map.txt and base_map.bin
+├── quaternion_euler.cc - Tool to convert Quaternion to Euler angles
+├── refresh_default_end_way_point.cc - Updates default end way point
+└── sim_map_generator.cc - Generates sim map
+</code></pre>
+<h2>
+<a id="user-content-links" class="anchor" href="#links" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Links</h2>
+<ul>
+<li>
+<p><a href="https://auro.ai/blog/2020/03/using-open-source-frameworks-in-autonomous-vehicle-development-part-2/" rel="nofollow">HD maps review</a></p>
+</li>
+<li>
+<p><a href="https://www.asam.net/standards/detail/opendrive/" rel="nofollow">OpenDrive specification</a></p>
+</li>
+<li>
+<p><a href="http://road2ai.info/2018/08/11/Apollo_02/" rel="nofollow">Review of Apollo OpenDrive</a></p>
+</li>
+<li>
+<p><a href="https://blog.yongcong.wang/2019/10/14/autonomous/Introduce-to-Autodrive-HD-Map-Format-OpenDRIVE-and-Apollo-OpenDRIVE/" rel="nofollow">Intro to Apollo OpenDrive</a></p>
+</li>
+<li>
+<p><a href="https://github.com/daohu527/Dig-into-Apollo/tree/master/modules/map">Dig into Apollo Map Module</a></p>
+</li>
+<li>
+<p><a href="https://paul.pub/apollo-routing/" rel="nofollow">Apollo Routing Module</a></p>
+</li>
+</ul>
+</article></body></html>

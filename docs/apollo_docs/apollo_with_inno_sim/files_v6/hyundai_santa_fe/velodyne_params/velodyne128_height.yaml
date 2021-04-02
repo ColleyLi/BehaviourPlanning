@@ -1,0 +1,4 @@
+vehicle:
+  parameters:
+    height: 1.879
+    height_var: 0.0045

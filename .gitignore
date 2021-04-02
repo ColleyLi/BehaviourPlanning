@@ -1,0 +1,45 @@
+# Ignore the simulator files
+/simulator/*
+!/simulator/README.md
+
+# Ignore non planning related modules from Apollo
+/apollo/*
+
+!/apollo/my_scripts
+!/apollo/my_cpp
+
+!/apollo/modules/
+/apollo/modules/*
+!/apollo/modules/planning/
+
+# Ignore unrelated files
+issues.txt
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app

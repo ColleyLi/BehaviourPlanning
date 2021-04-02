@@ -1,0 +1,117 @@
+# Define all coms in DAG streaming.
+
+##################################################
+#                   drivers                      #
+##################################################
+
+module_config {
+    module_library : "/apollo/bazel-bin/modules/drivers/velodyne/driver/libvelodyne_driver_component.so"
+
+    # 32_center
+    components {
+      class_name : "VelodyneDriverComponent"
+      config {
+        name : "velodyne_32_center_driver"
+        config_file_path : "/apollo/modules/drivers/velodyne/conf/velodyne32_center_conf.pb.txt"
+      }
+    }
+
+    # 16_left
+    #components {
+    #  class_name : "VelodyneDriverComponent"
+    #  config {
+    #    name : "velodyne_16_left_driver"
+    #    config_file_path : "/apollo/modules/drivers/velodyne/conf/velodyne16_left_conf.pb.txt"
+    #  }
+    #}
+
+    # 16_right
+    #components {
+    #  class_name : "VelodyneDriverComponent"
+    #  config {
+    #    name : "velodyne_16_right_driver"
+    #    config_file_path : "/apollo/modules/drivers/velodyne/conf/velodyne16_right_conf.pb.txt"
+    #  }
+    #}
+}
+
+##################################################
+#                   convert                      #
+##################################################
+
+module_config {
+    module_library : "/apollo/bazel-bin/modules/drivers/velodyne/parser/libvelodyne_convert_component.so"
+
+
+    # 32_center
+    components {
+      class_name : "VelodyneConvertComponent"
+      config {
+        name : "velodyne_32_center_convert"
+        config_file_path : "/apollo/modules/drivers/velodyne/conf/velodyne32_center_conf.pb.txt"
+        readers {
+          channel: "/apollo/sensor/lidar32/center/Scan"
+        }
+      }
+    }
+
+    # 16_left
+    #components {
+    #  class_name : "VelodyneConvertComponent"
+    #  config {
+    #    name : "velodyne_16_left_convert"
+    #    config_file_path : "/apollo/modules/drivers/velodyne/conf/velodyne16_left_conf.pb.txt"
+    #    readers {
+    #      channel: "/apollo/sensor/lidar16/left/Scan"
+    #    }
+    #  }
+    #}
+
+    # 16_right
+    #components {
+    #  class_name : "VelodyneConvertComponent"
+    #  config {
+    #    name : "velodyne_16_right_convert"
+    #    config_file_path : "/apollo/modules/drivers/velodyne/conf/velodyne16_right_conf.pb.txt"
+    #    readers {
+    #      channel: "/apollo/sensor/lidar16/right/Scan"
+    #    }
+    #  }
+    #}
+
+}
+
+
+##################################################
+#                    fusion                      #
+##################################################
+
+# module_config {
+#     module_library : "/apollo/bazel-bin/modules/drivers/velodyne/fusion/libvelodyne_fusion_component.so"
+# 
+#     components {
+#       class_name : "PriSecFusionComponent"
+#       config {
+#         name : "velodyne_fusion"
+#         config_file_path : "/apollo/modules/drivers/velodyne/conf/velodyne16_fusion_conf.pb.txt"
+#         readers {channel: "/apollo/sensor/lidar16/center/PointCloud2"}
+#       }
+#     }
+# }
+
+##################################################
+#                compensation                    #
+##################################################
+
+module_config {
+    module_library : "/apollo/bazel-bin/modules/drivers/velodyne/compensator/libvelodyne_compensator_component.so"
+
+    components {
+      class_name : "CompensatorComponent"
+      config {
+        name : "velodyne32_center_compensator"
+        config_file_path : "/apollo/modules/drivers/velodyne/conf/velodyne32_center_compensator.pb.txt"
+        readers {channel: "/apollo/sensor/lidar32/center/PointCloud2"}
+      }
+    }
+}

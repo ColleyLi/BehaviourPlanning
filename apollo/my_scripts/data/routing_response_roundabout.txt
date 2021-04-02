@@ -1,0 +1,615 @@
+header 
+{
+  timestamp_sec: 1603177764.98
+  module_name: "routing"
+  sequence_num: 1
+}
+
+road 
+{
+  id: "road_10"
+  passage 
+  {
+    segment 
+    {
+      id: "lane_249"
+      start_s: 5.97805979826
+      end_s: 49.0140376875
+    }
+    segment 
+    {
+      id: "lane_252"
+      start_s: 0.0
+      end_s: 9.54168468452
+    }
+    segment 
+    {
+      id: "lane_254"
+      start_s: 0.0
+      end_s: 127.912412874
+    }
+
+    can_exit: false
+    change_lane_type: LEFT
+  }
+
+  passage 
+  {
+    segment
+    {
+      id: "lane_250"
+      start_s: 0.0
+      end_s: 49.0398198796
+    }
+    segment
+    {
+      id: "lane_253"
+      start_s: 0.0
+      end_s: 9.54156349952
+    }
+
+    segment
+    {
+      id: "lane_255"
+      start_s: 0.0
+      end_s: 128.191748362
+    }
+
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+
+road
+{
+  id: "road_junc_49"
+  passage
+  {
+    segment
+    {
+      id: "lane_49"
+      start_s: 0.0
+      end_s: 21.1104488003
+    }
+    
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+
+road {
+  id: "road_17"
+  passage {
+    segment {
+      id: "lane_272"
+      start_s: 0.0
+      end_s: 0.550164117098
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_17"
+  passage {
+    segment {
+      id: "lane_276"
+      start_s: 0.0
+      end_s: 5.81393396112
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_17"
+  passage {
+    segment {
+      id: "lane_279"
+      start_s: 0.0
+      end_s: 93.852662196
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_17"
+  passage {
+    segment {
+      id: "lane_282"
+      start_s: 0.0
+      end_s: 2.01560176696
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_17"
+  passage {
+    segment {
+      id: "lane_285"
+      start_s: 0.0
+      end_s: 42.6322222111
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_17"
+  passage {
+    segment {
+      id: "lane_288"
+      start_s: 0.0
+      end_s: 2.923803585
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_17"
+  passage {
+    segment {
+      id: "lane_291"
+      start_s: 0.0
+      end_s: 58.4803812812
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_17"
+  passage {
+    segment {
+      id: "lane_294"
+      start_s: 0.0
+      end_s: 12.5965789135
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_17"
+  passage {
+    segment {
+      id: "lane_296"
+      start_s: 0.0
+      end_s: 56.6375270549
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_17"
+  passage {
+    segment {
+      id: "lane_298"
+      start_s: 0.0
+      end_s: 12.9740674296
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_17"
+  passage {
+    segment {
+      id: "lane_302"
+      start_s: 0.0
+      end_s: 8.43294590281
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_17"
+  passage {
+    segment {
+      id: "lane_305"
+      start_s: 0.0
+      end_s: 48.4278477127
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_junc_56"
+  passage {
+    segment {
+      id: "lane_56"
+      start_s: 0.0
+      end_s: 10.6616584369
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_19"
+  passage {
+    segment {
+      id: "lane_326"
+      start_s: 0.0
+      end_s: 26.3066805687
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_junc_72"
+  passage {
+    segment {
+      id: "lane_72"
+      start_s: 0.0
+      end_s: 11.8948730177
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_27"
+  passage {
+    segment {
+      id: "lane_367"
+      start_s: 0.0
+      end_s: 12.6756001111
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_junc_70"
+  passage {
+    segment {
+      id: "lane_70"
+      start_s: 0.0
+      end_s: 8.27796933112
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_26"
+  passage {
+    segment {
+      id: "lane_365"
+      start_s: 0.0
+      end_s: 19.7105526147
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_junc_74"
+  passage {
+    segment {
+      id: "lane_74"
+      start_s: 0.0
+      end_s: 14.1975463748
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_28"
+  passage {
+    segment {
+      id: "lane_369"
+      start_s: 0.0
+      end_s: 14.2002450868
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_junc_68"
+  passage {
+    segment {
+      id: "lane_68"
+      start_s: 0.0
+      end_s: 8.96189755977
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_25"
+  passage {
+    segment {
+      id: "lane_362"
+      start_s: 0.0
+      end_s: 26.4853649357
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_junc_65"
+  passage {
+    segment {
+      id: "lane_65"
+      start_s: 0.0
+      end_s: 18.9822116517
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_23"
+  passage {
+    segment {
+      id: "lane_357"
+      start_s: 0.0
+      end_s: 13.2561366986
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_junc_62"
+  passage {
+    segment {
+      id: "lane_62"
+      start_s: 0.0
+      end_s: 13.2859491016
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_22"
+  passage {
+    segment {
+      id: "lane_355"
+      start_s: 0.0
+      end_s: 19.2193684383
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_junc_60"
+  passage {
+    segment {
+      id: "lane_60"
+      start_s: 0.0
+      end_s: 8.62162325191
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_21"
+  passage {
+    segment {
+      id: "lane_331"
+      start_s: 0.0
+      end_s: 41.2590993028
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_21"
+  passage {
+    segment {
+      id: "lane_334"
+      start_s: 0.0
+      end_s: 14.7689449401
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_21"
+  passage {
+    segment {
+      id: "lane_337"
+      start_s: 0.0
+      end_s: 3.07099270259
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_21"
+  passage {
+    segment {
+      id: "lane_339"
+      start_s: 0.0
+      end_s: 139.767713474
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_21"
+  passage {
+    segment {
+      id: "lane_341"
+      start_s: 0.0
+      end_s: 0.726123656865
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_21"
+  passage {
+    segment {
+      id: "lane_344"
+      start_s: 0.0
+      end_s: 8.13812249751
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_21"
+  passage {
+    segment {
+      id: "lane_347"
+      start_s: 0.0
+      end_s: 19.7553912615
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_21"
+  passage {
+    segment {
+      id: "lane_350"
+      start_s: 0.0
+      end_s: 2.37874317679
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_21"
+  passage {
+    segment {
+      id: "lane_353"
+      start_s: 0.0
+      end_s: 27.2912583478
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_junc_53"
+  passage {
+    segment {
+      id: "lane_53"
+      start_s: 0.0
+      end_s: 20.8296072853
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_18"
+  passage {
+    segment {
+      id: "lane_308"
+      start_s: 0.0
+      end_s: 12.7623690549
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_18"
+  passage {
+    segment {
+      id: "lane_311"
+      start_s: 0.0
+      end_s: 30.073755997
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_18"
+  passage {
+    segment {
+      id: "lane_314"
+      start_s: 0.0
+      end_s: 13.0192402405
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road 
+{
+  id: "road_18"
+  passage 
+  {
+    segment 
+    {
+      id: "lane_316"
+      start_s: 0.0
+      end_s: 150.022887459
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+measurement 
+{
+  distance: 1257.54018696
+}
+
+routing_request 
+{
+  header 
+  {
+    timestamp_sec: 1603177764.98
+    module_name: "dreamview"
+    sequence_num: 1
+  }
+  waypoint
+   {
+    id: "lane_249"
+    s: 5.97805979826
+    pose
+    {
+      x: 358504.719849
+      y: 6180757.72229
+    }
+  }
+  waypoint 
+  {
+    id: "lane_316"
+    s: 150.022887459
+    pose 
+    {
+      x: 358564.751345
+      y: 6180744.22721
+    }
+  }
+}
+
+map_version: ""
+status 
+{
+  error_code: OK
+  msg: "Success!"
+}
