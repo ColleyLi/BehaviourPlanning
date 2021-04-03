@@ -35,7 +35,7 @@ def plot_route(routing_response, segment_center_curves, base_map, use_s=True):
                 else:
                     center_x, center_y = plot_center_curve(
                         segment_center_curves[segment.id])
-                plot_id(center_x, center_y, segment.id)
+                plot_id(center_x, center_y, str(road.id) + " " + str(segment.id))
 
     plt.title('Routing result')
     plt.axis('equal')

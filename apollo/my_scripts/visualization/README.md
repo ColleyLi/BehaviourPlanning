@@ -1,7 +1,7 @@
 # Visualization tools
 
 Here you can find several python visualization tools for modules.
-Execute all the commands from the visualizations directory.
+Execute all the commands from the `visualization` directory.
 
 ## Routing
 
@@ -10,7 +10,7 @@ Execute all the commands from the visualizations directory.
 ![Map plot](images/map_plot.png "Map plot")
 
 Plots an input map. If no map is provided, will plot default map from data directory.
-Tags on the plot are rpad ids.
+Tags on the plot are road ids.
 
 ```
 Usage: python -m routing/plot_map [-h] [--map_path MAP_PATH]

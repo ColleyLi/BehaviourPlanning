@@ -30,10 +30,14 @@ COLORS = [
 
 def show_map(drivemap, light=False):
     road_lane_set = []
+    road_id_of_lane = {}
     for road in drivemap.road:
         lanes = []
         for sec in road.section:
-            lanes.extend(proto_utils.flatten(sec.lane_id, 'id'))
+            lane_ids = proto_utils.flatten(sec.lane_id, 'id')
+            lanes.extend(lane_ids)
+            for lane_id in lane_ids:
+                road_id_of_lane[lane_id] = road.id.id
         road_lane_set.append(lanes)
 
     for lane in drivemap.lane:
@@ -50,7 +54,7 @@ def show_map(drivemap, light=False):
 
                 center_x, center_y = get_lane_center(curve.line_segment)
                 if not light:
-                    plot_id(center_x, center_y, "road_" + str(road_idx))
+                    plot_id(center_x, center_y, str(road_id_of_lane[lane.id.id]) + " " + str(lane.id.id))
 
         for curve in lane.left_boundary.curve.segment:
             if curve.HasField('line_segment'):
@@ -154,6 +158,7 @@ def plot_id(x, y, id_string, color='green'):
         id_string,
         xy=(x, y),
         xytext=(40, -40),
+        fontsize=7,
         textcoords='offset points',
         ha='right',
         va='bottom',
