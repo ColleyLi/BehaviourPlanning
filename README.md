@@ -1,5 +1,5 @@
 # Behaviour Planning
-Custom Behaviour Planning module for Apollo 5.0
+Custom Behaviour Planning module based on Hierarchical Behaviour Trees for Apollo 5.0
 
 ## Repo structure
 
@@ -10,10 +10,21 @@ BehaviourPlanning
 │   └──  - 
 ├── docs - Documentation
 │   ├── apollo_docs - Documentation related to the Apollo system
-│   │   └── apollo_with_inno_sim - How to run Apollo with the Innopolis Simulator
+|   |   ├── apollo_with_inno_sim - How to run Apollo with the Innopolis Simulator
+|   |   ├── map_module - Apollo Map module documentation
+|   |   ├── planning_module - Apollo Planning module documentation
+│   │   └── routing_module - Apollo Routing module documentation
 │   └── behaviour_planning - Everything related to the Behaviour Planning approach
 ├── simulator - Folder for the simulator
 ```
+
+## Things to check out
+
+### Apollo modules documentation
+Documentation of Apollo `map`, `routing` and `planning` modules in the `BehaviourPlanning/docs` folder
+
+### Visualisations
+Visualization tools for map, Routing Response, ADC Trajectory are in the `BehaviourPlanning/apollo/my_scripts/visualization` folder
 
 ## Installation
 

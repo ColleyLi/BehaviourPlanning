@@ -2,7 +2,7 @@
 
 The routing module uses routing map and routing requests to create routing responses that will be used in the Planning module
 
-## Module code structure
+## Module folder structure
 
 ```
 /apollo/modules/routing/

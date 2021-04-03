@@ -8,7 +8,6 @@ The main task of the map module is to read a high-precision map from files and c
 
 ```
 /apollo/modules/map/
-│ 
 ├── data - Folder for maps
 │   └── innopolis - Map of Innopolis
 ├── hdmap - HD map processing modules
@@ -28,15 +27,19 @@ The main task of the map module is to read a high-precision map from files and c
 │   │   └── multi_lane_map
 │   └── tools
 └── tools - Several useful tools to work with map files
+    ├── bin_map_generator.cc - Converts base_map.txt to base_map.bin
+    ├── map_datachecker -
+    ├── map_tool.cc - Generates map with given x-y offset
+    ├── map_xysl.cc - Several functions such as "GetElementByID" or "XY -> SL"
+    ├── proto_map_generator.cc - Converts opendrive base_map.xml to protobuf base_map.txt and base_map.bin
+    ├── quaternion_euler.cc - Tool to convert Quaternion to Euler angles
+    ├── refresh_default_end_way_point.cc - Updates default end way point
+    └── sim_map_generator.cc - Generates sim map
 ```
 
-## Folder descriptions
+## Maps
 
-### `data`
-
-Contains maps to use
-
-Apollo uses modified OpenDrive format a. k. a. Apollo OpenDrive. Checkout **Links** section for more information on the (Apollo) OpenDrive format.
+Apollo uses modified OpenDrive format a. k. a. Apollo OpenDrive. Check out the **Links** section for more information on the (Apollo) OpenDrive format.
 
 ![Apollo map elements](./images/elements_apollo_map.png)
 
@@ -48,9 +51,15 @@ Every map is described by at least three files:
 
 There are tools to convert Base map to Routing or Sim map. Check out `/apollo/modules/map/data/README.md`
 
-#### Additional files
+Map data structures are defined with protocol buffers. `map/proto` folder contains protobuf message defintions. You can find more information about the meaning of messages [here](https://github.com/daohu527/Dig-into-Apollo/tree/master/modules/map#%E5%9C%B0%E5%9B%BE%E4%BF%A1%E6%81%AF%E5%A4%B4)
 
-You can add additional files:
+In addition there is a PNC map:
+
+- **PNC map** - Planning and Control map, created from the base map
+
+### Maps meta info
+
+You can add additional info to maps:
 
 `metaInfo.json` - describes map offset to be applied
 
@@ -90,10 +99,7 @@ This endpoint will appear in Deamview on the `Route Editing -> Add Point of Inte
 
 ![Point of interest](./images/point_of_interest.png)
 
-_ _ _ _ _
-
-
-### `hdmap`
+## HD map class
 
 Parses map and provides an API for other modules.
 
@@ -101,12 +107,9 @@ The parser is located in `hdmap/adapter`. The most interesting files are in `hdm
 
 The API is defined in `hdmap/hdmap_impl.cc`. It consists of basic functions like `GetLanes()` and `GetCrosswalks()`
 
+## PNC Map
 
-_ _ _ _ _
-
-
-
-### `pnc_map`
+Planning and Control Map
 
 ![PNC Map call](./images/pnc_map_call.png)
 
@@ -114,34 +117,11 @@ Module that is being called by `reference_line_provider.cc` when the `Frame` dat
 
 The planning module then shrinks reference lines and segments with look forward/backward distances, and initializes current frame with them + future route waypoints
 
+### PNC Map and Reference Line Provider
 
+PNC Map is contained in the Reference Line Provider. Here is the scheme of the Reference Line Provider invocation:
 
-_ _ _ _ _
-
-
-### `proto`
-
-Contains protobuf message defintions. You can find more information about the meaning of messages [here](https://github.com/daohu527/Dig-into-Apollo/tree/master/modules/map#%E5%9C%B0%E5%9B%BE%E4%BF%A1%E6%81%AF%E5%A4%B4)
-
-_ _ _ _ _
-
-
-### `tools`
-
-Tools for map editing
-
-```
-/apollo/modules/map/tools
-│ 
-├── bin_map_generator.cc - Converts base_map.txt to base_map.bin
-├── map_datachecker - 
-├── map_tool.cc - Generates map with given x-y offset
-├── map_xysl.cc - Several functions such as "GetElementByID" or "XY -> SL"
-├── proto_map_generator.cc - Converts opendrive base_map.xml to protobuf base_map.txt and base_map.bin
-├── quaternion_euler.cc - Tool to convert Quaternion to Euler angles
-├── refresh_default_end_way_point.cc - Updates default end way point
-└── sim_map_generator.cc - Generates sim map
-```
+![Reference Line Provider Scheme](images/reference_line_provider_scheme.png)
 
 ## Links
 
@@ -154,7 +134,5 @@ Tools for map editing
 - [Intro to Apollo OpenDrive](https://blog.yongcong.wang/2019/10/14/autonomous/Introduce-to-Autodrive-HD-Map-Format-OpenDRIVE-and-Apollo-OpenDRIVE/)
 
 - [Dig into Apollo Map Module](https://github.com/daohu527/Dig-into-Apollo/tree/master/modules/map)
-
-- [Apollo Routing Module](https://paul.pub/apollo-routing/)
 
 - [Planning and Control(PnC) map tutorial](https://github.com/YannZyl/Apollo-Note/blob/master/docs/planning/pnc_map.md)
