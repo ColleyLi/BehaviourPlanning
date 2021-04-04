@@ -123,7 +123,7 @@ def main():
 
     odometry_msg = Gps()
 
-    # # Right lane (2 lanes)
+    # Right lane (2 lanes)
     # odometry_msg.localization.position.x = 358504.72
     # odometry_msg.localization.position.y = 6180757.72
     # odometry_msg.localization.position.z = 0.84

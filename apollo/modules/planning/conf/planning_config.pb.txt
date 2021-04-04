@@ -4,7 +4,7 @@ standard_planning_config
   planner_type: MY_PLANNER
   planner_scenarios 
   {
-     scenario_type: LANE_FOLLOW
+     scenario_type: MY_LANE_FOLLOW
      # scenario_type: BARE_INTERSECTION_UNPROTECTED
      # scenario_type: PULL_OVER
      # scenario_type: STOP_SIGN_UNPROTECTED

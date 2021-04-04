@@ -1,62 +1,72 @@
 header {
-  timestamp_sec: 1617434315.9354579
+  timestamp_sec: 1617525179.8458526
   module_name: "routing"
-  sequence_num: 20
+  sequence_num: 0
 }
 road {
   id: "road_14"
   passage {
     segment {
-      id: "lane_410"
-      start_s: 21.692566022640214
-      end_s: 41.997633175161575
-    }
-    segment {
-      id: "lane_413"
-      start_s: 0
-      end_s: 9.7573205153276135
-    }
-    can_exit: false
-    change_lane_type: LEFT
-  }
-  passage {
-    segment {
       id: "lane_411"
-      start_s: 21.783945648491148
+      start_s: 8.393051683651116
       end_s: 42.174547607606577
     }
     segment {
       id: "lane_414"
       start_s: 0
-      end_s: 9.75728550816529
+      end_s: 16.464422707083131
+    }
+    segment {
+      id: "lane_416"
+      start_s: 0
+      end_s: 20.682767337345641
+    }
+    can_exit: false
+    change_lane_type: RIGHT
+  }
+  passage {
+    segment {
+      id: "lane_410"
+      start_s: 0
+      end_s: 41.997633175161575
+    }
+    segment {
+      id: "lane_413"
+      start_s: 0
+      end_s: 16.464481778093997
+    }
+    segment {
+      id: "lane_415"
+      start_s: 0
+      end_s: 20.67172523510424
     }
     can_exit: true
     change_lane_type: FORWARD
   }
 }
 measurement {
-  distance: 30.062352660686649
+  distance: 70.938691310029469
 }
 routing_request {
   header {
-    timestamp_sec: 1617434315.9109728
+    timestamp_sec: 1617525171.6980498
     module_name: "dreamview"
-    sequence_num: 20
+    sequence_num: 16
   }
   waypoint {
-    id: "lane_410"
-    s: 21.692566022640214
+    id: "lane_411"
+    s: 8.393051683651116
     pose {
-      x: 358519.69714355469
-      y: 6180750.5960693359
+      x: 358508.72
+      y: 6180759
     }
   }
   waypoint {
-    id: "lane_414"
-    s: 9.75728550816529
+    id: "lane_415"
+    s: 20.67172523510424
     pose {
-      x: 358548.46653527877
-      y: 6180741.2346008308
+      x: 358571.88057344331
+      y: 6180726.5917689111
     }
   }
 }
@@ -65,3 +75,4 @@ status {
   error_code: OK
   msg: "Success!"
 }
+

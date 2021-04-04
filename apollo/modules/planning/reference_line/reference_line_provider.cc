@@ -604,18 +604,12 @@ bool ReferenceLineProvider::CreateReferenceLine(
     }
   }
 
-  AERROR << "RouteSegments size before route segments creation: " << segments->size();
-  AERROR << "RefLine size before route segments creation: " << reference_lines->size();
-  
   if (!CreateRouteSegments(vehicle_state, segments))
   {
     AERROR << "Failed to create reference line from routing";
     return false;
   }
 
-  AERROR << "RouteSegments size after route segments creation: " << segments->size();
-  AERROR << "RefLine size after route segments creation: " << reference_lines->size();
-  
   if (is_new_routing || !FLAGS_enable_reference_line_stitching) 
   {
     for (auto iter = segments->begin(); iter != segments->end();) 
@@ -660,6 +654,7 @@ bool ReferenceLineProvider::CreateReferenceLine(
       }
     }
   }
+
   return true;
 }
 
