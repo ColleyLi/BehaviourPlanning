@@ -81,23 +81,29 @@ Ok, now the Routing module knows what we want. It will use our Routing Request a
 
 #### Routing map creation
 
-In order to perform routing, we need to have the `routing_map`. Apollo creates it from the HD map called `base_map`. The code for the `routing_map` generation can be found in the `routing/topo_creator` folder
+In order to perform routing, we need to have the `routing_map`. Apollo creates it from the HD map called `base_map`. The code for the `routing_map` generation can be found in the `routing/topo_creator` folder.
 
-In Apollo routing map topology lanes represent nodes and relations between lanes are described by edges
-
-Here is the picture that describes the situation:
-
-![Road structure](images/road_structure.png)
-
-Basically, Apollo takes the `base_map` and converts it into the graph representation to do the routing procedure.
-
-There are some picularities like the difference between `TopoGraph` and `SubTopoGraph`. We will not go into such deep details because they are irrelevant to behaviour planning.
-
-So, let us see how the map looks for our example:
+So, let us see how the `base_map` looks for our example:
 
 ![Map example](images/map_example.png)
 
 It is the part of the `base_map` in our location. As we can see on the picture, there are lanes with different ids that are united by roads. In our case, we are interested in the road with id `road_14`.
+
+Now we briefly consider the structure of the `base_map`, which is defined in `apollo/modules/map/proto`:
+
+![Base map road structure](images/base_map_road_structure.png)
+
+If you want to know more about the `base_map` and how it is represented inside Apollo: `BehaviourPlanning/docs/apollo_docs/map_module`
+
+Basically, Apollo takes the `base_map` and converts it into the graph representation to do the routing procedure. In Apollo routing map topology lanes represent nodes and relations between lanes are described by edges. So, the `routing_map` will look something like that:
+
+![Routing map](images/routing_map.png)
+
+The protobuf for the `routing_map` is located in `routing/proto/topo_graph.proto`.
+
+The next step is to parse the protobuf `routing_map` into code. This is the task of the `TopoGraph`. There are some picularities like the difference between `TopoGraph` and `SubTopoGraph` (`SubTopoGraph` is used to process blacklisted lane ranges). We will not go into such deep details because they are irrelevant for now. 
+
+> TODO: describe logic of the blacklisted road and lane processing.
 
 #### Route search
 
@@ -115,7 +121,7 @@ The structure of the Routing response is defined in the `routing/proto/routing.p
 
 - `Road` - full route from the current location to the goal. Consists of one or more Road Segments
 - `RoadSegment` - part of the road. Has an id and consists of one or more passages. In the `routing.proto` Road Segments are named as `repeated road`, that can be confusing, bear that in mind when reading `pb.txt` of the Routing Response
-- `Passage` - one or more consequent lane segments. Passages within the same Road Segment are parallel
+- `Passage` - one or more lane segments that can be reached without a lane change. Passages within the same Road Segment are parallel
 - `LaneSegment` - basic building block of the Routing Response. Has an id and frenet `s` boundary
 
 The indices on the picture denote the indices of corresponding elements in the `RoutingResponse` data structure. We will need this indices later, when we will move to the Planning Module and `PNC Map` in particular.
