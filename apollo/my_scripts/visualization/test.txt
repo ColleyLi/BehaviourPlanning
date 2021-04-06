@@ -1,5 +1,5 @@
 header {
-  timestamp_sec: 1617525179.8458526
+  timestamp_sec: 1617688093.7369637
   module_name: "routing"
   sequence_num: 0
 }
@@ -19,7 +19,7 @@ road {
     segment {
       id: "lane_416"
       start_s: 0
-      end_s: 20.682767337345641
+      end_s: 26.293153905223864
     }
     can_exit: false
     change_lane_type: RIGHT
@@ -38,20 +38,20 @@ road {
     segment {
       id: "lane_415"
       start_s: 0
-      end_s: 20.67172523510424
+      end_s: 26.279116533486565
     }
     can_exit: true
     change_lane_type: FORWARD
   }
 }
 measurement {
-  distance: 70.938691310029469
+  distance: 76.549077877907678
 }
 routing_request {
   header {
-    timestamp_sec: 1617525171.6980498
+    timestamp_sec: 1617687461.7139449
     module_name: "dreamview"
-    sequence_num: 16
+    sequence_num: 0
   }
   waypoint {
     id: "lane_411"
@@ -63,10 +63,10 @@ routing_request {
   }
   waypoint {
     id: "lane_415"
-    s: 20.67172523510424
+    s: 26.279116533486565
     pose {
-      x: 358571.88057344331
-      y: 6180726.5917689111
+      x: 358577.06631271768
+      y: 6180724.4462931622
     }
   }
 }
