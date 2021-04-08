@@ -172,13 +172,23 @@ And for the stage two:
 
 Just in case, here is what those functions do:
 
-- `IsReachableFromWithChangeLane(from_node, to_nodes, result)` - sets `result` = first node in `to_nodes` that has `LEFT` or `RIGHT` edge from `from_node`
-- `IsReachableToWithChangeLane(to_node, from_nodes, result)` - sets `result` = first node in `from_nodes` that has `LEFT` or `RIGHT` edge to `to_node`
+- `IsReachableFromWithChangeLane(from_node, to_passage, result)` - sets `result` = first node in `to_passage` that has `LEFT` or `RIGHT` edge from `from_node`. Answers the question "Can I get from `from_node` to any node in `to_passage` with lane change?"
+- `IsReachableToWithChangeLane(to_node, from_passage, result)` - sets `result` = first node in `from_passage` that has `LEFT` or `RIGHT` edge to `to_node`. Answers the question "Can I get from any node in `from_passage` to `to_node` with lane change?"
 
 `ExtendBackward()` works similar to `ExtendForward()`.
 
 And now, the final part of the `ResultGenerator`: `CreateRoadSegments()`
 
+- go through each `passage` in `passges`
+  - go through each `node` in `cur_passage`
+    - if `cur_passage` is not the last one and we can get to `cur_node` from `next_passage` or if `cur_passage` is not the first one and we can get from `cur_node` to `prev_passage`
+      - if not `in_change_lane`
+        - `start_index = {i, j}; in_change_lane = true`
+    - else
+      - if `in_change_lane`
+        - `AddRoadSegment(passages, start_index, {i, j - 1}, result)`
+      - `AddRoadSegment(passages, {i, j}, {i, j}, result); in_change_lane = false`
+    
 
 ### Routing response
 
