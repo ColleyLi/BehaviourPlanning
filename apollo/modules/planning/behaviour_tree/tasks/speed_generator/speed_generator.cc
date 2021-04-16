@@ -15,18 +15,18 @@ namespace planning
   using apollo::planning_internal::STGraphDebug;
 
 
-  void SpeedGenerator::Init(const PlanningConfig& planning_config)
+  void SpeedGenerator::Init(const BTreeTaskConfigs& task_configs)
   {
-    for (auto& task : planning_config.default_task_config())
+    for (auto& task_config : task_configs.b_tree_task_config())
     {
-      if (task.task_type() == TaskConfig::SPEED_BOUNDS_PRIORI_DECIDER)
+      if (task_config.name() == BTreeTaskName::SPEED_BOUNDS_PRIORI_DECIDER_TASK)
       {
-        speed_bounds_config_ = task.speed_bounds_decider_config();
+        speed_bounds_config_ = task_config.speed_bounds_decider_config();
       }
 
-      if (task.task_type() == TaskConfig::DP_ST_SPEED_OPTIMIZER)
+      if (task_config.name() == BTreeTaskName::DP_ST_SPEED_OPTIMIZER_TASK)
       {
-        dp_st_speed_config_ = task.dp_st_speed_config();
+        dp_st_speed_config_ = task_config.dp_st_speed_config();
       }
     }
   }

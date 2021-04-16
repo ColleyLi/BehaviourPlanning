@@ -42,7 +42,12 @@ PlanningBase::~PlanningBase()
 Status PlanningBase::Init(const PlanningConfig& config) 
 {
   PlanningContext::Instance()->Instance()->Init();
-  TaskFactory::Init(config);
+
+  if (!config.has_btree_planning_config())
+  {
+    TaskFactory::Init(config);
+  }
+
   return Status::OK();
 }
 

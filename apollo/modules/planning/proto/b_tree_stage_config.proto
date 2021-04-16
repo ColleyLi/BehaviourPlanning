@@ -1,0 +1,34 @@
+syntax = "proto2";
+
+package apollo.planning;
+
+import "modules/planning/proto/b_tree.proto";
+
+enum BTreeStageState
+{
+  OK = 1;
+  FAILED = 2;
+  RUNNING = 3;
+}
+
+enum BTreeStageName
+{
+  LANE_FOLLOW_STAGE = 1;
+}
+
+message BTreeStageParameters
+{
+
+}
+
+message BTreeStageConfig
+{
+  optional BTreeStageName name = 1;
+  optional BTree tree  = 2;
+  optional BTreeStageParameters parameters = 3;
+}
+
+message BTreeStageConfigs
+{
+  repeated BTreeStageConfig b_tree_stage_config = 1;
+}

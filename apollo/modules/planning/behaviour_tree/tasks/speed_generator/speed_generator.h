@@ -1,6 +1,7 @@
 #pragma once
 
 #include "modules/planning/behaviour_tree/bt_task.h"
+#include "modules/planning/proto/b_tree_task_config.pb.h"
 
 namespace apollo
 {
@@ -12,7 +13,7 @@ using apollo::common::Status;
 class SpeedGenerator: public BTTask
 {
   public:
-    void Init(const PlanningConfig& planning_config);
+    void Init(const BTreeTaskConfigs& task_configs);
     Status Process(Frame* frame);
     Status Process(Frame* frame, ReferenceLineInfo* reference_line_info);
 

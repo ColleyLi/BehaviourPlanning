@@ -564,6 +564,11 @@ Status OnLanePlanning::Plan(
 
 bool OnLanePlanning::CheckPlanningConfig(const PlanningConfig& config)
 {
+  if (config.has_btree_planning_config())
+  {
+    return true;
+  }
+
   if (!config.has_standard_planning_config()) 
   {
     return false;

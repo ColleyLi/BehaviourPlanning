@@ -554,7 +554,6 @@ bool ReferenceLineProvider::CreateRouteSegments(
     const common::VehicleState &vehicle_state,
     std::list<hdmap::RouteSegments> *segments) 
 {
-  AERROR << "Segments size after map->GetRouteSegments: " << segments->size();
   {
     std::lock_guard<std::mutex> lock(pnc_map_mutex_);
     if (!pnc_map_->GetRouteSegments(vehicle_state, segments)) {
@@ -562,8 +561,6 @@ bool ReferenceLineProvider::CreateRouteSegments(
       return false;
     }
   }
-
-  AERROR << "Segments size after map->GetRouteSegments: " << segments->size();
 
   if (FLAGS_prioritize_change_lane)
   {

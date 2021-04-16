@@ -36,6 +36,7 @@ cc_library(
         "//modules/planning/constraint_checker",
         "//modules/planning/math/curve1d:quartic_polynomial_curve1d",
         "//modules/planning/proto:planning_proto",
+        "//modules/planning/common/util:util_lib",
         "//modules/planning/reference_line",
         "//modules/planning/reference_line:qp_spline_reference_line_smoother",
         "//modules/planning/scenarios:scenario",

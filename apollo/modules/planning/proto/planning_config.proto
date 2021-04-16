@@ -2,6 +2,7 @@ syntax = "proto2";
 
 package apollo.planning;
 
+import "modules/planning/proto/b_tree_context_config.proto";
 import "modules/planning/proto/decider_config.proto";
 import "modules/planning/proto/dp_st_speed_config.proto";
 import "modules/planning/proto/lane_change_decider_config.proto";
@@ -279,6 +280,19 @@ enum PlannerType
   NAVI = 2;         // navigation planner
   LATTICE = 3;      // lattice planner
   MY_PLANNER = 4;   // my planner
+  BTREE_PLANNER = 5; // behaviour tree planner
+}
+
+message BTreePlanningParameters
+{
+
+}
+
+message BTreePlanningConfig
+{
+  optional PlannerType planner_type = 1;
+  repeated BTreeContextName context_to_use = 2;
+  optional BTreePlanningParameters parameters = 3;
 }
 
 message RtkPlanningConfig 
@@ -304,6 +318,7 @@ message PlanningConfig
     RtkPlanningConfig rtk_planning_config = 1;
     StandardPlanningConfig standard_planning_config = 2;
     NavigationPlanningConfig navigation_planning_config = 3;
+    BTreePlanningConfig btree_planning_config = 4;
   }
 
   // default task config, it will be used if there is no scenario-specific

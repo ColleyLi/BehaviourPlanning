@@ -310,6 +310,18 @@ DEFINE_string(behaviour_tree_config_file,
              "/apollo/modules/planning/conf/behaviour_tree_config.pb.txt",
              "behaviour tree config file");
 
+DEFINE_string(b_tree_context_config_file,
+             "/apollo/modules/planning/conf/b_tree_context_config.pb.txt",
+             "behaviour tree context config file");
+
+DEFINE_string(b_tree_stage_config_file,
+             "/apollo/modules/planning/conf/b_tree_stage_config.pb.txt",
+             "behaviour tree stage config file");
+
+DEFINE_string(b_tree_task_config_file,
+             "/apollo/modules/planning/conf/b_tree_task_config.pb.txt",
+             "behaviour tree task config file");
+
 DEFINE_int32(trajectory_point_num_for_debug, 10,
              "number of output trajectory points for debugging");
 

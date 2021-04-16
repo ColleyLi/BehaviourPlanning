@@ -1,0 +1,40 @@
+syntax = "proto2";
+
+package apollo.planning;
+
+import "modules/planning/proto/b_tree_stage_config.proto";
+
+message StageFSM
+{
+  message Transition
+  {
+    optional BTreeStageState on_state = 1;
+    optional BTreeStageName from_stage = 2;
+    optional BTreeStageName to_stage = 3; 
+  };
+
+  repeated BTreeStageName stage = 1;
+  repeated Transition transition = 2;
+  optional BTreeStageName initial_stage = 3;
+}
+
+message BTreeContextParameters
+{
+}
+
+enum BTreeContextName
+{
+  BTREE_LANE_FOLLOW_CONTEXT = 0;
+}
+
+message BTreeContextConfig
+{
+  optional BTreeContextName name = 1;
+  optional StageFSM stage_fsm = 2;
+  optional BTreeContextParameters parameters = 3;
+}
+
+message BTreeContextConfigs
+{
+  repeated BTreeContextConfig b_tree_context_config = 1;
+}

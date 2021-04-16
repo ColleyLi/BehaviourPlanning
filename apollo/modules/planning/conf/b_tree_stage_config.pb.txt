@@ -1,0 +1,12 @@
+b_tree_stage_config
+{
+    name: LANE_FOLLOW_STAGE
+    tree
+    {
+
+    }
+    parameters
+    {
+
+    }
+}

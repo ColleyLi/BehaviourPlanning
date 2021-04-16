@@ -23,6 +23,7 @@
 #include "modules/planning/planner/public_road/public_road_planner.h"
 #include "modules/planning/planner/rtk/rtk_replay_planner.h"
 #include "modules/planning/planner/my_planner/my_planner.h"
+#include "modules/planning/planner/btree_planner/btree_planner.h"
 
 namespace apollo 
 {
@@ -47,6 +48,9 @@ void PlannerDispatcher::RegisterPlanners()
 
   planner_factory_.Register(PlannerType::MY_PLANNER, 
                             []() -> Planner* { return new MyPlanner(); });
+
+  planner_factory_.Register(PlannerType::BTREE_PLANNER, 
+                            []() -> Planner* { return new BTreePlanner(); });
 }
 
 }  // namespace planning

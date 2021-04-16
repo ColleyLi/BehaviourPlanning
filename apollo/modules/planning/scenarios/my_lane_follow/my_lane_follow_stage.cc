@@ -15,7 +15,7 @@
 #include "modules/planning/common/ego_info.h"
 #include "modules/planning/common/frame.h"
 #include "modules/planning/common/planning_gflags.h"
-#include "modules/planning/proto/planning_config.pb.h"
+#include "modules/planning/proto/b_tree_task_config.pb.h"
 #include "modules/planning/behaviour_tree/bt_sequence.h"
 #include "modules/planning/behaviour_tree/bt_selector.h"
 #include "modules/planning/behaviour_tree/tasks/path_generator/path_generator.h"
@@ -46,9 +46,8 @@ using common::time::Clock;
 MyLaneFollowStage::MyLaneFollowStage(const ScenarioConfig::StageConfig& config)
     : Stage(config) 
     {
-
-      PlanningConfig planning_config;
-      apollo::cyber::common::GetProtoFromFile(FLAGS_behaviour_tree_config_file, &planning_config);
+      BTreeTaskConfigs task_configs;
+      apollo::cyber::common::GetProtoFromFile(FLAGS_b_tree_task_config_file, &task_configs);
 
       BTSelector* action_selector = new BTSelector();
       action_selector->SetName("ActionSelector");
@@ -74,7 +73,7 @@ MyLaneFollowStage::MyLaneFollowStage(const ScenarioConfig::StageConfig& config)
       path_generator_node->SetName("PathGenerator");
       SpeedGenerator* speed_generator_node = new SpeedGenerator();
       speed_generator_node->SetName("SpeedGenerator");
-      speed_generator_node->Init(planning_config);
+      speed_generator_node->Init(task_configs);
       FallbackPathGenerator* fallback_path_generator_node = new FallbackPathGenerator();
       fallback_path_generator_node->SetName("FallbackPathGenerator");
       FallbackSpeedGenerator* fallback_speed_generator_node = new FallbackSpeedGenerator();

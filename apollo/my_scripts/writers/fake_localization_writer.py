@@ -123,15 +123,25 @@ def main():
 
     odometry_msg = Gps()
 
+    # After crossroad before the bus stop
+    odometry_msg.localization.position.x = 358694.2
+    odometry_msg.localization.position.y = 6180674.0
+    odometry_msg.localization.position.z = 204.4
+
     # Right lane (2 lanes)
     # odometry_msg.localization.position.x = 358504.72
     # odometry_msg.localization.position.y = 6180757.72
     # odometry_msg.localization.position.z = 0.84
 
     # Left lane (2 lanes)
-    odometry_msg.localization.position.x = 358508.72
-    odometry_msg.localization.position.y = 6180759.0
-    odometry_msg.localization.position.z = 0.84
+    # odometry_msg.localization.position.x = 358508.72
+    # odometry_msg.localization.position.y = 6180759.0
+    # odometry_msg.localization.position.z = 0.84
+
+    # Between lanes (2 lanes)
+    # odometry_msg.localization.position.x = 358504.72
+    # odometry_msg.localization.position.y = 6180759.0
+    # odometry_msg.localization.position.z = 0.84
 
     # Right lane (3 lanes)
     # odometry_msg.localization.position.x = 358706.12

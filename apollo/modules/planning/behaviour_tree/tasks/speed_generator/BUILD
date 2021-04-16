@@ -12,6 +12,9 @@ cc_library(
     ],
     copts = ["-DMODULE_NAME=\\\"planning\\\""],
     deps = [
+        "//modules/common",
+        "//modules/planning/common:planning_common",
+        "//modules/planning/common/util:util_lib",
         "//modules/common/status",
         "//modules/planning/common:frame",
         "//modules/planning/behaviour_tree:bt_task",

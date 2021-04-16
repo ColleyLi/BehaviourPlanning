@@ -19,10 +19,15 @@ def main():
     routing_request.header.module_name = 'routing_request'
 
     waypoint = routing_request.waypoint.add()
-    waypoint.pose.x = 358519.69714355469
-    waypoint.pose.y = 6180750.5960693359
-    waypoint.id = 'lane_410'
-    waypoint.s = 22
+    # waypoint.pose.x = 358519.69714355469
+    # waypoint.pose.y = 6180750.5960693359
+    # waypoint.id = 'lane_410'
+    # waypoint.s = 22
+
+    waypoint.pose.x = 358504.72
+    waypoint.pose.y = 6180759.0
+    # waypoint.id = '
+    waypoint.s = 1.123
 
     waypoint = routing_request.waypoint.add()
     waypoint.pose.x = 358548.46653527877

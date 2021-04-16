@@ -23,6 +23,9 @@ DECLARE_double(test_duration);
 
 DECLARE_string(planning_config_file);
 DECLARE_string(behaviour_tree_config_file);
+DECLARE_string(b_tree_context_config_file);
+DECLARE_string(b_tree_stage_config_file);
+DECLARE_string(b_tree_task_config_file);
 
 // scenarios related
 DECLARE_string(scenario_bare_intersection_unprotected_config_file);
