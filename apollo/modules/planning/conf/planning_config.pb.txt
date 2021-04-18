@@ -1,6 +1,6 @@
 btree_planning_config
 {
   planner_type: BTREE_PLANNER
-  context_to_use: BTREE_LANE_FOLLOW_CONTEXT 
+  context_to_use: LANE_FOLLOW_CONTEXT 
 }
 

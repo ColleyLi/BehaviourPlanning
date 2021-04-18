@@ -1,22 +1,26 @@
 #include "modules/planning/behaviour_tree/checks/collision_check.h"
 
-namespace apollo
+namespace apollo {
+namespace planning {
+namespace behaviour_tree {
+BTreeNodeState CollisionCheck::Init(const BTreeNodeConfig& config)
 {
-namespace planning
-{
-
-using apollo::common::Status;
-using apollo::common::ErrorCode;
-
-Status CollisionCheck::Process(Frame* frame, ReferenceLineInfo* reference_line_info)
-{
-    return Process(frame);
+  config_ = config;
+  state_ = BTreeNodeState::NODE_INITIALIZED;
+  return state_;
 }
 
-Status CollisionCheck::Process(Frame* frame)
+BTreeNodeState CollisionCheck::Execute(Frame* frame, ReferenceLineInfo* reference_line_info)
 {
-    return Status(ErrorCode::PLANNING_ERROR, "No collision");
+    return Execute(frame);
 }
 
+BTreeNodeState CollisionCheck::Execute(Frame* frame)
+{
+    state_ = BTreeNodeState::NODE_FAILED;
+    return state_;
 }
-}
+
+} // namespace behaviour_tree
+} // namespace planning
+} // namespace apollo

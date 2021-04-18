@@ -1,24 +1,36 @@
-b_tree_context_config
+context_config
 {
-   name: BTREE_LANE_FOLLOW_CONTEXT
+   type: LANE_FOLLOW_CONTEXT
    stage_fsm
    {
       stage: LANE_FOLLOW_STAGE
       transition
       {
-         on_state: OK
+         on_state: STAGE_NOT_INITIALIZED
          from_stage: LANE_FOLLOW_STAGE
          to_stage: LANE_FOLLOW_STAGE
       }
       transition
       {
-         on_state: FAILED
+         on_state: STAGE_INITIALIZED
          from_stage: LANE_FOLLOW_STAGE
          to_stage: LANE_FOLLOW_STAGE
       }
       transition
       {
-         on_state: RUNNING
+         on_state: STAGE_DONE
+         from_stage: LANE_FOLLOW_STAGE
+         to_stage: LANE_FOLLOW_STAGE
+      }
+      transition
+      {
+         on_state: STAGE_FAILED
+         from_stage: LANE_FOLLOW_STAGE
+         to_stage: LANE_FOLLOW_STAGE
+      }
+      transition
+      {
+         on_state: STAGE_RUNNING
          from_stage: LANE_FOLLOW_STAGE
          to_stage: LANE_FOLLOW_STAGE
       }

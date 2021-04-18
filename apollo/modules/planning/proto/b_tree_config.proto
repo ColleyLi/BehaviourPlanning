@@ -1,0 +1,53 @@
+syntax = "proto2";
+
+package apollo.planning;
+
+import "modules/planning/proto/b_tree_node_config.proto";
+
+enum BTreeNodeState
+{
+  NODE_NOT_INITIALIZED = 1;
+  NODE_INITIALIZED = 2;
+  NODE_DONE = 3;
+  NODE_FAILED = 4;
+  NODE_RUNNING = 5;
+}
+
+enum BTreeNodeType 
+{
+  SEQUENCE = 1;
+  SELECTOR = 2;
+  OBSTACLE_PROCESSOR_TASK = 5;
+  PATH_GENERATOR_TASK = 6;
+  SPEED_GENERATOR_TASK = 7;
+  LANE_PRIORITIZER_TASK = 8;
+  FALLBACK_PATH_GENERATOR_TASK = 9;
+  FALLBACK_SPEED_GENERATOR_TASK = 10;
+  LANE_PRIORITY_SELECTOR = 11;
+  COLLISION_CHECK = 12;
+  SAFE_LANE_CHANGE_CHECK = 13;
+};
+
+message BTreeNodeConfig
+{
+  oneof config 
+  {
+    BTreeDefaultNodeConfig default_config = 5;
+    BTreeSpeedGeneratorTaskConfig speed_generator_task_config = 6;
+  }
+}
+
+message BTreeNodeDescription
+{
+    optional string id = 1;
+    optional string name = 2;
+    optional BTreeNodeType type = 3;
+    repeated string child_id = 4;
+    optional BTreeNodeConfig config = 5;
+}
+
+message BTreeConfig
+{
+    optional string root_node_id = 1;
+    repeated BTreeNodeDescription node = 2;
+}

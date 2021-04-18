@@ -12,9 +12,8 @@ cc_library(
     ],
     copts = ["-DMODULE_NAME=\\\"planning\\\""],
     deps = [
-        "//modules/common/status",
         "//modules/planning/common:frame",
-        "//modules/planning/behaviour_tree:bt_node",
+        "//modules/planning/behaviour_tree:b_tree_check",
     ],
 )
 
@@ -28,10 +27,9 @@ cc_library(
     ],
     copts = ["-DMODULE_NAME=\\\"planning\\\""],
     deps = [
-        "//modules/common/status",
         "//modules/planning/common:frame",
         "//modules/planning/tasks/deciders/lane_change_decider",
-        "//modules/planning/behaviour_tree:bt_node",
+        "//modules/planning/behaviour_tree:b_tree_check",
     ],
 )
 

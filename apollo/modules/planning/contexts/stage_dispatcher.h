@@ -1,10 +1,8 @@
 #pragma once
 
 #include <memory>
-#include "modules/common/status/status.h"
 #include "modules/planning/contexts/stage.h"
 #include "modules/common/util/factory.h"
-#include "modules/planning/proto/b_tree_stage_config.pb.h"
 
 namespace apollo {
 namespace planning {
@@ -16,15 +14,15 @@ class StageDispatcher
         StageDispatcher() = default;
         ~StageDispatcher() = default;
 
-        common::Status Init();
+        bool Init();
 
-  	    std::shared_ptr<Stage> Dispatch(const BTreeStageName& stage_name);
+  	    std::shared_ptr<Stage> Dispatch(const BTreeStageType& stage_type);
     private:
         void RegisterStages();
 
-        common::util::Factory<BTreeStageName, Stage> stage_factory_;
+        common::util::Factory<BTreeStageType, Stage> stage_factory_;
 };
 
-} // namespace apollo
-} // namespace planning
 } // namespace context
+} // namespace planning
+} // namespace apollo

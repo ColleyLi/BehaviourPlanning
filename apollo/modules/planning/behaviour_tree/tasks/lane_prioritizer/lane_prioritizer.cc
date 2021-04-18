@@ -1,9 +1,8 @@
 #include "modules/planning/behaviour_tree/tasks/lane_prioritizer/lane_prioritizer.h" 
 
-namespace apollo
-{
-namespace planning
-{ 
+namespace apollo {
+namespace planning {
+namespace behaviour_tree {
 
 namespace
 {
@@ -16,8 +15,14 @@ namespace
   const int kObstacleCost = 5;
   const int kFrontObstacleCost = 50;
 }  
+  BTreeNodeState LanePrioritizer::Init(const BTreeNodeConfig& config)
+  {
+    config_ = config;
+    state_ = BTreeNodeState::NODE_INITIALIZED;
+    return state_;
+  }
 
-  Status LanePrioritizer::Process(Frame* frame)
+  BTreeNodeState LanePrioritizer::Execute(Frame* frame)
   {
     for (auto& ref_line : *frame->mutable_reference_line_info())
     {
@@ -71,13 +76,16 @@ namespace
       } 
     }
 
-    return Status::OK();
+    state_ = BTreeNodeState::NODE_DONE;
+    return state_;
   }
 
-  Status LanePrioritizer::Process(Frame* frame, ReferenceLineInfo* reference_line_info)
+  BTreeNodeState LanePrioritizer::Execute(Frame* frame, ReferenceLineInfo* reference_line_info)
   {
-    return Process(frame);
+    return Execute(frame);
   }
 
-}
-}
+
+} // namespace behaviour_tree
+} // namespace planning
+} // namespace apollo

@@ -15,32 +15,31 @@ bool StageSelector::Init(const StageFSM& fsm_config)
 
     for(int i = 0; i < fsm_config.stage_size(); ++i)
     {
-        auto stage_name = fsm_config.stage(i);
-        auto stage = stage_dispatcher_.Dispatch(stage_name);
+        auto stage_type = fsm_config.stage(i);
+        auto stage = stage_dispatcher_.Dispatch(stage_type);
 
         // TODO: Speed-up config lookup
-        for (int i = 0; i < stage_configs.b_tree_stage_config_size(); ++i)
+        for (int i = 0; i < stage_configs.stage_config_size(); ++i)
         {
-            auto stage_config = stage_configs.b_tree_stage_config(i);
-            if (stage_config.name() == stage_name)
+            auto stage_config = stage_configs.stage_config(i);
+            if (stage_config.type() == stage_type)
             {
                 stage->Init(stage_config);
                 break;
             } 
         }
 
-        stages_[stage_name] = stage;
+        stages_[stage_type] = stage;
     }
 
     for(int i = 0; i < fsm_config.transition_size(); ++i)
     {
         auto transition = fsm_config.transition(i);
-
         transitions_[transition.on_state()][transition.from_stage()] = transition.to_stage();
     }
 
-    current_stage_name_ = fsm_config.initial_stage();
-    current_stage_ = stages_[current_stage_name_];
+    current_stage_type_ = fsm_config.initial_stage();
+    current_stage_ = stages_[current_stage_type_];
     return true;
 }
 
@@ -48,12 +47,12 @@ std::shared_ptr<Stage> StageSelector::GetCurrentStage(const TrajectoryPoint& pla
 {
     auto current_state = current_stage_->GetState();
 
-    current_stage_name_ = transitions_[current_state][current_stage_name_];
-    current_stage_ = stages_[current_stage_name_];
+    current_stage_type_ = transitions_[current_state][current_stage_type_];
+    current_stage_ = stages_[current_stage_type_];
 
     return current_stage_;
 }
 
-} // namespace apollo
-} // namespace planning
 } // namespace context
+} // namespace planning
+} // namespace apollo

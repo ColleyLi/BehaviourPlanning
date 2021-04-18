@@ -4,8 +4,6 @@
 #include <memory>
 #include "modules/planning/contexts/stage.h"
 #include "modules/planning/contexts/stage_dispatcher.h"
-#include "modules/common/proto/pnc_point.pb.h"
-
 
 namespace apollo {
 namespace planning {
@@ -24,12 +22,12 @@ class StageSelector
 
     private:
         StageDispatcher stage_dispatcher_;
-        std::unordered_map<BTreeStageName, std::shared_ptr<Stage>, std::hash<int>> stages_;
-        std::unordered_map<BTreeStageState, std::unordered_map<BTreeStageName, BTreeStageName, std::hash<int>>, std::hash<int>> transitions_;
+        std::unordered_map<BTreeStageType, std::shared_ptr<Stage>, std::hash<int>> stages_;
+        std::unordered_map<BTreeStageState, std::unordered_map<BTreeStageType, BTreeStageType, std::hash<int>>, std::hash<int>> transitions_;
         std::shared_ptr<Stage> current_stage_ = nullptr;
-        BTreeStageName current_stage_name_;
+        BTreeStageType current_stage_type_;
 };
 
-} // namespace apollo
-} // namespace planning
 } // namespace context
+} // namespace planning
+} // namespace apollo

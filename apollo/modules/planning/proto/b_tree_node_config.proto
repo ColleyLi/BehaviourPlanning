@@ -1,0 +1,17 @@
+syntax = "proto2";
+
+package apollo.planning;
+
+import "modules/planning/proto/dp_st_speed_config.proto";
+import "modules/planning/proto/speed_bounds_decider_config.proto";
+
+message BTreeSpeedGeneratorTaskConfig
+{
+  optional DpStSpeedConfig dp_st_speed_config = 1;
+  optional SpeedBoundsDeciderConfig speed_bounds_decider_config = 2;
+}
+
+message BTreeDefaultNodeConfig
+{
+
+}

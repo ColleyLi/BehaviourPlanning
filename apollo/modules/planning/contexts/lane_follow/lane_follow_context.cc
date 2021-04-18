@@ -4,14 +4,14 @@ namespace apollo {
 namespace planning {
 namespace context {
 
-common::Status LaneFollowContext::Init(const BTreeContextConfig& config)
+BTreeContextState LaneFollowContext::Init(const BTreeContextConfig& config)
 {
-    stage_selector_.Init(config.stage_fsm());
-    parameters_ = config.parameters();
-    return common::Status::OK();
+    state_ = Context::Init(config);
+
+    return state_;
 }
 
-common::Status LaneFollowContext::Execute(const TrajectoryPoint& planning_start_point, Frame* const frame)
+BTreeContextState LaneFollowContext::Execute(const TrajectoryPoint& planning_start_point, Frame* const frame)
 {
     AERROR << "Executed LaneFollow context";
 
@@ -19,9 +19,11 @@ common::Status LaneFollowContext::Execute(const TrajectoryPoint& planning_start_
 
     current_stage->Execute(planning_start_point, frame);
 
-    return common::Status::OK();
+    state_ = BTreeContextState::CONTEXT_DONE;
+
+    return state_;
 }
 
-} // namespace apollo
-} // namespace planning
 } // namespace context
+} // namespace planning
+} // namespace apollo

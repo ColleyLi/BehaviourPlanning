@@ -7,23 +7,23 @@ namespace planning {
 namespace context {
 
 
-common::Status StageDispatcher::Init()
+bool StageDispatcher::Init()
 {
     RegisterStages();
 
-    return common::Status::OK();
+    return true;
 }
 
 void StageDispatcher::RegisterStages() 
 {
-    stage_factory_.Register(BTreeStageName::LANE_FOLLOW_STAGE, []() -> Stage* { return new LaneFollowStage();});
+    stage_factory_.Register(BTreeStageType::LANE_FOLLOW_STAGE, []() -> Stage* { return new LaneFollowStage();});
 }
 
-std::shared_ptr<Stage> StageDispatcher::Dispatch(const BTreeStageName& stage_name)
+std::shared_ptr<Stage> StageDispatcher::Dispatch(const BTreeStageType& stage_type)
 {
-    return stage_factory_.CreateObject(stage_name);
+    return stage_factory_.CreateObject(stage_type);
 }
 
-} // namespace apollo
-} // namespace planning
 } // namespace context
+} // namespace planning
+} // namespace apollo

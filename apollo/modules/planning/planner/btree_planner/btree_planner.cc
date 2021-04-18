@@ -15,11 +15,11 @@ Status BTreePlanner::Init(const PlanningConfig& config)
 {
   config_ = config;
 
-  std::set<BTreeContextName> config_contexts;
+  std::set<BTreeContextType> config_contexts;
 
   for (int i = 0; i < config_.btree_planning_config().context_to_use_size(); ++i) 
   {
-    const BTreeContextName context = config_.btree_planning_config().context_to_use(i); 
+    const BTreeContextType context = config_.btree_planning_config().context_to_use(i); 
     config_contexts.insert(context);
   }
 

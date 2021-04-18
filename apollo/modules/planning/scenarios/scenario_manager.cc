@@ -29,7 +29,6 @@
 #include "modules/planning/common/util/util.h"
 #include "modules/planning/scenarios/bare_intersection/unprotected/bare_intersection_unprotected_scenario.h"
 #include "modules/planning/scenarios/lane_follow/lane_follow_scenario.h"
-#include "modules/planning/scenarios/my_lane_follow/my_lane_follow_scenario.h"
 #include "modules/planning/scenarios/park/pull_over/pull_over_scenario.h"
 #include "modules/planning/scenarios/park/valet_parking/valet_parking_scenario.h"
 #include "modules/planning/scenarios/stop_sign/unprotected/stop_sign_unprotected_scenario.h"
@@ -49,8 +48,7 @@ bool ScenarioManager::Init(
     const std::set<ScenarioConfig::ScenarioType>& supported_scenarios) 
 {
   RegisterScenarios();
-  // default_scenario_type_ = ScenarioConfig::LANE_FOLLOW;
-  default_scenario_type_ = ScenarioConfig::MY_LANE_FOLLOW;
+  default_scenario_type_ = ScenarioConfig::LANE_FOLLOW;
   supported_scenarios_ = supported_scenarios;
 
   if (supported_scenarios_.size() == 1)
@@ -71,10 +69,6 @@ std::unique_ptr<Scenario> ScenarioManager::CreateScenario(
   {
     case ScenarioConfig::LANE_FOLLOW:
       ptr.reset(new lane_follow::LaneFollowScenario(config_map_[scenario_type],
-                                                    &scenario_context_));
-      break;
-    case ScenarioConfig::MY_LANE_FOLLOW:
-      ptr.reset(new lane_follow::MyLaneFollowScenario(config_map_[scenario_type],
                                                     &scenario_context_));
       break;
     case ScenarioConfig::BARE_INTERSECTION_UNPROTECTED:
@@ -123,10 +117,6 @@ void ScenarioManager::RegisterScenarios() {
   // lane_follow
   CHECK(Scenario::LoadConfig(FLAGS_scenario_lane_follow_config_file,
                              &config_map_[ScenarioConfig::LANE_FOLLOW]));
-
-    // my_lane_follow
-  CHECK(Scenario::LoadConfig(FLAGS_scenario_my_lane_follow_config_file,
-                             &config_map_[ScenarioConfig::MY_LANE_FOLLOW]));
 
   // bare_intersection
   CHECK(Scenario::LoadConfig(
@@ -274,7 +264,6 @@ ScenarioConfig::ScenarioType ScenarioManager::SelectPullOverScenario(
 
   switch (current_scenario_->scenario_type()) {
     case ScenarioConfig::LANE_FOLLOW:
-    case ScenarioConfig::MY_LANE_FOLLOW:
       if (pull_over_scenario) {
         return ScenarioConfig::PULL_OVER;
       }
@@ -323,7 +312,6 @@ ScenarioConfig::ScenarioType ScenarioManager::SelectStopSignScenario(
 
   switch (current_scenario_->scenario_type()) {
     case ScenarioConfig::LANE_FOLLOW:
-    case ScenarioConfig::MY_LANE_FOLLOW:
     case ScenarioConfig::CHANGE_LANE:
     case ScenarioConfig::PULL_OVER:
       if (stop_sign_scenario) {
@@ -418,7 +406,6 @@ ScenarioConfig::ScenarioType ScenarioManager::SelectTrafficLightScenario(
 
   switch (current_scenario_->scenario_type()) {
     case ScenarioConfig::LANE_FOLLOW:
-    case ScenarioConfig::MY_LANE_FOLLOW:
     case ScenarioConfig::CHANGE_LANE:
     case ScenarioConfig::PULL_OVER:
       if (traffic_light_scenario) {
@@ -493,7 +480,6 @@ ScenarioConfig::ScenarioType ScenarioManager::SelectBareIntersectionScenario(
 
   switch (current_scenario_->scenario_type()) {
     case ScenarioConfig::LANE_FOLLOW:
-    case ScenarioConfig::MY_LANE_FOLLOW:
     case ScenarioConfig::CHANGE_LANE:
     case ScenarioConfig::PULL_OVER:
       if (bare_junction_scenario) {
@@ -614,7 +600,6 @@ void ScenarioManager::ScenarioDispatch(const common::TrajectoryPoint& ego_point,
   // switch (current_scenario_->scenario_type()) 
   // {
   //   case ScenarioConfig::LANE_FOLLOW:
-  //   case ScenarioConfig::MY_LANE_FOLLOW:
   //   case ScenarioConfig::CHANGE_LANE:
   //   case ScenarioConfig::PULL_OVER:
   //     break;

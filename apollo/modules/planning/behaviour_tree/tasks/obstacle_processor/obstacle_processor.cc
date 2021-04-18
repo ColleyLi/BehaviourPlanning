@@ -1,30 +1,37 @@
 #include "modules/planning/behaviour_tree/tasks/obstacle_processor/obstacle_processor.h" 
 
-namespace apollo
-{
-namespace planning
-{ 
-  Status ObstacleProcessor::Process(Frame* frame)
+namespace apollo {
+namespace planning {
+namespace behaviour_tree {
+  
+  BTreeNodeState ObstacleProcessor::Init(const BTreeNodeConfig& config)
   {
-    Status status;
+    config_ = config;
+    state_ = BTreeNodeState::NODE_INITIALIZED;
+    return state_;
+  }
+
+  BTreeNodeState ObstacleProcessor::Execute(Frame* frame)
+  {
     for (auto& ref_line : *frame->mutable_reference_line_info())
     {
-      status = Process(frame, &ref_line);
-      if(!status.ok())
+      BTreeNodeState state = Execute(frame, &ref_line);
+      if(!(state = BTreeNodeState::NODE_DONE))
       {
-        return status;
+        return state;
       } 
     }
 
-    return Status::OK();
+    state_ = BTreeNodeState::NODE_DONE;
+    return state_;
   }
 
-  Status ObstacleProcessor::Process(Frame* frame, ReferenceLineInfo* reference_line_info)
+  BTreeNodeState ObstacleProcessor::Execute(Frame* frame, ReferenceLineInfo* reference_line_info)
   {
-    
-
-    return Status::OK();
+    state_ = BTreeNodeState::NODE_DONE;
+    return state_;
   }
 
-}
-}
+} // namespace behaviour_tree
+} // namespace planning
+} // namespace apollo

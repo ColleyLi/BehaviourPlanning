@@ -1,15 +1,17 @@
 #include "modules/planning/behaviour_tree/checks/safe_lane_change_check.h"
 #include "modules/planning/tasks/deciders/lane_change_decider/lane_change_decider.h"
 
-namespace apollo
+namespace apollo {
+namespace planning {
+namespace behaviour_tree { 
+BTreeNodeState SafeLaneChangeCheck::Init(const BTreeNodeConfig& config)
 {
-namespace planning
-{
+  config_ = config;
+  state_ = BTreeNodeState::NODE_INITIALIZED;
+  return state_;
+}
 
-using apollo::common::Status;
-using apollo::common::ErrorCode;
-
-Status SafeLaneChangeCheck::Process(Frame* frame, ReferenceLineInfo* reference_line_info)
+BTreeNodeState SafeLaneChangeCheck::Execute(Frame* frame, ReferenceLineInfo* reference_line_info)
 {
     ADEBUG << "Checking if lane change is possible for: " << reference_line_info->Lanes().Id();
     if (!reference_line_info->IsChangeLanePath() ||
@@ -23,17 +25,21 @@ Status SafeLaneChangeCheck::Process(Frame* frame, ReferenceLineInfo* reference_l
         {
           ADEBUG << "This line does not want to change lane!";
         }
-        return Status::OK();
+        state_ = BTreeNodeState::NODE_DONE;
+        return state_;
     }
 
     ADEBUG << "Lane change is not safe!"; 
-    return Status(ErrorCode::PLANNING_ERROR, "Lane change is not safe");
+    state_ = BTreeNodeState::NODE_FAILED;
+    return state_;
 }
 
-Status SafeLaneChangeCheck::Process(Frame* frame)
+BTreeNodeState SafeLaneChangeCheck::Execute(Frame* frame)
 {
-    return Status(ErrorCode::PLANNING_ERROR, "Lane change is not safe");
+  state_ = BTreeNodeState::NODE_FAILED;
+  return state_;
 }
 
-}
-}
+} // namespace behaviour_tree
+} // namespace planning
+} // namespace apollo

@@ -71,7 +71,6 @@ cc_library(
         "//modules/planning/common/util:util_lib",
         "//modules/planning/scenarios/bare_intersection/unprotected:bare_intersection_unprotected_scenario",
         "//modules/planning/scenarios/lane_follow",
-        "//modules/planning/scenarios/my_lane_follow",
         "//modules/planning/scenarios/park/pull_over:pull_over_scenario",
         "//modules/planning/scenarios/park/valet_parking",
         "//modules/planning/scenarios/stop_sign/unprotected:stop_sign_unprotected_scenario",

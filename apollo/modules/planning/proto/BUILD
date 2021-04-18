@@ -18,7 +18,6 @@ proto_library(
     deps = [
         ":decision_proto_lib",
         ":planning_internal_proto_lib",
-        ":b_tree_task_config_proto_lib",
         "//modules/canbus/proto:canbus_proto_lib",
         "//modules/common/proto:drive_state_proto_lib",
         "//modules/common/proto:error_code_proto_lib",
@@ -617,34 +616,37 @@ proto_library(
 )
 
 cc_proto_library(
-    name = "b_tree_proto",
+    name = "b_tree_node_config_proto",
     deps = [
-        ":b_tree_proto_lib",
+        ":b_tree_node_config_proto_lib",
     ],
 )
 
 proto_library(
-    name = "b_tree_proto_lib",
+    name = "b_tree_node_config_proto_lib",
     srcs = [
-        "b_tree.proto",
-    ],
-)
-
-cc_proto_library(
-    name = "b_tree_task_config_proto",
-    deps = [
-        ":b_tree_task_config_proto_lib",
-    ],
-)
-
-proto_library(
-    name = "b_tree_task_config_proto_lib",
-    srcs = [
-        "b_tree_task_config.proto",
+        "b_tree_node_config.proto",
     ],
     deps = [
         ":dp_st_speed_config_proto_lib",
         ":speed_bounds_decider_config_proto_lib",
+    ],
+)
+
+cc_proto_library(
+    name = "b_tree_config_proto",
+    deps = [
+        ":b_tree_config_proto_lib",
+    ],
+)
+
+proto_library(
+    name = "b_tree_config_proto_lib",
+    srcs = [
+        "b_tree_config.proto",
+    ],
+    deps = [
+        ":b_tree_node_config_proto_lib",
     ],
 )
 
@@ -661,7 +663,7 @@ proto_library(
         "b_tree_stage_config.proto",
     ],
     deps = [
-        ":b_tree_proto_lib",
+        ":b_tree_config_proto_lib",
     ],
 )
 

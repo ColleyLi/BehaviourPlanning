@@ -18,15 +18,15 @@ class ContextSelector
     public:
         ContextSelector() = default;
 
-        bool Init(const std::set<BTreeContextName>& contexts_to_use);
+        bool Init(const std::set<BTreeContextType>& contexts_to_use);
 
         std::shared_ptr<Context> GetCurrentContext(const TrajectoryPoint& planning_start_point, Frame* const frame);
 
     private:
         ContextDispatcher context_dispatcher_;
-        std::unordered_map<BTreeContextName, std::shared_ptr<Context>, std::hash<int>> contexts_;
+        std::unordered_map<BTreeContextType, std::shared_ptr<Context>, std::hash<int>> contexts_;
 };
 
-} // namespace apollo
-} // namespace planning
 } // namespace context
+} // namespace planning
+} // namespace apollo

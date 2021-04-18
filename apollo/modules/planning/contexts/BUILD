@@ -15,7 +15,8 @@ cc_library(
         "//modules/common",
         "//modules/planning/common:planning_common",
         "//modules/planning/common/util:util_lib",
-        "//modules/planning/behaviour_tree:bt_node",
+        "//modules/planning/behaviour_tree:b_tree_node",
+        "//modules/planning/behaviour_tree:b_tree_node_dispatcher",
     ],
 )
 

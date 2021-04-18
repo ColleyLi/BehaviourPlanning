@@ -1,17 +1,23 @@
 #include "modules/planning/behaviour_tree/tasks/path_generator/path_generator.h"
 
-namespace apollo
-{
-namespace planning
-{
-  using apollo::common::Status;
+namespace apollo {
+namespace planning {
+namespace behaviour_tree {
 
-  Status PathGenerator::Process(Frame* frame)
+  BTreeNodeState PathGenerator::Init(const BTreeNodeConfig& config)
   {
-    return Status::OK();
+    config_ = config;
+    state_ = BTreeNodeState::NODE_INITIALIZED;
+    return state_;
   }
 
-  Status PathGenerator::Process(Frame* frame, ReferenceLineInfo* reference_line_info)
+  BTreeNodeState PathGenerator::Execute(Frame* frame)
+  {
+    state_ = BTreeNodeState::NODE_DONE;
+    return state_;
+  }
+
+  BTreeNodeState PathGenerator::Execute(Frame* frame, ReferenceLineInfo* reference_line_info)
   {
     const ReferenceLine& reference_line = reference_line_info->reference_line();
     const common::TrajectoryPoint& cur_ego_position = frame->PlanningStartPoint();
@@ -34,7 +40,10 @@ namespace planning
     path_data.SetFrenetPath(FrenetFramePath(frenet_frame_path));
     *(reference_line_info->mutable_path_data()) = path_data;
     
-    return Status::OK();
+    state_ = BTreeNodeState::NODE_DONE;
+    return state_;
   }
-}
-}
+
+} // namespace behaviour_tree
+} // namespace planning
+} // namespace apollo

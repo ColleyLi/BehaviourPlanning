@@ -2,7 +2,6 @@
 
 #include <unordered_map>
 #include <memory>
-#include "modules/common/status/status.h"
 #include "modules/planning/contexts/context.h"
 #include "modules/common/util/factory.h"
 #include "modules/planning/proto/b_tree_context_config.pb.h"
@@ -17,15 +16,15 @@ class ContextDispatcher
         ContextDispatcher() = default;
         ~ContextDispatcher() = default;
 
-        common::Status Init();
+        bool Init();
 
-  	    std::shared_ptr<Context> Dispatch(const BTreeContextName& context_name);
+  	    std::shared_ptr<Context> Dispatch(const BTreeContextType& context_type);
     private:
         void RegisterContexts();
 
-        common::util::Factory<BTreeContextName, Context> context_factory_;
+        common::util::Factory<BTreeContextType, Context> context_factory_;
 };
 
-} // namespace apollo
-} // namespace planning
 } // namespace context
+} // namespace planning
+} // namespace apollo

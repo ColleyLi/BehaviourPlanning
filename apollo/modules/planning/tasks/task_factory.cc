@@ -23,7 +23,6 @@
 #include "modules/planning/proto/planning_config.pb.h"
 
 #include "modules/common/status/status.h"
-#include "modules/planning/tasks/my_tasks/my_task/my_task.h"
 #include "modules/planning/tasks/deciders/creep_decider/creep_decider.h"
 #include "modules/planning/tasks/deciders/lane_change_decider/lane_change_decider.h"
 #include "modules/planning/tasks/deciders/open_space_decider/open_space_fallback_decider.h"
@@ -61,10 +60,6 @@ void TaskFactory::Init(const PlanningConfig& config) {
                          [](const TaskConfig& config) -> Task* {
                            return new LaneChangeDecider(config);
                          });
-   task_factory_.Register(TaskConfig::MY_TASK,
-                         [](const TaskConfig& config) -> Task* {
-                           return new MyTask(config);
-                         });                   
   task_factory_.Register(TaskConfig::PATH_LANE_BORROW_DECIDER,
                          [](const TaskConfig& config) -> Task* {
                            return new PathLaneBorrowDecider(config);

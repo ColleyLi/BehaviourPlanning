@@ -1,19 +1,18 @@
 #pragma once
 
-#include "modules/planning/behaviour_tree/bt_node.h"
+#include "modules/planning/behaviour_tree/b_tree_check.h"
 
-namespace apollo
-{
-namespace planning
-{
+namespace apollo {
+namespace planning {
+namespace behaviour_tree {
 
-using apollo::common::Status;
-
-class CollisionCheck: public BTNode
+class CollisionCheck: public BTreeCheck
 {
-    Status Process(Frame* frame);
-    Status Process(Frame* frame, ReferenceLineInfo* reference_line_info);
+    BTreeNodeState Init(const BTreeNodeConfig& config);
+    BTreeNodeState Execute(Frame* frame);
+    BTreeNodeState Execute(Frame* frame, ReferenceLineInfo* reference_line_info);
 };
 
-}
-}
+} // namespace behaviour_tree
+} // namespace planning
+} // namespace apollo

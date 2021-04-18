@@ -1,18 +1,27 @@
 #include "modules/planning/behaviour_tree/tasks/fallback_speed_generator/fallback_speed_generator.h" 
 
-namespace apollo
-{
-namespace planning
-{ 
-  Status FallbackSpeedGenerator::Process(Frame* frame)
+namespace apollo {
+namespace planning {
+namespace behaviour_tree {
+  BTreeNodeState FallbackSpeedGenerator::Init(const BTreeNodeConfig& config)
   {
-    return Status::OK();
+    config_ = config;
+    state_ = BTreeNodeState::NODE_INITIALIZED;
+    return state_;
   }
 
-  Status FallbackSpeedGenerator::Process(Frame* frame, ReferenceLineInfo* reference_line_info)
+  BTreeNodeState FallbackSpeedGenerator::Execute(Frame* frame)
   {
-    return Status::OK();
+    state_ = BTreeNodeState::NODE_DONE;
+    return state_;
   }
 
-}
-}
+  BTreeNodeState FallbackSpeedGenerator::Execute(Frame* frame, ReferenceLineInfo* reference_line_info)
+  {
+    state_ = BTreeNodeState::NODE_DONE;
+    return state_;
+  }
+
+} // namespace behaviour_tree
+} // namespace planning
+} // namespace apollo

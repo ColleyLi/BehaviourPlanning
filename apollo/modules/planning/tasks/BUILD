@@ -54,7 +54,6 @@ cc_library(
         "//modules/planning/tasks/optimizers/piecewise_jerk_path:piecewise_jerk_path_optimizer",
         "//modules/planning/tasks/optimizers/piecewise_jerk_speed:piecewise_jerk_speed_optimizer",
         "//modules/planning/tasks/rss:decider_rss",
-        "//modules/planning/tasks/my_tasks/my_task:my_task",
     ],
 )
 

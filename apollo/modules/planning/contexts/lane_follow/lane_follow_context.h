@@ -9,13 +9,11 @@ namespace context {
 class LaneFollowContext : public Context
 {
     public:
-        LaneFollowContext() = default;
+        BTreeContextState Init(const BTreeContextConfig& config);
 
-        common::Status Init(const BTreeContextConfig& config) override;
-
-        common::Status Execute(const TrajectoryPoint& planning_start_point, Frame* const frame) override;
+        BTreeContextState Execute(const TrajectoryPoint& planning_start_point, Frame* const frame);
 };
 
-} // namespace apollo
-} // namespace planning
 } // namespace context
+} // namespace planning
+} // namespace apollo

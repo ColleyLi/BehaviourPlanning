@@ -1,32 +1,30 @@
 #pragma once
 
-#include "modules/planning/behaviour_tree/bt_task.h"
-#include "modules/planning/proto/b_tree_task_config.pb.h"
+#include "modules/planning/behaviour_tree/b_tree_task.h"
+#include "modules/planning/proto/b_tree_node_config.pb.h"
 
-namespace apollo
-{
-namespace planning
-{
+namespace apollo {
+namespace planning {
+namespace behaviour_tree {
 
-using apollo::common::Status;
-
-class SpeedGenerator: public BTTask
+class SpeedGenerator: public BTreeTask
 {
   public:
-    void Init(const BTreeTaskConfigs& task_configs);
-    Status Process(Frame* frame);
-    Status Process(Frame* frame, ReferenceLineInfo* reference_line_info);
+    BTreeNodeState Init(const BTreeNodeConfig& config);
+    BTreeNodeState Execute(Frame* frame);
+    BTreeNodeState Execute(Frame* frame, ReferenceLineInfo* reference_line_info);
 
   private:
-    Status ConstantSpeed(Frame* frame, ReferenceLineInfo* reference_line_info);
-    Status GenerateBoundaries(Frame* frame, ReferenceLineInfo* reference_line_info);
+    BTreeNodeState ConstantSpeed(Frame* frame, ReferenceLineInfo* reference_line_info);
+    BTreeNodeState GenerateBoundaries(Frame* frame, ReferenceLineInfo* reference_line_info);
     double SetSpeedFallbackDistance(PathDecision *const path_decision);
-    Status OptimizeSTGraph(Frame* frame, ReferenceLineInfo* reference_line_info);
+    BTreeNodeState OptimizeSTGraph(Frame* frame, ReferenceLineInfo* reference_line_info);
 
   private:
     SpeedBoundsDeciderConfig speed_bounds_config_;
     DpStSpeedConfig dp_st_speed_config_;
 };
 
-}
-}
+} // namespace behaviour_tree
+} // namespace planning
+} // namespace apollo

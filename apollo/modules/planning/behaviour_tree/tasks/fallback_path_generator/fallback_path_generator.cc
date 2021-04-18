@@ -1,18 +1,27 @@
 #include "modules/planning/behaviour_tree/tasks/fallback_path_generator/fallback_path_generator.h" 
 
-namespace apollo
-{
-namespace planning
-{ 
-  Status FallbackPathGenerator::Process(Frame* frame)
+namespace apollo {
+namespace planning {
+namespace behaviour_tree {
+  BTreeNodeState FallbackPathGenerator::Init(const BTreeNodeConfig& config)
   {
-    return Status::OK();
+    config_ = config;
+    state_ = BTreeNodeState::NODE_INITIALIZED;
+    return state_;
   }
 
-  Status FallbackPathGenerator::Process(Frame* frame, ReferenceLineInfo* reference_line_info)
+  BTreeNodeState FallbackPathGenerator::Execute(Frame* frame)
   {
-    return Status::OK();
+    state_ = BTreeNodeState::NODE_DONE;
+    return state_;
   }
 
-}
-}
+  BTreeNodeState FallbackPathGenerator::Execute(Frame* frame, ReferenceLineInfo* reference_line_info)
+  {
+    state_ = BTreeNodeState::NODE_DONE;
+    return state_;
+  }
+
+} // namespace behaviour_tree
+} // namespace planning
+} // namespace apollo

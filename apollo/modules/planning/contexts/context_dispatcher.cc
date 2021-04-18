@@ -6,23 +6,23 @@ namespace apollo {
 namespace planning {
 namespace context {
 
-common::Status ContextDispatcher::Init()
+bool ContextDispatcher::Init()
 {
     RegisterContexts();
 
-    return common::Status::OK();
+    return true;
 }
 
 void ContextDispatcher::RegisterContexts() 
 {
-    context_factory_.Register(BTreeContextName::BTREE_LANE_FOLLOW_CONTEXT, []() -> Context* { return new LaneFollowContext();});
+    context_factory_.Register(BTreeContextType::LANE_FOLLOW_CONTEXT, []() -> Context* { return new LaneFollowContext();});
 }
 
-std::shared_ptr<Context> ContextDispatcher::Dispatch(const BTreeContextName& context_name)
+std::shared_ptr<Context> ContextDispatcher::Dispatch(const BTreeContextType& context_type)
 {
-    return context_factory_.CreateObject(context_name);
+    return context_factory_.CreateObject(context_type);
 }
 
-} // namespace apollo
-} // namespace planning
 } // namespace context
+} // namespace planning
+} // namespace apollo

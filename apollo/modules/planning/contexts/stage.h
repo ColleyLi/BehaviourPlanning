@@ -1,36 +1,35 @@
 #pragma once
 
 #include <memory>
-#include "modules/common/status/status.h"
 #include "modules/planning/common/frame.h"
-#include "modules/planning/behaviour_tree/bt_node.h"
+#include "modules/planning/behaviour_tree/b_tree_node_dispatcher.h"
+#include "modules/planning/behaviour_tree/b_tree_node.h"
 #include "modules/common/proto/pnc_point.pb.h"
-
 
 namespace apollo {
 namespace planning {
 namespace context {
 
+using behaviour_tree::BTreeNode;
+using behaviour_tree::BTreeNodeDispatcher;
 using common::TrajectoryPoint;
 
 class Stage
 {
     public:
-        virtual common::Status Init(const BTreeStageConfig& config) = 0;
+        BTreeStageState Init(const BTreeStageConfig& config);
+        BTreeStageState GetState();
 
-        virtual common::Status Execute(const TrajectoryPoint& planning_start_point, Frame* const frame) = 0;
-
-        BTreeStageState GetState()
-        {
-            return state_;
-        };
+        virtual BTreeStageState Execute(const TrajectoryPoint& planning_start_point, Frame* const frame) = 0;
 
     protected:
+        BTreeNodeDispatcher node_dispatcher_;
         BTreeStageParameters parameters_;
-        BTreeStageState state_;
-        std::unique_ptr<BTNode> behaviour_tree_;
+        BTreeStageState state_ = BTreeStageState::STAGE_NOT_INITIALIZED;
+        std::shared_ptr<BTreeNode> behaviour_tree_;
+        std::unordered_map<std::string, std::shared_ptr<BTreeNode>> nodes_;
 };
 
-} // namespace apollo
-} // namespace planning
 } // namespace context
+} // namespace planning
+} // namespace apollo

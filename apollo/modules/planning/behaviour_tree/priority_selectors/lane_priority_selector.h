@@ -1,43 +1,48 @@
-#include "modules/planning/behaviour_tree/bt_composite_node.h"
+#include "modules/planning/behaviour_tree/b_tree_node.h"
 
-namespace apollo
-{    
-namespace planning
-{
+namespace apollo {    
+namespace planning {
+namespace behaviour_tree {
 
-using common::Status;
-using common::ErrorCode;
-
-class LanePrioritySelector: public BTCompositeNode
+class LanePrioritySelector: public BTreeNode
 {
   public:
-    Status Process(Frame* frame, ReferenceLineInfo* reference_line_info)
+    BTreeNodeState Init(const BTreeNodeConfig& config)
     {
-      return Process(frame);
+      config_ = config;
+      state_ = BTreeNodeState::NODE_INITIALIZED;
+      return state_;
     }
 
-    Status Process(Frame* frame)
+    BTreeNodeState Execute(Frame* frame, ReferenceLineInfo* reference_line_info)
     {
-        std::list<ReferenceLineInfo>* ref_lines = frame->mutable_reference_line_info();
-        ref_lines->sort([](const ReferenceLineInfo& l1,
-                     const ReferenceLineInfo& l2) 
-                  { return l1.Cost() < l2.Cost();});
+      return Execute(frame);
+    }
+
+    BTreeNodeState Execute(Frame* frame)
+    {
+      std::list<ReferenceLineInfo>* ref_lines = frame->mutable_reference_line_info();
+      ref_lines->sort([](const ReferenceLineInfo& l1, const ReferenceLineInfo& l2){return l1.Cost() < l2.Cost();});
 
       for(auto& ref_line : *frame->mutable_reference_line_info())
       {
-        for(BTNode* child : GetChildren())
+        for(auto child : GetChildren())
         {
-          if(child->Process(frame, &ref_line).ok())
+          if(child->Execute(frame, &ref_line) == BTreeNodeState::NODE_DONE)
           {
-            return Status::OK();
+            state_ = BTreeNodeState::NODE_DONE;
+            return state_;
           }
         }
       }
 
       std::string msg("All tasks failed");
-      return Status(ErrorCode::PLANNING_ERROR, msg);
+      ADEBUG << msg;
+      state_ = BTreeNodeState::NODE_FAILED;
+      return state_;
     }
 };
 
-}
-}
+} // namespace behaviour_tree
+} // namespace planning
+} // namespace apollo

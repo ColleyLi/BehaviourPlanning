@@ -3,57 +3,52 @@
 #include "modules/planning/tasks/deciders/speed_bounds_decider/speed_limit_decider.h"
 #include "modules/planning/tasks/deciders/speed_bounds_decider/st_boundary_mapper.h"
 #include "modules/planning/tasks/optimizers/path_time_heuristic/gridded_path_time_graph.h"
+#include "modules/common/status/status.h"
 
-namespace apollo
-{
-namespace planning
-{
-  using apollo::common::Status;
+namespace apollo {
+namespace planning {
+namespace behaviour_tree {
+
   using common::ErrorCode;
+  using common::Status;
   using apollo::common::TrajectoryPoint;
   using apollo::planning_internal::StGraphBoundaryDebug;
   using apollo::planning_internal::STGraphDebug;
 
-
-  void SpeedGenerator::Init(const BTreeTaskConfigs& task_configs)
+  BTreeNodeState SpeedGenerator::Init(const BTreeNodeConfig& config)
   {
-    for (auto& task_config : task_configs.b_tree_task_config())
-    {
-      if (task_config.name() == BTreeTaskName::SPEED_BOUNDS_PRIORI_DECIDER_TASK)
-      {
-        speed_bounds_config_ = task_config.speed_bounds_decider_config();
-      }
+    config_ = config;
 
-      if (task_config.name() == BTreeTaskName::DP_ST_SPEED_OPTIMIZER_TASK)
-      {
-        dp_st_speed_config_ = task_config.dp_st_speed_config();
-      }
-    }
+    auto speed_generator_config = config.speed_generator_task_config();
+    speed_bounds_config_ = speed_generator_config.speed_bounds_decider_config();
+    dp_st_speed_config_ = speed_generator_config.dp_st_speed_config();
+    
+    state_ = BTreeNodeState::NODE_INITIALIZED;
+    return state_;
   }
 
-  Status SpeedGenerator::Process(Frame *frame)
+  BTreeNodeState SpeedGenerator::Execute(Frame *frame)
   {
-    return Status::OK();
+    state_ = BTreeNodeState::NODE_DONE;
+    return state_;
   }
 
-  Status SpeedGenerator::Process(Frame* frame, ReferenceLineInfo* reference_line_info)
+  BTreeNodeState SpeedGenerator::Execute(Frame* frame, ReferenceLineInfo* reference_line_info)
   {
-    Status status;
-
-    // status = ConstantSpeed(frame, reference_line_info);
+    // state_ = ConstantSpeed(frame, reference_line_info);
 
     GenerateBoundaries(frame, reference_line_info);
-    status = OptimizeSTGraph(frame, reference_line_info);
+    state_ = OptimizeSTGraph(frame, reference_line_info);
 
-    if (status.ok())
+    if (state_ == BTreeNodeState::NODE_DONE)
     {
       reference_line_info->SetDrivable(true);
     }
 
-    return status;
+    return state_;
   }
 
-  Status SpeedGenerator::GenerateBoundaries(Frame* frame, ReferenceLineInfo* reference_line_info)
+  BTreeNodeState SpeedGenerator::GenerateBoundaries(Frame* frame, ReferenceLineInfo* reference_line_info)
   {
     // Retrieve data from frame and reference_line_info
     const PathData &path_data = reference_line_info->path_data();
@@ -71,7 +66,8 @@ namespace planning
     {
       const std::string msg = "Mapping obstacle failed.";
       AERROR << msg;
-      return Status(ErrorCode::PLANNING_ERROR, msg);
+      state_ = BTreeNodeState::NODE_FAILED;
+      return state_;
     }
 
     std::vector<const STBoundary *> boundaries;
@@ -103,7 +99,8 @@ namespace planning
     {
       std::string msg("Getting speed limits failed!");
       AERROR << msg;
-      return Status(ErrorCode::PLANNING_ERROR, msg);
+      state_ = BTreeNodeState::NODE_FAILED;
+      return state_;
     }
 
     // 3. Get path_length as s axis search bound in st graph
@@ -124,7 +121,8 @@ namespace planning
                             speed_limit, path_data_length, total_time_by_conf,
                             st_graph_debug);
 
-    return Status::OK();
+    state_ = BTreeNodeState::NODE_DONE;
+    return state_;
   }
 
 double SpeedGenerator::SetSpeedFallbackDistance(PathDecision *const path_decision) 
@@ -182,7 +180,7 @@ double SpeedGenerator::SetSpeedFallbackDistance(PathDecision *const path_decisio
   return min_s_non_reverse > min_s_reverse ? 0.0 : min_s_non_reverse;
 }
   
-  Status SpeedGenerator::OptimizeSTGraph(Frame* frame, ReferenceLineInfo* reference_line_info)
+  BTreeNodeState SpeedGenerator::OptimizeSTGraph(Frame* frame, ReferenceLineInfo* reference_line_info)
   {
     SpeedData speed_data;
     const TrajectoryPoint &init_point = frame->PlanningStartPoint();
@@ -192,7 +190,8 @@ double SpeedGenerator::SetSpeedFallbackDistance(PathDecision *const path_decisio
     {
       std::string msg("Empty path data");
       AERROR << msg;
-      return Status(ErrorCode::PLANNING_ERROR, msg);
+      state_ = BTreeNodeState::NODE_FAILED;
+      return state_;
     }
 
     GriddedPathTimeGraph st_graph(
@@ -203,17 +202,18 @@ double SpeedGenerator::SetSpeedFallbackDistance(PathDecision *const path_decisio
     {
       std::string msg("Failed to search graph with dynamic programming");
       AERROR << msg;
-      return Status(ErrorCode::PLANNING_ERROR, msg);
+      state_ = BTreeNodeState::NODE_FAILED;
+      return state_;
     }
 
     *(reference_line_info->mutable_speed_data()) = speed_data;
 
-    return Status::OK();
+    state_ = BTreeNodeState::NODE_DONE;
+    return state_;
   } 
   
-  Status SpeedGenerator::ConstantSpeed(Frame* frame, ReferenceLineInfo* reference_line_info)
+  BTreeNodeState SpeedGenerator::ConstantSpeed(Frame* frame, ReferenceLineInfo* reference_line_info)
   {
-  
     SpeedData speed_data;
 
     double dt = 0.1;
@@ -226,7 +226,10 @@ double SpeedGenerator::SetSpeedFallbackDistance(PathDecision *const path_decisio
 
     *(reference_line_info->mutable_speed_data()) = speed_data;
 
-    return Status::OK();
+    state_ = BTreeNodeState::NODE_DONE;
+    return state_;
   }
-}
-}
+
+} // namespace behaviour_tree
+} // namespace planning
+} // namespace apollo

@@ -13,11 +13,11 @@ cc_library(
     copts = ["-DMODULE_NAME=\\\"planning\\\""],
     deps = [
         "//modules/common",
+        "//modules/common/status",
         "//modules/planning/common:planning_common",
         "//modules/planning/common/util:util_lib",
-        "//modules/common/status",
         "//modules/planning/common:frame",
-        "//modules/planning/behaviour_tree:bt_task",
+        "//modules/planning/behaviour_tree:b_tree_task",
         "//modules/planning/tasks/deciders/speed_bounds_decider",
         "//modules/planning/tasks/optimizers/path_time_heuristic:path_time_heuristic_optimizer",
     ],
