@@ -5,16 +5,21 @@
 # Ignore non planning related modules from Apollo
 /apollo/*
 
-!/apollo/my_scripts
-!/apollo/my_cpp
-
 !/apollo/modules/
 /apollo/modules/*
 !/apollo/modules/planning/
 !/apollo/modules/routing/
+!/apollo/modules/map/
+!/apollo/modules/calibration/
+!/apollo/modules/common/
+!/apollo/modules/dreamview/
+!/apollo/modules/tools
+
+
 
 # Ignore unrelated files
 issues.txt
+.vscode 
 
 # Prerequisites
 *.d

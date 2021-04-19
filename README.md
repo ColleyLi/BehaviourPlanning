@@ -1,5 +1,5 @@
 # Behaviour Planning
-Custom Behaviour Planning module based on Hierarchical Behaviour Trees for Apollo 5.0
+Custom Behaviour Planning module based on Hierarchical Behaviour Trees for Apollo 6.0
 
 ## Repo structure
 
@@ -23,8 +23,9 @@ BehaviourPlanning
 ### Apollo modules documentation
 Documentation of Apollo `map`, `routing` and `planning` modules in the `BehaviourPlanning/docs` folder
 
-### Visualisations
-Visualization tools for map, Routing Response, ADC Trajectory are in the `BehaviourPlanning/apollo/my_scripts/visualization` folder
+### Behaviour Tree Planner documentation
+
+Documentation of the proposed behaviour tree planner in the `BehaviourPlanning/docs/behaviour_planning/README.md`
 
 ## Installation
 

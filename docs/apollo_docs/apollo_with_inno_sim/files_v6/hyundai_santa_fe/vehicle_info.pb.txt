@@ -1,7 +1,0 @@
-name : "HYUNDAI_SANTA_FE"
-brand : HYUNDAI_SANTA_FE
-model : SANTA_FE
-vehicle_id 
-{
-    vin : "KMHS281DDKUO72261"
-}
