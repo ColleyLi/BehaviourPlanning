@@ -15,6 +15,7 @@
  *****************************************************************************/
 
 #include <algorithm>
+#include <cmath>
 #include <limits>
 #include <queue>
 
@@ -232,8 +233,8 @@ double AStarStrategy::HeuristicCost(const TopoNode* src_node,
                                     const TopoNode* dest_node) {
   const auto& src_point = src_node->AnchorPoint();
   const auto& dest_point = dest_node->AnchorPoint();
-  double distance = fabs(src_point.x() - dest_point.x()) +
-                    fabs(src_point.y() - dest_point.y());
+  double distance = std::fabs(src_point.x() - dest_point.x()) +
+                    std::fabs(src_point.y() - dest_point.y());
   return distance;
 }
 
@@ -299,14 +300,15 @@ bool AStarStrategy::Search(const TopoGraph* graph,
       if (GetResidualS(edge, to_node) < FLAGS_min_length_for_lane_change) {
         continue;
       }
-      tentative_g_score =
-          g_score_[current_node.topo_node] + GetCostToNeighbor(edge, from_node, dest_node);
+      tentative_g_score = g_score_[current_node.topo_node] + 
+                          GetCostToNeighbor(edge, from_node, dest_node);
       if (edge->Type() != TopoEdgeType::TET_FORWARD) {
         tentative_g_score -=
             (edge->FromNode()->Cost() + edge->ToNode()->Cost()) / 2;
       }
       double f = tentative_g_score + HeuristicCost(to_node, dest_node);
-      if (open_set_.count(to_node) != 0 && tentative_g_score >= g_score_[to_node]) {
+      if (open_set_.count(to_node) != 0 && 
+          tentative_g_score >= g_score_[to_node]) {
         continue;
       }
       // if to_node is reached by forward, reset enter_s to start_s

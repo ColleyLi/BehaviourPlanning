@@ -11,18 +11,6 @@ import "modules/map/proto/map_id.proto";
 import "modules/planning/proto/decision.proto";
 import "modules/planning/proto/planning_internal.proto";
 
-message ADCSignals {
-  enum SignalType {
-    LEFT_TURN = 1;
-    RIGHT_TURN = 2;
-    LOW_BEAM_LIGHT = 3;
-    HIGH_BEAM_LIGHT = 4;
-    FOG_LIGHT = 5;
-    EMERGENCY_LIGHT = 6;
-  }
-  repeated SignalType signal = 1;
-}
-
 message EStop {
   // is_estop == true when emergency stop is required
   optional bool is_estop = 1;
@@ -52,9 +40,8 @@ message RSSInfo {
   optional double acc_lat_right_range_maximum = 9;
 }
 
-// next id: 23
-message ADCTrajectory 
-{
+// next id: 24
+message ADCTrajectory {
   optional apollo.common.Header header = 1;
 
   optional double total_path_length = 2;  // in meters
@@ -89,7 +76,7 @@ message ADCTrajectory
   }
   optional RightOfWayStatus right_of_way_status = 17;
 
-  // lane id along reference line
+  // lane id along current reference line
   repeated apollo.hdmap.Id lane_id = 18;
 
   // set the engage advice for based on current planning result.
@@ -110,8 +97,12 @@ message ADCTrajectory
     NORMAL = 1;
     PATH_FALLBACK = 2;
     SPEED_FALLBACK = 3;
+    PATH_REUSED = 4;
   }
   optional TrajectoryType trajectory_type = 21 [default = UNKNOWN];
+
+  // lane id along target reference line
+  repeated apollo.hdmap.Id target_lane_id = 23;
 
   // output related to RSS
   optional RSSInfo rss_info = 100;

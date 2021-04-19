@@ -20,6 +20,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include "modules/common/status/status.h"
 #include "modules/planning/common/frame.h"
 #include "modules/planning/tasks/task.h"
@@ -27,28 +29,27 @@
 namespace apollo {
 namespace planning {
 
-class Decider : public Task 
-{
-  public:
-    explicit Decider(const TaskConfig& config);
-    virtual ~Decider() = default;
-  
-    apollo::common::Status Execute(
+class Decider : public Task {
+ public:
+  explicit Decider(const TaskConfig& config);
+  Decider(const TaskConfig& config,
+          const std::shared_ptr<DependencyInjector>& injector);
+  virtual ~Decider() = default;
+
+  apollo::common::Status Execute(
       Frame* frame, ReferenceLineInfo* reference_line_info) override;
 
-    apollo::common::Status Execute(Frame* frame) override;
+  apollo::common::Status Execute(Frame* frame) override;
 
-  protected:
-    virtual apollo::common::Status Process(Frame* frame,
-     ReferenceLineInfo* reference_line_info) 
-    {
-      return apollo::common::Status::OK();
-    }
+ protected:
+  virtual apollo::common::Status Process(
+      Frame* frame, ReferenceLineInfo* reference_line_info) {
+    return apollo::common::Status::OK();
+  }
 
-    virtual apollo::common::Status Process(Frame* frame) 
-    {
-      return apollo::common::Status::OK();
-    }
+  virtual apollo::common::Status Process(Frame* frame) {
+    return apollo::common::Status::OK();
+  }
 };
 
 }  // namespace planning

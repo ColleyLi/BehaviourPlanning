@@ -34,9 +34,8 @@ namespace
       {
         ref_line.AddCost(kLaneStayCost);
       }
-
-      std::string blocking_obstacle_id = ref_line.GetBlockingObstacleId();
-      if (blocking_obstacle_id.size() != 0)
+      Obstacle* blocking_obstacle = ref_line.GetBlockingObstacle();
+      if (blocking_obstacle)
       {
         ref_line.AddCost(kBlockingObstacleCost);
       }

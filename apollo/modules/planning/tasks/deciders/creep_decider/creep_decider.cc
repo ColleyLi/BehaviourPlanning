@@ -20,6 +20,7 @@
 
 #include "modules/planning/tasks/deciders/creep_decider/creep_decider.h"
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -32,13 +33,13 @@
 namespace apollo {
 namespace planning {
 
-using common::Status;
-using hdmap::PathOverlap;
+using apollo::common::Status;
+using apollo::hdmap::PathOverlap;
 
-uint32_t CreepDecider::creep_clear_counter_ = 0;
-
-CreepDecider::CreepDecider(const TaskConfig& config) : Decider(config) {
-  CHECK(config_.has_creep_decider_config());
+CreepDecider::CreepDecider(const TaskConfig& config,
+                           const std::shared_ptr<DependencyInjector>& injector)
+    : Decider(config, injector) {
+  ACHECK(config_.has_creep_decider_config());
 }
 
 Status CreepDecider::Process(Frame* frame,
@@ -48,10 +49,36 @@ Status CreepDecider::Process(Frame* frame,
 
   double stop_line_s = 0.0;
   std::string current_overlap_id;
-  const std::string stop_sign_overlap_id = PlanningContext::Instance()
+
+  // stop sign
+  const std::string stop_sign_overlap_id = injector_->planning_context()
                                                ->planning_status()
                                                .stop_sign()
                                                .current_stop_sign_overlap_id();
+  // traffic light
+  std::string current_traffic_light_overlap_id;
+  if (injector_->planning_context()
+          ->planning_status()
+          .traffic_light()
+          .current_traffic_light_overlap_id_size() > 0) {
+    current_traffic_light_overlap_id = injector_->planning_context()
+                                           ->planning_status()
+                                           .traffic_light()
+                                           .current_traffic_light_overlap_id(0);
+  }
+
+  // yield sign
+  std::string yield_sign_overlap_id;
+  if (injector_->planning_context()
+          ->planning_status()
+          .yield_sign()
+          .current_yield_sign_overlap_id_size() > 0) {
+    yield_sign_overlap_id = injector_->planning_context()
+                                ->planning_status()
+                                .yield_sign()
+                                .current_yield_sign_overlap_id(0);
+  }
+
   if (!stop_sign_overlap_id.empty()) {
     // get overlap along reference line
     PathOverlap* current_stop_sign_overlap =
@@ -63,16 +90,8 @@ Status CreepDecider::Process(Frame* frame,
                     FindCreepDistance(*frame, *reference_line_info);
       current_overlap_id = current_stop_sign_overlap->object_id;
     }
-  } else if (PlanningContext::Instance()
-                 ->planning_status()
-                 .traffic_light()
-                 .current_traffic_light_overlap_id_size() > 0) {
+  } else if (!current_traffic_light_overlap_id.empty()) {
     // get overlap along reference line
-    const std::string current_traffic_light_overlap_id =
-        PlanningContext::Instance()
-            ->planning_status()
-            .traffic_light()
-            .current_traffic_light_overlap_id(0);
     PathOverlap* current_traffic_light_overlap =
         scenario::util::GetOverlapOnReferenceLine(
             *reference_line_info, current_traffic_light_overlap_id,
@@ -82,7 +101,19 @@ Status CreepDecider::Process(Frame* frame,
                     FindCreepDistance(*frame, *reference_line_info);
       current_overlap_id = current_traffic_light_overlap_id;
     }
+  } else if (!yield_sign_overlap_id.empty()) {
+    // get overlap along reference line
+    PathOverlap* current_yield_sign_overlap =
+        scenario::util::GetOverlapOnReferenceLine(
+            *reference_line_info, yield_sign_overlap_id,
+            ReferenceLineInfo::YIELD_SIGN);
+    if (current_yield_sign_overlap) {
+      stop_line_s = current_yield_sign_overlap->end_s +
+                    FindCreepDistance(*frame, *reference_line_info);
+      current_overlap_id = yield_sign_overlap_id;
+    }
   }
+
   if (stop_line_s > 0.0) {
     std::string virtual_obstacle_id = CREEP_VO_ID_PREFIX + current_overlap_id;
     const double creep_stop_s =
@@ -106,13 +137,13 @@ double CreepDecider::FindCreepDistance(
 
 bool CreepDecider::CheckCreepDone(const Frame& frame,
                                   const ReferenceLineInfo& reference_line_info,
-                                  const double stop_sign_overlap_end_s,
+                                  const double traffic_sign_overlap_end_s,
                                   const double wait_time_sec,
                                   const double timeout_sec) {
   const auto& creep_config = config_.creep_decider_config();
   bool creep_done = false;
-  double creep_stop_s =
-      stop_sign_overlap_end_s + FindCreepDistance(frame, reference_line_info);
+  double creep_stop_s = traffic_sign_overlap_end_s +
+                        FindCreepDistance(frame, reference_line_info);
 
   const double distance =
       creep_stop_s - reference_line_info.AdcSlBoundary().end_s();
@@ -150,12 +181,19 @@ bool CreepDecider::CheckCreepDone(const Frame& frame,
       }
     }
 
-    creep_clear_counter_ = all_far_away ? creep_clear_counter_ + 1 : 0;
-    if (creep_clear_counter_ >= 5) {
-      creep_clear_counter_ = 0;  // reset
+    auto* creep_decider_status = injector_->planning_context()
+                                          ->mutable_planning_status()
+                                          ->mutable_creep_decider();
+    int creep_clear_counter = creep_decider_status->creep_clear_counter();
+    creep_clear_counter = all_far_away ? creep_clear_counter + 1 : 0;
+    if (creep_clear_counter >= 5) {
+      creep_clear_counter = 0;  // reset
       creep_done = true;
     }
+    // use PlanningContext instead of static counter for multi-ADC
+    creep_decider_status->set_creep_clear_counter(creep_clear_counter);
   }
+
   return creep_done;
 }
 

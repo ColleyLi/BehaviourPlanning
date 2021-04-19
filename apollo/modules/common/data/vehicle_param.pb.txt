@@ -1,0 +1,30 @@
+vehicle_param 
+{
+  brand: HYUNDAI_SANTA_FE
+  vehicle_id 
+  {
+      vin: "KMHS281DDKUO72261"
+      other_unique_id: "santa_fe"
+  }
+
+  front_edge_to_center: 3.65
+  back_edge_to_center: 1.12
+  left_edge_to_center: 0.94
+  right_edge_to_center: 0.94
+
+  length: 4.77012
+  width: 1.88976
+  height: 1.67894
+  min_turn_radius: 5.71
+  max_acceleration: 10.0
+  max_deceleration: -10.0
+  max_steer_angle: 8.58702
+  max_steer_angle_rate: 8.58702
+  min_steer_angle_rate: 0
+  steer_ratio: 15.03
+  wheel_base: 2.765
+  wheel_rolling_radius: 0.31
+  max_abs_speed_when_stopped: 0.2
+  brake_deadzone: 14.5
+  throttle_deadzone: 15.7
+}

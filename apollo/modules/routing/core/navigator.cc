@@ -26,7 +26,7 @@ namespace routing {
 
 namespace {
 
-using common::ErrorCode;
+using apollo::common::ErrorCode;
 
 bool ShowRequestInfo(const RoutingRequest& request, const TopoGraph* graph) {
   for (const auto& wp : request.waypoint()) {
@@ -151,15 +151,13 @@ bool Navigator::MergeRoute(
 bool Navigator::SearchRouteByStrategy(
     const TopoGraph* graph, const std::vector<const TopoNode*>& way_nodes,
     const std::vector<double>& way_s,
-    std::vector<NodeWithRange>* const result_nodes) const 
-{
+    std::vector<NodeWithRange>* const result_nodes) const {
   std::unique_ptr<Strategy> strategy_ptr;
   strategy_ptr.reset(new AStarStrategy(FLAGS_enable_change_lane_in_result));
 
   result_nodes->clear();
   std::vector<NodeWithRange> node_vec;
-  for (size_t i = 1; i < way_nodes.size(); ++i) 
-  {
+  for (size_t i = 1; i < way_nodes.size(); ++i) {
     const auto* way_start = way_nodes[i - 1];
     const auto* way_end = way_nodes[i];
     double way_start_s = way_s[i - 1];
@@ -171,38 +169,34 @@ bool Navigator::SearchRouteByStrategy(
 
     SubTopoGraph sub_graph(full_range_manager.RangeMap());
     const auto* start = sub_graph.GetSubNodeWithS(way_start, way_start_s);
-    if (start == nullptr) 
-    {
+    if (start == nullptr) {
       AERROR << "Sub graph node is nullptr, origin node id: "
              << way_start->LaneId() << ", s:" << way_start_s;
       return false;
     }
-    
     const auto* end = sub_graph.GetSubNodeWithS(way_end, way_end_s);
-    if (end == nullptr) 
-    {
+    if (end == nullptr) {
       AERROR << "Sub graph node is nullptr, origin node id: "
              << way_end->LaneId() << ", s:" << way_end_s;
       return false;
     }
 
     std::vector<NodeWithRange> cur_result_nodes;
-    if (!strategy_ptr->Search(graph, &sub_graph, start, end, &cur_result_nodes))
-    {
-      AERROR << "Failed to search route with waypoint from " << start->LaneId() << " to " << end->LaneId();
+    if (!strategy_ptr->Search(graph, &sub_graph, start, end,
+                              &cur_result_nodes)) {
+      AERROR << "Failed to search route with waypoint from " << start->LaneId()
+             << " to " << end->LaneId();
       return false;
     }
 
-    node_vec.insert(node_vec.end(), cur_result_nodes.begin(), cur_result_nodes.end());
+    node_vec.insert(node_vec.end(), cur_result_nodes.begin(),
+                    cur_result_nodes.end());
   }
 
   if (!MergeRoute(node_vec, result_nodes)) {
     AERROR << "Failed to merge route.";
     return false;
   }
-
-
-
   return true;
 }
 
@@ -235,7 +229,6 @@ bool Navigator::SearchRoute(const RoutingRequest& request,
                  response->mutable_status());
     return false;
   }
-
   if (result_nodes.empty()) {
     SetErrorCode(ErrorCode::ROUTING_ERROR_RESPONSE, "Failed to result nodes!",
                  response->mutable_status());
@@ -243,11 +236,6 @@ bool Navigator::SearchRoute(const RoutingRequest& request,
   }
   result_nodes.front().SetStartS(request.waypoint().begin()->s());
   result_nodes.back().SetEndS(request.waypoint().rbegin()->s());
-
-  for (auto const& node : result_nodes)
-  {
-    AERROR << "Result node: road_id: " << node.RoadId() << " lane_id: " << node.LaneId() << " start_s: " << node.StartS() << " end_s: " << node.EndS();
-  }
 
   if (!result_generator_->GeneratePassageRegion(
           graph_->MapVersion(), request, result_nodes, topo_range_manager_,

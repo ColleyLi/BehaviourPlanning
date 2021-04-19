@@ -12,11 +12,10 @@ cc_library(
     ],
     copts = ["-DMODULE_NAME=\\\"planning\\\""],
     deps = [
-        "//modules/common",
         "//modules/planning/common:planning_common",
         "//modules/planning/common/util:util_lib",
         "//modules/planning/contexts:stage",
-        "//modules/planning/proto:planning_proto",
+        "//modules/planning/proto:planning_cc_proto",
         "//modules/planning/behaviour_tree:b_tree_node",
         "//modules/planning/behaviour_tree:b_tree_sequence",
         "//modules/planning/behaviour_tree:b_tree_selector",

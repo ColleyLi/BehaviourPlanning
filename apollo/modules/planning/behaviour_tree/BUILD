@@ -89,7 +89,6 @@ cc_library(
         ":b_tree_node",
         ":b_tree_selector",
         ":b_tree_sequence",
-        "//modules/common",
         "//modules/planning/common:planning_common",
         "//modules/planning/common/util:util_lib",
         "//modules/planning/behaviour_tree/checks:collision_check",

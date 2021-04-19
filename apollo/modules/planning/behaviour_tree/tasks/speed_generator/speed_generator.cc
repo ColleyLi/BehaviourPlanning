@@ -21,8 +21,8 @@ namespace behaviour_tree {
 
     auto speed_generator_config = config.speed_generator_task_config();
     speed_bounds_config_ = speed_generator_config.speed_bounds_decider_config();
-    dp_st_speed_config_ = speed_generator_config.dp_st_speed_config();
-    
+    dp_st_speed_optimizer_config_ = speed_generator_config.dp_st_speed_optimizer_config();
+
     state_ = BTreeNodeState::NODE_INITIALIZED;
     return state_;
   }
@@ -35,11 +35,11 @@ namespace behaviour_tree {
 
   BTreeNodeState SpeedGenerator::Execute(Frame* frame, ReferenceLineInfo* reference_line_info)
   {
-    // state_ = ConstantSpeed(frame, reference_line_info);
+    state_ = ConstantSpeed(frame, reference_line_info);
 
-    GenerateBoundaries(frame, reference_line_info);
-    state_ = OptimizeSTGraph(frame, reference_line_info);
-
+    // GenerateBoundaries(frame, reference_line_info);
+    // state_ = OptimizeSTGraph(frame, reference_line_info);
+    
     if (state_ == BTreeNodeState::NODE_DONE)
     {
       reference_line_info->SetDrivable(true);
@@ -59,7 +59,9 @@ namespace behaviour_tree {
     // Map obstacles into st graph
     STBoundaryMapper boundary_mapper(
       speed_bounds_config_, reference_line, path_data,
-      path_data.discretized_path().Length(), speed_bounds_config_.total_time());
+      path_data.discretized_path().Length(),
+      speed_bounds_config_.total_time(),
+      injector_);
 
     path_decision->EraseStBoundaries();
     if (boundary_mapper.ComputeSTBoundary(path_decision).code() == ErrorCode::PLANNING_ERROR) 
@@ -116,10 +118,10 @@ namespace behaviour_tree {
     // optimizer logging
     auto *debug = reference_line_info->mutable_debug();
     STGraphDebug *st_graph_debug = debug->mutable_planning_data()->add_st_graph();
-
+    const double cruise_speed = 11.1;
     st_graph_data->LoadData(boundaries, min_s_on_st_boundaries, init_point,
-                            speed_limit, path_data_length, total_time_by_conf,
-                            st_graph_debug);
+                            speed_limit, cruise_speed, path_data_length, 
+                            total_time_by_conf, st_graph_debug);
 
     state_ = BTreeNodeState::NODE_DONE;
     return state_;
@@ -195,7 +197,7 @@ double SpeedGenerator::SetSpeedFallbackDistance(PathDecision *const path_decisio
     }
 
     GriddedPathTimeGraph st_graph(
-      reference_line_info->st_graph_data(), dp_st_speed_config_,
+      reference_line_info->st_graph_data(), dp_st_speed_optimizer_config_,
       reference_line_info->path_decision()->obstacles().Items(), init_point);
 
     if (!st_graph.Search(&speed_data).ok()) 

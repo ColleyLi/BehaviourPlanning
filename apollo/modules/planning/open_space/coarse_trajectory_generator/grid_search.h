@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include <algorithm>
 #include <limits>
 #include <memory>
 #include <queue>
@@ -29,6 +28,7 @@
 #include <utility>
 #include <vector>
 
+#include "absl/strings/str_cat.h"
 #include "cyber/common/log.h"
 #include "modules/common/math/line_segment2d.h"
 #include "modules/planning/proto/planner_open_space_config.pb.h"
@@ -41,14 +41,10 @@ class Node2d {
   Node2d(const double x, const double y, const double xy_resolution,
          const std::vector<double>& XYbounds) {
     // XYbounds with xmin, xmax, ymin, ymax
+    x_ = x;
+    y_ = y;
     grid_x_ = static_cast<int>((x - XYbounds[0]) / xy_resolution);
     grid_y_ = static_cast<int>((y - XYbounds[2]) / xy_resolution);
-    index_ = ComputeStringIndex(grid_x_, grid_y_);
-  }
-  Node2d(const int grid_x, const int grid_y,
-         const std::vector<double>& XYbounds) {
-    grid_x_ = grid_x;
-    grid_y_ = grid_y;
     index_ = ComputeStringIndex(grid_x_, grid_y_);
   }
   void SetPathCost(const double path_cost) {
@@ -61,6 +57,8 @@ class Node2d {
   }
   void SetCost(const double cost) { cost_ = cost; }
   void SetPreNode(std::shared_ptr<Node2d> pre_node) { pre_node_ = pre_node; }
+  double GetX() const { return x_; }
+  double GetY() const { return y_; }
   double GetGridX() const { return grid_x_; }
   double GetGridY() const { return grid_y_; }
   double GetPathCost() const { return path_cost_; }
@@ -82,10 +80,12 @@ class Node2d {
 
  private:
   static std::string ComputeStringIndex(int x_grid, int y_grid) {
-    return std::to_string(x_grid) + "_" + std::to_string(y_grid);
+    return absl::StrCat(x_grid, "_", y_grid);
   }
 
  private:
+  double x_ = 0.0;
+  double y_ = 0.0;
   int grid_x_ = 0;
   int grid_y_ = 0;
   double path_cost_ = 0.0;

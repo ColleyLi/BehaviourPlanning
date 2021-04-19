@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "errors",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::32639" } },
-"features": [
-
-]
-}

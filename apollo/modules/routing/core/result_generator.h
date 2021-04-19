@@ -57,11 +57,9 @@ class ResultGenerator {
                           RoutingResponse* result);
 
   void AddRoadSegment(const std::vector<PassageInfo>& passages,
-                    const std::pair<std::size_t, std::size_t>& start_index,
-                    const std::pair<std::size_t, std::size_t>& end_index,
-                    RoutingResponse* result);
-
-
+                      const std::pair<std::size_t, std::size_t>& start_index,
+                      const std::pair<std::size_t, std::size_t>& end_index,
+                      RoutingResponse* result);
   void ExtendPassages(const TopoRangeManager& range_manager,
                       std::vector<PassageInfo>* const passages);
   bool ExtractBasicPassages(const std::vector<NodeWithRange>& nodes,

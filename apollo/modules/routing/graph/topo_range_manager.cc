@@ -68,7 +68,7 @@ const std::vector<NodeSRange>* TopoRangeManager::Find(
 void TopoRangeManager::PrintDebugInfo() const {
   for (const auto& map : range_map_) {
     for (const auto& range : map.second) {
-      AERROR << "black lane id: " << map.first->LaneId()
+      AINFO << "black lane id: " << map.first->LaneId()
             << ", start s: " << range.StartS() << ", end s: " << range.EndS();
     }
   }

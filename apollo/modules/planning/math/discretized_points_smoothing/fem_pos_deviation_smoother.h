@@ -23,7 +23,7 @@
 #include <utility>
 #include <vector>
 
-#include "modules/planning/proto/fem_pos_deviation_smoother_config.pb.h"
+#include "modules/planning/proto/math/fem_pos_deviation_smoother_config.pb.h"
 
 namespace apollo {
 namespace planning {
@@ -52,13 +52,17 @@ class FemPosDeviationSmoother {
              const std::vector<double>& bounds, std::vector<double>* opt_x,
              std::vector<double>* opt_y);
 
-  bool SolveWithOsqp(const std::vector<std::pair<double, double>>& raw_point2d,
-                     const std::vector<double>& bounds,
-                     std::vector<double>* opt_x, std::vector<double>* opt_y);
+  bool QpWithOsqp(const std::vector<std::pair<double, double>>& raw_point2d,
+                  const std::vector<double>& bounds, std::vector<double>* opt_x,
+                  std::vector<double>* opt_y);
 
-  bool SolveWithIpopt(const std::vector<std::pair<double, double>>& raw_point2d,
-                      const std::vector<double>& bounds,
-                      std::vector<double>* opt_x, std::vector<double>* opt_y);
+  bool NlpWithIpopt(const std::vector<std::pair<double, double>>& raw_point2d,
+                    const std::vector<double>& bounds,
+                    std::vector<double>* opt_x, std::vector<double>* opt_y);
+
+  bool SqpWithOsqp(const std::vector<std::pair<double, double>>& raw_point2d,
+                   const std::vector<double>& bounds,
+                   std::vector<double>* opt_x, std::vector<double>* opt_y);
 
  private:
   FemPosDeviationSmootherConfig config_;

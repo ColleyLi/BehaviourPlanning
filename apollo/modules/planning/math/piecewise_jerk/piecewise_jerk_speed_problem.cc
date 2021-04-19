@@ -16,10 +16,7 @@
 
 #include "modules/planning/math/piecewise_jerk/piecewise_jerk_speed_problem.h"
 
-#include <algorithm>
-
 #include "cyber/common/log.h"
-
 #include "modules/planning/common/planning_gflags.h"
 
 namespace apollo {
@@ -30,14 +27,6 @@ PiecewiseJerkSpeedProblem::PiecewiseJerkSpeedProblem(
     const std::array<double, 3>& x_init)
     : PiecewiseJerkProblem(num_of_knots, delta_s, x_init) {
   penalty_dx_.resize(num_of_knots_, 0.0);
-}
-
-void PiecewiseJerkSpeedProblem::set_x_ref(const double weight_x_ref,
-                                          std::vector<double> x_ref) {
-  CHECK_EQ(x_ref.size(), num_of_knots_);
-  x_ref_ = std::move(x_ref);
-  weight_x_ref_ = weight_x_ref;
-  has_x_ref_ = true;
 }
 
 void PiecewiseJerkSpeedProblem::set_dx_ref(const double weight_dx_ref,
@@ -52,14 +41,6 @@ void PiecewiseJerkSpeedProblem::set_penalty_dx(std::vector<double> penalty_dx) {
   penalty_dx_ = std::move(penalty_dx);
 }
 
-void PiecewiseJerkSpeedProblem::set_end_state_ref(
-    const std::array<double, 3>& weight_end_state,
-    const std::array<double, 3>& end_state_ref) {
-  weight_end_state_ = weight_end_state;
-  end_state_ref_ = end_state_ref;
-  has_end_state_ref_ = true;
-}
-
 void PiecewiseJerkSpeedProblem::CalculateKernel(std::vector<c_float>* P_data,
                                                 std::vector<c_int>* P_indices,
                                                 std::vector<c_int>* P_indptr) {
@@ -72,44 +53,53 @@ void PiecewiseJerkSpeedProblem::CalculateKernel(std::vector<c_float>* P_data,
 
   // x(i)^2 * w_x_ref
   for (int i = 0; i < n - 1; ++i) {
-    columns[i].emplace_back(i, weight_x_ref_);
+    columns[i].emplace_back(
+        i, weight_x_ref_ / (scale_factor_[0] * scale_factor_[0]));
     ++value_index;
   }
   // x(n-1)^2 * (w_x_ref + w_end_x)
-  columns[n - 1].emplace_back(n - 1, weight_x_ref_ + weight_end_state_[0]);
+  columns[n - 1].emplace_back(n - 1, (weight_x_ref_ + weight_end_state_[0]) /
+                                         (scale_factor_[0] * scale_factor_[0]));
   ++value_index;
 
   // x(i)'^2 * (w_dx_ref + penalty_dx)
   for (int i = 0; i < n - 1; ++i) {
-    columns[n + i].emplace_back(n + i, weight_dx_ref_ + penalty_dx_[i]);
+    columns[n + i].emplace_back(n + i,
+                                (weight_dx_ref_ + penalty_dx_[i]) /
+                                    (scale_factor_[1] * scale_factor_[1]));
     ++value_index;
   }
   // x(n-1)'^2 * (w_dx_ref + penalty_dx + w_end_dx)
   columns[2 * n - 1].emplace_back(
-      2 * n - 1, weight_dx_ref_ + penalty_dx_[n - 1] + weight_end_state_[1]);
+      2 * n - 1, (weight_dx_ref_ + penalty_dx_[n - 1] + weight_end_state_[1]) /
+                     (scale_factor_[1] * scale_factor_[1]));
   ++value_index;
 
   auto delta_s_square = delta_s_ * delta_s_;
   // x(i)''^2 * (w_ddx + 2 * w_dddx / delta_s^2)
   columns[2 * n].emplace_back(2 * n,
-                              weight_ddx_ + weight_dddx_ / delta_s_square);
+                              (weight_ddx_ + weight_dddx_ / delta_s_square) /
+                                  (scale_factor_[2] * scale_factor_[2]));
   ++value_index;
 
   for (int i = 1; i < n - 1; ++i) {
     columns[2 * n + i].emplace_back(
-        2 * n + i, weight_ddx_ + 2.0 * weight_dddx_ / delta_s_square);
+        2 * n + i, (weight_ddx_ + 2.0 * weight_dddx_ / delta_s_square) /
+                       (scale_factor_[2] * scale_factor_[2]));
     ++value_index;
   }
 
   columns[3 * n - 1].emplace_back(
       3 * n - 1,
-      weight_ddx_ + weight_dddx_ / delta_s_square + weight_end_state_[2]);
+      (weight_ddx_ + weight_dddx_ / delta_s_square + weight_end_state_[2]) /
+          (scale_factor_[2] * scale_factor_[2]));
   ++value_index;
 
   // -2 * w_dddx / delta_s^2 * x(i)'' * x(i + 1)''
   for (int i = 0; i < n - 1; ++i) {
     columns[2 * n + i].emplace_back(2 * n + i + 1,
-                                    -2.0 * weight_dddx_ / delta_s_square);
+                                    -2.0 * weight_dddx_ / delta_s_square /
+                                        (scale_factor_[2] * scale_factor_[2]));
     ++value_index;
   }
 
@@ -134,17 +124,20 @@ void PiecewiseJerkSpeedProblem::CalculateOffset(std::vector<c_float>* q) {
   q->resize(kNumParam);
   for (int i = 0; i < n; ++i) {
     if (has_x_ref_) {
-      q->at(i) += -2.0 * weight_x_ref_ * x_ref_[i];
+      q->at(i) += -2.0 * weight_x_ref_ * x_ref_[i] / scale_factor_[0];
     }
     if (has_dx_ref_) {
-      q->at(n + i) += -2.0 * weight_dx_ref_ * dx_ref_;
+      q->at(n + i) += -2.0 * weight_dx_ref_ * dx_ref_ / scale_factor_[1];
     }
   }
 
   if (has_end_state_ref_) {
-    q->at(n - 1) += -2.0 * weight_end_state_[0] * end_state_ref_[0];
-    q->at(2 * n - 1) += -2.0 * weight_end_state_[1] * end_state_ref_[1];
-    q->at(3 * n - 1) += -2.0 * weight_end_state_[2] * end_state_ref_[2];
+    q->at(n - 1) +=
+        -2.0 * weight_end_state_[0] * end_state_ref_[0] / scale_factor_[0];
+    q->at(2 * n - 1) +=
+        -2.0 * weight_end_state_[1] * end_state_ref_[1] / scale_factor_[1];
+    q->at(3 * n - 1) +=
+        -2.0 * weight_end_state_[2] * end_state_ref_[2] / scale_factor_[2];
   }
 }
 

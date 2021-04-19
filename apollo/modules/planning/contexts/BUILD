@@ -12,7 +12,6 @@ cc_library(
     ],
     copts = ["-DMODULE_NAME=\\\"planning\\\""],
     deps = [
-        "//modules/common",
         "//modules/planning/common:planning_common",
         "//modules/planning/common/util:util_lib",
         "//modules/planning/behaviour_tree:b_tree_node",
@@ -31,7 +30,6 @@ cc_library(
     copts = ["-DMODULE_NAME=\\\"planning\\\""],
     deps = [
         ":stage",
-        "//modules/common",
         "//modules/planning/common:planning_common",
         "//modules/planning/common/util:util_lib",
         "//modules/planning/contexts/lane_follow/stages:lane_follow_stage",
@@ -50,7 +48,6 @@ cc_library(
     deps = [
         ":stage",
         ":stage_dispatcher",
-        "//modules/common",
         "//modules/planning/common:planning_common",
         "//modules/planning/common/util:util_lib",
     ],
@@ -67,7 +64,6 @@ cc_library(
     copts = ["-DMODULE_NAME=\\\"planning\\\""],
     deps = [
         ":stage_selector",
-        "//modules/common",
         "//modules/planning/common:planning_common",
         "//modules/planning/common/util:util_lib",
     ],
@@ -84,7 +80,6 @@ cc_library(
     copts = ["-DMODULE_NAME=\\\"planning\\\""],
     deps = [
         ":context",
-        "//modules/common",
         "//modules/planning/common:planning_common",
         "//modules/planning/common/util:util_lib",
         "//modules/planning/contexts/lane_follow:lane_follow_context",
@@ -103,7 +98,6 @@ cc_library(
     deps = [
         ":context",
         ":context_dispatcher",
-        "//modules/common",
         "//modules/planning/common:planning_common",
         "//modules/planning/common/util:util_lib",
     ],
