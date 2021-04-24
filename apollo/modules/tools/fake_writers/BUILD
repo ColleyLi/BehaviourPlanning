@@ -11,6 +11,7 @@ py_binary(
         "//modules/perception/proto:perception_obstacle_py_pb2",
         "//modules/localization/proto:imu_py_pb2",
         "//modules/localization/proto:gps_py_pb2",
+        "//modules/localization/proto:localization_py_pb2",
         "//modules/drivers/gnss/proto:ins_py_pb2",
         "//modules/canbus/proto:chassis_py_pb2",
     ],

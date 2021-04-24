@@ -12,6 +12,8 @@ from modules.perception.proto.perception_obstacle_pb2 import (
 from modules.localization.proto.imu_pb2 import CorrectedImu
 from modules.drivers.gnss.proto.ins_pb2 import InsStat
 from modules.localization.proto.gps_pb2 import Gps
+from modules.localization.proto.localization_pb2 import LocalizationStatus 
+from modules.localization.proto.localization_pb2 import LocalizationEstimate
 from modules.canbus.proto.chassis_pb2 import Chassis
 
 COMPLETE_AUTO_DRIVE = 1
@@ -35,6 +37,12 @@ def main():
 
     chassis_writer = test_node.create_writer(
         "/apollo/canbus/chassis", Chassis, 6)
+
+    localization_estimate_writer = test_node.create_writer(
+        "/apollo/localization/pose", LocalizationEstimate, 6)
+
+    localization_status_writer = test_node.create_writer(
+        "/apollo/localization/msf_status", LocalizationStatus, 6)
 
     obstacles_msg = PerceptionObstacles()
 
@@ -122,12 +130,17 @@ def main():
     # obstacle.velocity.z = 0.0
     # obstacles_msg.perception_obstacle.extend([obstacle])
 
-    odometry_msg = Gps()
+    # odometry_msg = Gps()
 
     # After crossroad before the bus stop
-    odometry_msg.localization.position.x = 358694.2
-    odometry_msg.localization.position.y = 6180674.0
-    odometry_msg.localization.position.z = 204.4
+    # odometry_msg.localization.position.x = 358694.2
+    # odometry_msg.localization.position.y = 6180674.0
+    # odometry_msg.localization.position.z = 204.4
+
+    # Right side
+    # odometry_msg.localization.position.x = 358627.72
+    # odometry_msg.localization.position.y = 6180717.72
+    # odometry_msg.localization.position.z = 0.84 
 
     # Right lane (2 lanes)
     # odometry_msg.localization.position.x = 358504.72
@@ -149,60 +162,92 @@ def main():
     # odometry_msg.localization.position.y = 6180665.23
     # odometry_msg.localization.position.z = 3.02
 
-    odometry_msg.localization.orientation.qx = 0.005095433
-    odometry_msg.localization.orientation.qy = -0.011954642
-    odometry_msg.localization.orientation.qz = -0.843348324
-    odometry_msg.localization.orientation.qw = 0.537210107
+    # odometry_msg.localization.orientation.qx = 0.005095433
+    # odometry_msg.localization.orientation.qy = -0.011954642
+    # odometry_msg.localization.orientation.qz = -0.843348324
+    # odometry_msg.localization.orientation.qw = 0.537210107
 
-    odometry_msg.localization.linear_velocity.x = 0.0
-    odometry_msg.localization.linear_velocity.y = 0.0
-    odometry_msg.localization.linear_velocity.z = 0.0
+    # odometry_msg.localization.linear_velocity.x = 0.0
+    # odometry_msg.localization.linear_velocity.y = 0.0
+    # odometry_msg.localization.linear_velocity.z = 0.0
 
-    odometry_msg.localization.heading = -115
+    # odometry_msg.localization.heading = -115
 
-    status_msg = InsStat()
+    # status_msg = InsStat()
 
-    status_msg.ins_status = 3
-    status_msg.pos_type = 56
+    # status_msg.ins_status = 3
+    # status_msg.pos_type = 56
 
-    imu_msg = CorrectedImu()
+    # imu_msg = CorrectedImu()
 
-    imu_msg.imu.linear_acceleration.x = 0.21
-    imu_msg.imu.linear_acceleration.y = -0.14
-    imu_msg.imu.linear_acceleration.z = 0.807
+    # imu_msg.imu.linear_acceleration.x = 0.21
+    # imu_msg.imu.linear_acceleration.y = -0.14
+    # imu_msg.imu.linear_acceleration.z = 0.807
 
-    imu_msg.imu.angular_velocity.x = 0.0
-    imu_msg.imu.angular_velocity.y = 0.0
-    imu_msg.imu.angular_velocity.z = 0.0
+    # imu_msg.imu.angular_velocity.x = 0.0
+    # imu_msg.imu.angular_velocity.y = 0.0
+    # imu_msg.imu.angular_velocity.z = 0.0
 
-    imu_msg.imu.heading = -115
+    # imu_msg.imu.heading = -115
 
-    imu_msg.imu.euler_angles.x = -6.2617
-    imu_msg.imu.euler_angles.y = -6.2684
-    imu_msg.imu.euler_angles.z = -2.0071
+    # imu_msg.imu.euler_angles.x = -6.2617
+    # imu_msg.imu.euler_angles.y = -6.2684
+    # imu_msg.imu.euler_angles.z = -2.0071
 
-    chassis_msg = Chassis()
+    # chassis_msg = Chassis()
 
-    chassis_msg.engine_started = 1
-    chassis_msg.engine_rpm = 800.0
-    chassis_msg.speed_mps = 0.0
-    chassis_msg.brake_percentage = 100.0
-    chassis_msg.driving_mode = COMPLETE_AUTO_DRIVE
-    chassis_msg.gear_location = GEAR_DRIVE
+    # chassis_msg.engine_started = 1
+    # chassis_msg.engine_rpm = 800.0
+    # chassis_msg.speed_mps = 0.0
+    # chassis_msg.brake_percentage = 100.0
+    # chassis_msg.driving_mode = COMPLETE_AUTO_DRIVE
+    # chassis_msg.gear_location = GEAR_DRIVE
 
-    chassis_msg.header.module_name = 'chassis'
+    # chassis_msg.header.module_name = 'chassis'
 
-    chassis_msg.chassis_gps.year = 1970
-    chassis_msg.chassis_gps.month = 1
-    chassis_msg.chassis_gps.day = 1
-    chassis_msg.chassis_gps.hours = 3
-    chassis_msg.chassis_gps.compass_direction = 135.0
-    chassis_msg.chassis_gps.pdop = 0.0
-    chassis_msg.chassis_gps.hdop = 0.0
-    chassis_msg.chassis_gps.vdop = 0.0
-    chassis_msg.chassis_gps.heading = 115
-    chassis_msg.chassis_gps.num_satellites = 15
-    chassis_msg.chassis_gps.gps_speed = 0.0
+    # chassis_msg.chassis_gps.year = 1970
+    # chassis_msg.chassis_gps.month = 1
+    # chassis_msg.chassis_gps.day = 1
+    # chassis_msg.chassis_gps.hours = 3
+    # chassis_msg.chassis_gps.compass_direction = 135.0
+    # chassis_msg.chassis_gps.pdop = 0.0
+    # chassis_msg.chassis_gps.hdop = 0.0
+    # chassis_msg.chassis_gps.vdop = 0.0
+    # chassis_msg.chassis_gps.heading = 115
+    # chassis_msg.chassis_gps.num_satellites = 15
+    # chassis_msg.chassis_gps.gps_speed = 0.0
+
+
+    localization_msg = LocalizationEstimate()
+    localization_msg.pose.position.x = 358621.64
+    localization_msg.pose.position.y = 6180720.4
+    localization_msg.pose.position.z = 203
+
+    localization_msg.pose.orientation.qx = 0.000681112
+    localization_msg.pose.orientation.qy = -0.005984223
+    localization_msg.pose.orientation.qz = 0.542498648
+    localization_msg.pose.orientation.qw = 0.840035141
+    
+    localization_msg.pose.linear_velocity.x = 0.0
+    localization_msg.pose.linear_velocity.y = 0.0
+    localization_msg.pose.linear_velocity.z = 0.0
+    
+    localization_msg.pose.linear_acceleration.x = 0.0
+    localization_msg.pose.linear_acceleration.y = 0.0
+    localization_msg.pose.linear_acceleration.z = 9.81
+    
+    localization_msg.pose.angular_velocity.x = 0.0
+    localization_msg.pose.angular_velocity.y = 0.0
+    localization_msg.pose.angular_velocity.z = 0.0
+
+    localization_msg.pose.heading = 2.7176
+
+    localization_msg.pose.linear_acceleration_vrf.x = 0.0
+    localization_msg.pose.linear_acceleration_vrf.y = 0.0
+    
+    localization_status = LocalizationStatus()
+    localization_status.fusion_status = 0
+    localization_status.state_message = "" 
 
     sequence_num = 0
     while not cyber.is_shutdown():
@@ -211,18 +256,24 @@ def main():
         timestamp = time.time()
 
         obstacles_msg.header.timestamp_sec = timestamp
-        odometry_msg.header.timestamp_sec = timestamp
-        status_msg.header.timestamp_sec = timestamp
-        imu_msg.header.timestamp_sec = timestamp
-        chassis_msg.header.timestamp_sec = timestamp
+        # odometry_msg.header.timestamp_sec = timestamp
+        # status_msg.header.timestamp_sec = timestamp
+        # imu_msg.header.timestamp_sec = timestamp
+        # chassis_msg.header.timestamp_sec = timestamp
+        localization_msg.header.timestamp_sec = timestamp
+        localization_status.header.timestamp_sec = timestamp
+        localization_status.measurement_time = timestamp
 
-        odometry_msg.header.sequence_num = sequence_num
+        # odometry_msg.header.sequence_num = sequence_num
+        localization_msg.header.sequence_num = sequence_num
 
         obstacle_writer.write(obstacles_msg)
-        odometry_writer.write(odometry_msg)
-        status_writer.write(status_msg)
-        imu_writer.write(imu_msg)
-        chassis_writer.write(chassis_msg)
+        localization_estimate_writer.write(localization_msg)
+        localization_status_writer.write(localization_status)
+        # odometry_writer.write(odometry_msg)
+        # status_writer.write(status_msg)
+        # imu_writer.write(imu_msg)
+        # chassis_writer.write(chassis_msg)
 
         sequence_num += 1
 

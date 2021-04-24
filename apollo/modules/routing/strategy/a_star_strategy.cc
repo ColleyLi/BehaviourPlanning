@@ -64,6 +64,7 @@ double GetCostToNeighbor(const TopoEdge* edge, const TopoNode* cur_node, const T
     double distance = DestinationDistanceMetric(cur_node, dest_node);
     ratio = std::pow(distance / FLAGS_min_length_for_lane_change, -1.1) + 1.0;
   }
+  ratio = 1.0;
 
   return (edge->Cost() * ratio + edge->ToNode()->Cost());
 }
@@ -252,7 +253,7 @@ bool AStarStrategy::Search(const TopoGraph* graph,
   open_set_detail.push(src_search_node);
 
   open_set_.insert(src_node);
-  g_score_[src_node] = 0.0;
+  g_score_[src_node] = src_node->Cost();
   enter_s_[src_node] = src_node->StartS();
 
   SearchNode current_node;
@@ -261,7 +262,8 @@ bool AStarStrategy::Search(const TopoGraph* graph,
   while (!open_set_detail.empty()) {
     current_node = open_set_detail.top();
     const auto* from_node = current_node.topo_node;
-    if (current_node.topo_node == dest_node) {
+    if (current_node.topo_node == dest_node) 
+    {
       if (!Reconstruct(came_from_, from_node, result_nodes)) {
         AERROR << "Failed to reconstruct route.";
         return false;
@@ -302,13 +304,14 @@ bool AStarStrategy::Search(const TopoGraph* graph,
       }
       tentative_g_score = g_score_[current_node.topo_node] + 
                           GetCostToNeighbor(edge, from_node, dest_node);
-      if (edge->Type() != TopoEdgeType::TET_FORWARD) {
-        tentative_g_score -=
-            (edge->FromNode()->Cost() + edge->ToNode()->Cost()) / 2;
-      }
+      // if (edge->Type() != TopoEdgeType::TET_FORWARD) {
+        // tentative_g_score -=
+            // (edge->FromNode()->Cost() + edge->ToNode()->Cost()) / 2;
+      // }
       double f = tentative_g_score + HeuristicCost(to_node, dest_node);
+      AERROR << "From node "  << from_node->LaneId() << " cost: " << from_node->Cost() << " To node " <<  to_node->LaneId() << " cost: " << to_node->Cost() << " Edge cost: " << edge->Cost(); 
       if (open_set_.count(to_node) != 0 && 
-          tentative_g_score >= g_score_[to_node]) {
+           tentative_g_score >= g_score_[to_node]) {
         continue;
       }
       // if to_node is reached by forward, reset enter_s to start_s
