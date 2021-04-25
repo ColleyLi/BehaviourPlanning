@@ -13,6 +13,7 @@
 
 #include <NodeStyle.hpp>
 #include<NodeDataModel.hpp>
+#include<Connection.hpp>
 
 #include "modules/tools/btviz/btviz_base.h"
 
@@ -27,6 +28,7 @@ using QtNodes::NodeDataType;
 using QtNodes::NodeDataModel;
 using QtNodes::NodeValidationState;
 using QtNodes::NodeStyle;
+using QtNodes::Connection;
 
 class BTreeDataModel : public NodeDataModel
 {
@@ -39,9 +41,18 @@ class BTreeDataModel : public NodeDataModel
     void Init();
  
   public:
+
+    QString caption() const override {return "";}
+
+    bool captionVisible() const override { return false; }
+
     unsigned int nPorts(PortType portType) const override;
 
+    bool hasDynamicPorts(PortType) const override;
+
     ConnectionPolicy portOutConnectionPolicy(PortIndex) const final;
+    
+    ConnectionPolicy portInConnectionPolicy(PortIndex) const final;
 
     NodeDataType dataType(PortType , PortIndex ) const final;
 
@@ -50,16 +61,32 @@ class BTreeDataModel : public NodeDataModel
     std::shared_ptr<NodeData> outData(PortIndex port) final;
 
     QString name() const final;
-    
+
     QWidget *embeddedWidget() final;
+  
   public: 
     void setNodeName(const QString& name);
     
     void setNodeId(const QString& id);
+
+    const QString& getNodeId();
+    
+    const QString& getNodeName();
+    
+    const QString& getNodeType();
+    
+    const QString& getNodeCategory();
+
+    std::vector<QString> getChildren();
   
     QJsonObject save() const override;
 
     void restore(QJsonObject const &) override;
+
+  public Q_SLOTS:
+    void outputConnectionCreated(Connection const& c) override;
+    
+    void outputConnectionDeleted(Connection const& c) override;
 
   public slots:
     void updateNodeSize();
@@ -69,6 +96,8 @@ class BTreeDataModel : public NodeDataModel
 
   private:
     BTNode node_;
+
+    std::vector<QString> _children_list;
 
     QFrame*  main_widget_;
     QVBoxLayout* main_layout_;

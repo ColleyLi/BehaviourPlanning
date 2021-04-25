@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <cmath>
-#include <QDebug>
 
 #include "PortType.hpp"
 #include "NodeState.hpp"
@@ -21,21 +20,21 @@ using QtNodes::Node;
 
 NodeGeometry::
 NodeGeometry(std::unique_ptr<NodeDataModel> const &dataModel)
-  : _width(50)
+  : _width(100)
   , _height(50)
-  , _inputPortWidth(4)
-  , _outputPortWidth(4)
-  , _entryHeight(1)
-  , _spacing(1)
+  , _inputPortWidth(70)
+  , _outputPortWidth(70)
+  , _entryHeight(20)
+  , _spacing(20)
   , _hovered(false)
   , _draggingPos(-1000, -1000)
   , _dataModel(dataModel)
   , _fontMetrics(QFont())
   , _boldFontMetrics(QFont())
-  , _ports_layout(PortLayout::Vertical  )
+  , _ports_layout(PortLayout::Vertical)
 {
-  QFont f;
-  f.setPointSize(12);
+  QFont f; f.setBold(true);
+
   _boldFontMetrics = QFontMetrics(f);
 }
 
@@ -70,7 +69,7 @@ boundingRect() const
 {
   auto const &nodeStyle = StyleCollection::nodeStyle();
 
-  double addon = 2 * nodeStyle.ConnectionPointDiameter;
+  double addon = 4 * nodeStyle.ConnectionPointDiameter;
 
   return QRectF(0 - addon,
                 0 - addon,
@@ -88,13 +87,15 @@ recalculateSize() const
   {
     unsigned int maxNumOfEntries = std::max(nSinks(), nSources());
     unsigned int step = _entryHeight + _spacing;
-    _height = step * maxNumOfEntries;
+    _width = step * maxNumOfEntries;
   }
 
   if (auto w = _dataModel->embeddedWidget())
   {
-    _height = std::max(_height, w->height());
+    _height = std::max(_height, static_cast<unsigned>(w->height()));
   }
+
+  // _height += captionHeight();
 
   _inputPortWidth  = portWidth(PortType::In);
   _outputPortWidth = portWidth(PortType::Out);
@@ -108,11 +109,13 @@ recalculateSize() const
     _width += w->width();
   }
 
-  if (_dataModel->validationState() != NodeValidationState::Valid)
-  {
-    _width   = std::max(_width, (int)validationWidth());
-    _height += validationHeight() + _spacing;
-  }
+  _width = std::max(_width, captionWidth());
+
+  // if (_dataModel->validationState() != NodeValidationState::Valid)
+  // {
+    // _width   = std::max(_width, validationWidth());
+    // _height += validationHeight() + _spacing;
+  // }
 }
 
 
@@ -122,7 +125,8 @@ recalculateSize(QFont const & font) const
 {
   QFontMetrics fontMetrics(font);
   QFont boldFont = font;
-  boldFont.setPointSize(12);
+
+  boldFont.setBold(true);
 
   QFontMetrics boldFontMetrics(boldFont);
 
@@ -130,6 +134,7 @@ recalculateSize(QFont const & font) const
   {
     _fontMetrics     = fontMetrics;
     _boldFontMetrics = boldFontMetrics;
+
     recalculateSize();
   }
 }
@@ -141,7 +146,45 @@ portScenePosition(PortIndex index,
                   PortType portType,
                   QTransform const & t) const
 {
-  auto const connectionDiameter = StyleCollection::nodeStyle().ConnectionPointDiameter;
+  // auto const &nodeStyle = StyleCollection::nodeStyle();
+
+  // unsigned int step = _entryHeight + _spacing;
+
+  // QPointF result;
+
+  // double totalHeight = 0.0;
+
+  // totalHeight += captionHeight();
+
+  // totalHeight += step * index;
+
+  // // TODO: why?
+  // totalHeight += step / 2.0;
+
+  // switch (portType)
+  // {
+  //   case PortType::Out:
+  //   {
+  //     double x = _width + nodeStyle.ConnectionPointDiameter;
+
+  //     result = QPointF(x, totalHeight);
+  //     break;
+  //   }
+
+  //   case PortType::In:
+  //   {
+  //     double x = 0.0 - nodeStyle.ConnectionPointDiameter;
+
+  //     result = QPointF(x, totalHeight);
+  //     break;
+  //   }
+
+  //   default:
+  //     break;
+  // }
+
+  // return t.map(result);
+ auto const connectionDiameter = StyleCollection::nodeStyle().ConnectionPointDiameter;
 
   if( _ports_layout == PortLayout::Horizontal)
   {
@@ -163,6 +206,7 @@ portScenePosition(PortIndex index,
                                              - connectionDiameter;
     return t.map( QPointF( x, y) );
   }
+
 }
 
 
@@ -179,7 +223,7 @@ checkHitScenePoint(PortType portType,
   if (portType == PortType::None)
     return result;
 
-  double const tolerance = 2 * nodeStyle.ConnectionPointDiameter;
+  double const tolerance = 2.0 * nodeStyle.ConnectionPointDiameter;
 
   unsigned int const nItems = _dataModel->nPorts(portType);
 
@@ -205,7 +249,7 @@ QRect
 NodeGeometry::
 resizeRect() const
 {
-  unsigned int rectSize = 4;
+  unsigned int rectSize = 7;
 
   return QRect(_width - rectSize,
                _height - rectSize,
@@ -220,24 +264,70 @@ widgetPosition() const
 {
   if (auto w = _dataModel->embeddedWidget())
   {
-    if (_dataModel->validationState() != NodeValidationState::Valid)
+    if (w->sizePolicy().verticalPolicy() & QSizePolicy::ExpandFlag)
     {
-      return QPointF(_spacing + portWidth(PortType::In),
-                     ( _height - validationHeight() - _spacing - w->height()) / 2.0);
+      // If the widget wants to use as much vertical space as possible, place it immediately after the caption.
+      return QPointF(_spacing + portWidth(PortType::In), captionHeight());
     }
+    else
+    {
+      if (_dataModel->validationState() != NodeValidationState::Valid)
+      {
+        return QPointF(_spacing + portWidth(PortType::In),
+                      (captionHeight() + _height - validationHeight() - _spacing - w->height()) / 2.0);
+      }
 
-    return QPointF(_spacing + portWidth(PortType::In),
-                   ( _height - w->height()) / 2.0);
+      return QPointF(_spacing + portWidth(PortType::In), 
+                    (captionHeight() + _height - w->height()) / 2.0);
+    }
   }
-
   return QPointF();
 }
+
+int
+NodeGeometry::
+equivalentWidgetHeight() const
+{
+  if (_dataModel->validationState() != NodeValidationState::Valid)
+  {
+    return height() - captionHeight() + validationHeight();
+  }
+
+  return height() - captionHeight();
+}
+
+unsigned int
+NodeGeometry::
+captionHeight() const
+{
+  if (!_dataModel->captionVisible())
+    return 0;
+
+  QString name = _dataModel->caption();
+
+  return _boldFontMetrics.boundingRect(name).height();
+}
+
+
+unsigned int
+NodeGeometry::
+captionWidth() const
+{
+  if (!_dataModel->captionVisible())
+    return 0;
+
+  QString name = _dataModel->caption();
+
+  return _boldFontMetrics.boundingRect(name).width();
+}
+
 
 unsigned int
 NodeGeometry::
 validationHeight() const
 {
   QString msg = _dataModel->validationMessage();
+
   return _boldFontMetrics.boundingRect(msg).height();
 }
 
@@ -247,6 +337,7 @@ NodeGeometry::
 validationWidth() const
 {
   QString msg = _dataModel->validationMessage();
+
   return _boldFontMetrics.boundingRect(msg).width();
 }
 
@@ -268,11 +359,11 @@ calculateNodePositionBetweenNodePorts(PortIndex targetPortIndex, PortType target
   return converterNodePos;
 }
 
+
 void NodeGeometry::setPortLayout(QtNodes::PortLayout layout)
 {
     _ports_layout = layout;
 }
-
 
 unsigned int
 NodeGeometry::
@@ -282,8 +373,18 @@ portWidth(PortType portType) const
 
   for (auto i = 0ul; i < _dataModel->nPorts(portType); ++i)
   {
-    QString name = _dataModel->dataType(portType, i).name;
-    width = std::max(unsigned(_fontMetrics.width(name)), width);
+    QString name;
+
+    if (_dataModel->portCaptionVisible(portType, i))
+    {
+      name = _dataModel->portCaption(portType, i);
+    }
+    else
+    {
+      name = _dataModel->dataType(portType, i).name;
+    }
+
+    width = std::max(static_cast<unsigned>(_fontMetrics.horizontalAdvance(name)), width);
   }
 
   return width;

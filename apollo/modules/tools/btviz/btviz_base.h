@@ -14,10 +14,14 @@
 #include <vector>
 
 #include "modules/planning/proto/b_tree_config.pb.h"
+#include "cyber/cyber.h"
 
 using QtNodes::Node;
 using apollo::planning::BTreeNodeState;
 using apollo::planning::BTreeNodeType;
+using apollo::planning::BTreeConfig;
+using apollo::planning::BTreeNodeDescription;
+using apollo::cyber::common::SetProtoToASCIIFile;
 
 struct BTNode
 {
@@ -28,6 +32,9 @@ struct BTNode
 };
 
 std::vector<BTNode> getExistingNodes();
+QString nodeCategoryFromNodeName(const QString& name);
+QString nodeTypeToQString(BTreeNodeType type);
+BTreeNodeType QStringToNodeType(QString string);
 
 struct BTvizNode
 {
@@ -68,11 +75,5 @@ class BTvizTree
 };
 
 Q_DECLARE_METATYPE(BTvizTree);
-
-static int getUid()
-{
-    static int uid = 0;
-    return uid++;
-}
 
 #endif // BTVIZ_BASE_H

@@ -36,6 +36,8 @@ public:
   /// NodeDataModel should be an rvalue and is moved into the Node
   Node(std::unique_ptr<NodeDataModel> && dataModel);
 
+  Node(std::unique_ptr<NodeDataModel> && dataModel, QUuid&& uuid);
+
   virtual
   ~Node();
 
@@ -85,12 +87,11 @@ public:
   NodeDataModel*
   nodeDataModel() const;
 
-public slots: // data propagation
+public Q_SLOTS: // data propagation
 
   /// Propagates incoming data to the underlying model.
   void
-  propagateData(std::shared_ptr<NodeData> nodeData,
-                PortIndex inPortIndex) const;
+  propagateData(PortIndex inPortIndex) const;
 
   /// Fetches data from model's OUT #index port
   /// and propagates it to the connection
@@ -100,6 +101,32 @@ public slots: // data propagation
   /// update the graphic part if the size of the embeddedwidget changes
   void
   onNodeSizeUpdated();
+
+  /// Add the specified port and recalculate position of the connections
+  void
+  onPortAdded(PortType portType, PortIndex index);
+
+  void
+  onPortMoved(PortType portType, PortIndex oldIndex, PortIndex newIndex);
+
+  void
+  onPortRemoved(PortType portType, PortIndex index);
+
+Q_SIGNALS:
+
+  void
+  connectionRemoved(Connection& connection);
+
+private:
+
+  void
+  updateGraphics() const;
+
+  void
+  insertEntry(PortType portType, PortIndex index);
+
+  void
+  eraseEntry(PortType portType, PortIndex index);
 
 private:
 

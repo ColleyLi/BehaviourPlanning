@@ -15,7 +15,7 @@ ConnectionGeometry()
   //, _animationPhase(0)
   , _lineWidth(3.0)
   , _hovered(false)
-  , _ports_layout( PortLayout::Horizontal )
+  , _ports_layout( PortLayout::Horizontal)
 { }
 
 QPointF const&
@@ -100,39 +100,49 @@ std::pair<QPointF, QPointF>
 ConnectionGeometry::
 pointsC1C2() const
 {
+  const double defaultOffset = 200;
+
   double distance = ( _ports_layout == PortLayout::Horizontal ) ?
         (_in.x() - _out.x()) :
         (_in.y() - _out.y());
 
-  double defaultOffset = 50;
+  double horizontalOffset = qMin(defaultOffset, std::abs(distance));
 
-  double minimum = qMin(defaultOffset, std::abs(distance));
-  double offset = 0;
-  double ratio1 = 0.5;
+  double verticalOffset = 0;
+
+  double ratio = 0.5;
 
   if (distance <= 0)
   {
-    offset = -minimum;
-    ratio1 = 1.0;
+    double yDistance = _in.y() - _out.y() + 20;
+
+    double vector = yDistance < 0 ? -1.0 : 1.0;
+
+    verticalOffset = qMin(defaultOffset, std::abs(yDistance)) * vector;
+
+    ratio = 1.0;
   }
 
-  QPointF c1,c2;
-  if( _ports_layout == PortLayout::Horizontal )
-  {
-    c1 = QPointF(_out.x() + minimum * ratio1,
-                 _out.y() + offset);
+  horizontalOffset *= ratio;
 
-    c2 = QPointF(_in.x() - minimum * ratio1,
-                 _in.y() + offset);
+  QPointF c1,c2;
+  if(_ports_layout == PortLayout::Horizontal)
+  {
+    c1 = QPointF(_out.x() + horizontalOffset,
+                 _out.y() + verticalOffset);
+
+    c2 = QPointF(_in.x() - horizontalOffset,
+                 _in.y() + verticalOffset);
   }
   else
   {
-    c1 = QPointF(_out.x() + offset,
-                 _out.y() + minimum * ratio1);
+    c1 = QPointF(_out.x() + verticalOffset,
+                 _out.y() + horizontalOffset);
 
-    c2 = QPointF(_in.x() + offset,
-                 _in.y() - minimum * ratio1);
+    c2 = QPointF(_in.x() + verticalOffset,
+                 _in.y() - horizontalOffset);
   }
+
   return std::make_pair(c1, c2);
 }
 

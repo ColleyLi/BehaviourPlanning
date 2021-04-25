@@ -39,9 +39,8 @@ FlowView(QWidget *parent)
 
   setBackgroundBrush(flowViewStyle.BackgroundColor);
 
-  setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+  //setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
   //setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
-
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
@@ -115,7 +114,7 @@ contextMenuEvent(QContextMenuEvent *event)
   //Add filterbox to the context menu
   auto *txtBox = new QLineEdit(&modelMenu);
 
-  txtBox->setPlaceholderText(QStringLiteral("Filter"));
+  txtBox->setPlaceholderText(QStringLiteral("Search"));
   txtBox->setClearButtonEnabled(true);
 
   auto *txtBoxAction = new QWidgetAction(&modelMenu);
@@ -135,10 +134,41 @@ contextMenuEvent(QContextMenuEvent *event)
   QMap<QString, QTreeWidgetItem*> topLevelItems;
   for (auto const &cat : _scene->registry().categories())
   {
-    auto item = new QTreeWidgetItem(treeView);
-    item->setText(0, cat);
-    item->setData(0, Qt::UserRole, skipText);
-    topLevelItems[cat] = item;
+    // Allows subcategories if separeted by "//"
+    QStringList splittedCategories = cat.split("//");
+
+    if (splittedCategories.count() == 1) {
+       auto item = new QTreeWidgetItem(treeView);
+       item->setText(0, cat);
+       item->setData(0, Qt::UserRole, skipText);
+       topLevelItems[cat] = item;
+    }
+    else {
+       QString partialCategory = splittedCategories.at(0);
+       QTreeWidgetItem* parent = nullptr;
+
+       if (!topLevelItems.contains(partialCategory)) {
+          auto item = new QTreeWidgetItem(treeView);
+          item->setText(0, partialCategory);
+          item->setData(0, Qt::UserRole, partialCategory);
+          topLevelItems[partialCategory] = item;
+          parent = item;
+       }
+       else {
+          parent = topLevelItems[partialCategory];
+       }
+
+       for (int i=1; i<splittedCategories.count(); ++i) {
+          partialCategory += "//" + splittedCategories.at(i);
+
+          auto childItem = new QTreeWidgetItem(parent);
+          childItem->setText(0, splittedCategories.at(i));
+          childItem->setData(0, Qt::UserRole, splittedCategories.at(i));
+          topLevelItems[partialCategory] = childItem;
+
+          parent = childItem;
+       }
+    }
   }
 
   for (auto const &assoc : _scene->registry().registeredModelsCategoryAssociation())
@@ -162,15 +192,20 @@ contextMenuEvent(QContextMenuEvent *event)
     QPoint pos = event->pos();
     QPointF posView = this->mapToScene(pos);
     _scene->createNodeAtPosition(node_type, posView);
-
-    // auto type = _scene->registry().create(node_type);
+    
+    // auto type = _scene->registry().create(modelName);
 
     // if (type)
     // {
+    //   auto& node = _scene->createNode(std::move(type));
+
     //   QPoint pos = event->pos();
+
     //   QPointF posView = this->mapToScene(pos);
-    //   auto& new_node = _scene->createNode(std::move(type));
-    //   _scene->setNodePosition(new_node, posView);
+
+    //   node.nodeGraphicsObject().setPos(posView);
+
+    //   _scene->nodePlaced(node);
     // }
     // else
     // {
@@ -180,18 +215,33 @@ contextMenuEvent(QContextMenuEvent *event)
     modelMenu.close();
   });
 
+  auto depthSearch = [] (QTreeWidgetItem* item, const QString& text) -> void {
+     auto search = [](QTreeWidgetItem* item, const QString& text, const auto& func) -> bool {
+        if(item->childCount() == 0){
+           const auto modelName = item->data(0, Qt::UserRole).toString();
+           const bool match = modelName.contains(text, Qt::CaseInsensitive);
+           item->setHidden(!match);
+           return match;
+        }
+        else {
+           bool matchAtLeastOneChild = false;
+           for(int i = 0; i<item->childCount(); ++i){
+              matchAtLeastOneChild |= func(item->child(i), text, func);
+           }
+           item->setHidden(!matchAtLeastOneChild);
+           return matchAtLeastOneChild;
+        }
+     };
+
+     search(item, text, search);
+  };
+
   //Setup filtering
-  connect(txtBox, &QLineEdit::textChanged, [&](const QString &text)
+  connect(txtBox, &QLineEdit::textChanged, this, [topLevelItems, depthSearch](const QString &text)
   {
-    for (auto& topLvlItem : topLevelItems)
+    for(auto& topLvlItem : topLevelItems)
     {
-      for (int i = 0; i < topLvlItem->childCount(); ++i)
-      {
-        auto child = topLvlItem->child(i);
-        auto modelName = child->data(0, Qt::UserRole).toString();
-        const bool match = (modelName.contains(text, Qt::CaseInsensitive));
-        child->setHidden(!match);
-      }
+       depthSearch(topLvlItem, text);
     }
   });
 
@@ -227,7 +277,7 @@ void
 FlowView::
 scaleUp()
 {
-  double const step   = 1.1;
+  double const step   = 1.2;
   double const factor = std::pow(step, 1.0);
 
   QTransform t = transform();
@@ -243,7 +293,7 @@ void
 FlowView::
 scaleDown()
 {
-  double const step   = 1.1;
+  double const step   = 1.2;
   double const factor = std::pow(step, -1.0);
 
   scale(factor, factor);
@@ -257,8 +307,6 @@ deleteSelectedNodes()
   // Delete the selected connections first, ensuring that they won't be
   // automatically deleted when selected nodes are deleted (deleting a node
   // deletes some connections as well)
-  startNodeDelete();
-
   for (QGraphicsItem * item : _scene->selectedItems())
   {
     if (auto c = qgraphicsitem_cast<ConnectionGraphicsObject*>(item))
@@ -274,8 +322,6 @@ deleteSelectedNodes()
     if (auto n = qgraphicsitem_cast<NodeGraphicsObject*>(item))
       _scene->removeNode(n->node());
   }
-
-  finishNodeDelete();
 }
 
 
@@ -288,6 +334,20 @@ keyPressEvent(QKeyEvent *event)
     case Qt::Key_Shift:
       setDragMode(QGraphicsView::RubberBandDrag);
       break;
+
+    case Qt::Key_C:
+       if (event->modifiers() & Qt::ControlModifier) {
+          copy();
+          return;
+       }
+       break;
+
+    case Qt::Key_V:
+       if (event->modifiers() & Qt::ControlModifier) {
+          paste();
+          return;
+       }
+       break;
 
     default:
       break;
@@ -408,5 +468,35 @@ FlowScene *
 FlowView::
 scene()
 {
-  return _scene;
+   return _scene;
+}
+
+QString FlowView::nodeMimeType() const
+{
+   return "application/x-nodeeditor-nodes";
+}
+
+void FlowView::copy()
+{
+   QClipboard *clipboard = QApplication::clipboard();
+   QMimeData *mimeData = new QMimeData();
+
+   QByteArray data = scene()->copyNodes(scene()->selectedNodes());
+   mimeData->setData(nodeMimeType(), data);
+   mimeData->setText(data);
+
+   clipboard->setMimeData(mimeData);
+}
+
+void FlowView::paste()
+{
+   const QClipboard *clipboard = QApplication::clipboard();
+   const QMimeData *mimeData = clipboard->mimeData();
+
+   auto mousePos = mapToScene(mapFromGlobal(QCursor::pos()));
+   if (mimeData->hasFormat(nodeMimeType())) {
+      scene()->pasteNodes(mimeData->data(nodeMimeType()), mousePos);
+   } else if (mimeData->hasText()) {
+      scene()->pasteNodes(mimeData->text().toUtf8(), mousePos);
+   }
 }

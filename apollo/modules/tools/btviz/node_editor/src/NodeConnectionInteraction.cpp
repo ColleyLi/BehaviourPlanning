@@ -1,3 +1,5 @@
+#include <QQueue>
+
 #include "NodeConnectionInteraction.hpp"
 
 #include "ConnectionGraphicsObject.hpp"
@@ -32,7 +34,6 @@ canConnect(PortIndex &portIndex, TypeConverter & converter) const
 
   PortType requiredPort = connectionRequiredPort();
 
-
   if (requiredPort == PortType::None)
   {
     return false;
@@ -43,6 +44,43 @@ canConnect(PortIndex &portIndex, TypeConverter & converter) const
 
   if (node == _node)
     return false;
+
+  // 1.6) Check for Cyclic Connection
+  // Fix #198
+  if (node) {
+    auto isConnected = [](Node* a, Node* b) {
+     QQueue<Connection*> cons;
+     QQueue<Node*> nodes;
+     nodes.enqueue(a);
+     while (!nodes.isEmpty()) {
+      auto curNode = nodes.dequeue();
+      auto& curNodeState = curNode->nodeState();
+      auto curNodeCons = curNodeState.getEntries(PortType::Out);
+
+      for (auto& nodeCons : curNodeCons) {
+       for (auto& nodeCon : nodeCons) {
+        cons.enqueue(nodeCon.second);
+       }
+         }
+         while (!cons.isEmpty()) {
+          auto curCon = cons.dequeue();
+          if (auto conNode = curCon->getNode(PortType::In)) {
+             if (conNode == b) return true;
+             
+               nodes.enqueue(conNode);
+            }
+         }
+      }
+      return false;
+    };
+    if (requiredPort == PortType::Out) {
+      if (isConnected(node, _node)) {
+         return false;
+      }
+    } else if (isConnected(_node, node)) {
+       return false;
+    }
+  }
 
   // 2) connection point is on top of the node port
 
@@ -78,7 +116,7 @@ canConnect(PortIndex &portIndex, TypeConverter & converter) const
     }
     else if (requiredPort == PortType::Out)
     {
-      converter = _scene->registry().getTypeConverter(candidateNodeDataType , connectionDataType);
+      converter = _scene->registry().getTypeConverter(candidateNodeDataType, connectionDataType);
     }
 
     return (converter != nullptr);
@@ -149,7 +187,7 @@ disconnect(PortType portToDisconnect) const
   NodeState &state = _node->nodeState();
 
   // clear pointer to Connection in the NodeState
-  state.getEntries(portToDisconnect)[portIndex].clear();
+  state.getEntries(portToDisconnect)[portIndex].erase(_connection->id());
 
   // 4) Propagate invalid data to IN node
   _connection->propagateEmptyData();
@@ -159,7 +197,7 @@ disconnect(PortType portToDisconnect) const
 
   _connection->setRequiredPort(portToDisconnect);
 
-  _connection->connectionGraphicsObject().grabMouse();
+  _connection->getConnectionGraphicsObject().grabMouse();
 
   return true;
 }
@@ -182,7 +220,7 @@ NodeConnectionInteraction::
 connectionEndScenePosition(PortType portType) const
 {
   auto &go =
-    _connection->connectionGraphicsObject();
+    _connection->getConnectionGraphicsObject();
 
   ConnectionGeometry& geometry = _connection->connectionGeometry();
 
@@ -219,6 +257,7 @@ nodePortIndexUnderScenePoint(PortType portType,
   PortIndex portIndex = nodeGeom.checkHitScenePoint(portType,
                                                     scenePoint,
                                                     sceneTransform);
+
   return portIndex;
 }
 
@@ -227,12 +266,20 @@ bool
 NodeConnectionInteraction::
 nodePortIsEmpty(PortType portType, PortIndex portIndex) const
 {
+  if (portType == PortType::None)
+  {
+    return false;
+  }
+
   NodeState const & nodeState = _node->nodeState();
 
   auto const & entries = nodeState.getEntries(portType);
 
-  if (entries[portIndex].empty()) return true;
+  if (entries[portIndex].empty())
+    return true;
 
-  const auto outPolicy = _node->nodeDataModel()->portOutConnectionPolicy(portIndex);
-  return ( portType == PortType::Out && outPolicy == NodeDataModel::ConnectionPolicy::Many);
+  if (portType == PortType::In)
+    return _node->nodeDataModel()->portInConnectionPolicy(portIndex) == NodeDataModel::ConnectionPolicy::Many;
+
+  return _node->nodeDataModel()->portOutConnectionPolicy(portIndex) == NodeDataModel::ConnectionPolicy::Many;
 }

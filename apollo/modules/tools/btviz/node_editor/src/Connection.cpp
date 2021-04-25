@@ -17,7 +17,6 @@
 #include "ConnectionState.hpp"
 #include "ConnectionGeometry.hpp"
 #include "ConnectionGraphicsObject.hpp"
-#include "StyleCollection.hpp"
 
 using QtNodes::Connection;
 using QtNodes::PortType;
@@ -35,7 +34,6 @@ Connection(PortType portType,
            Node& node,
            PortIndex portIndex)
   : _uid(QUuid::createUuid())
-  , _style(QtNodes::StyleCollection::connectionStyle())
   , _outPortIndex(INVALID)
   , _inPortIndex(INVALID)
   , _connectionState()
@@ -68,6 +66,11 @@ Connection(Node& nodeIn,
 Connection::
 ~Connection()
 {
+  if (complete())
+  {
+    connectionMadeIncomplete(*this);
+  }
+
   propagateEmptyData();
 
   if (_inNode)
@@ -92,9 +95,13 @@ save() const
   {
     connectionJson["in_id"] = _inNode->id().toString();
     connectionJson["in_index"] = _inPortIndex;
+    connectionJson["in_type"] = _inNode->nodeDataModel()->dataType(PortType::In, _inPortIndex).id;
 
     connectionJson["out_id"] = _outNode->id().toString();
     connectionJson["out_index"] = _outPortIndex;
+    connectionJson["out_type"] = _outNode->nodeDataModel()->dataType(PortType::Out, _outPortIndex).id;
+
+
 
     if (_converter)
     {
@@ -126,6 +133,14 @@ Connection::
 id() const
 {
   return _uid;
+}
+
+
+bool
+Connection::
+complete() const
+{
+  return _inNode != nullptr && _outNode != nullptr;
 }
 
 
@@ -229,6 +244,8 @@ setNodeToPort(Node& node,
               PortType portType,
               PortIndex portIndex)
 {
+  bool wasIncomplete = !complete();
+
   auto& nodeWeak = getNode(portType);
 
   nodeWeak = &node;
@@ -241,6 +258,9 @@ setNodeToPort(Node& node,
   _connectionState.setNoRequiredPort();
 
   updated(*this);
+  if (complete() && wasIncomplete) {
+    connectionCompleted(*this);
+  }
 }
 
 
@@ -258,7 +278,7 @@ removeFromNodes() const
 
 ConnectionGraphicsObject&
 Connection::
-connectionGraphicsObject() const
+getConnectionGraphicsObject() const
 {
   return *_connectionGraphicsObject;
 }
@@ -344,6 +364,11 @@ void
 Connection::
 clearNode(PortType portType)
 {
+  if (complete())
+  {
+    connectionMadeIncomplete(*this);
+  }
+
   getNode(portType) = nullptr;
 
   if (portType == PortType::In)
@@ -395,6 +420,10 @@ dataType(PortType portType) const
   Q_UNREACHABLE();
 }
 
+QtNodes::TypeConverter& Connection::typeConverter()
+{
+    return _converter;
+}
 
 void
 Connection::
@@ -406,16 +435,14 @@ setTypeConverter(TypeConverter converter)
 
 void
 Connection::
-propagateData(std::shared_ptr<NodeData> nodeData) const
+propagateData() const
 {
   if (_inNode)
   {
-    if (_converter)
+     if (_inPortIndex < static_cast<int>(_inNode->nodeDataModel()->nPorts(PortType::In)))
     {
-      nodeData = _converter(nodeData);
+      _inNode->propagateData(_inPortIndex);
     }
-
-    _inNode->propagateData(nodeData, _inPortIndex);
   }
 }
 
@@ -424,7 +451,5 @@ void
 Connection::
 propagateEmptyData() const
 {
-  std::shared_ptr<NodeData> emptyData;
-
-  propagateData(emptyData);
+  propagateData();
 }

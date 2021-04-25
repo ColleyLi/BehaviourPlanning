@@ -1,3 +1,4 @@
+
 #pragma once
 
 #include <set>
@@ -18,15 +19,6 @@
 
 namespace QtNodes
 {
-
-inline
-bool
-operator<(QtNodes::NodeDataType const & d1,
-          QtNodes::NodeDataType const & d2)
-{
-  return d1.id < d2.id;
-}
-
 
 /// Class uses map for storing models (name, model)
 class NODE_EDITOR_PUBLIC DataModelRegistry

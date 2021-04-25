@@ -36,6 +36,13 @@ public:
 
   static
   void
+  drawModelName(QPainter* painter,
+                NodeGeometry const& geom,
+                NodeState const& state,
+                NodeDataModel const * model);
+
+  static
+  void
   drawEntryLabels(QPainter* painter,
                   NodeGeometry const& geom,
                   NodeState const& state,

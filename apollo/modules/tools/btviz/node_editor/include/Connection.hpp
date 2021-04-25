@@ -10,7 +10,6 @@
 #include "Serializable.hpp"
 #include "ConnectionState.hpp"
 #include "ConnectionGeometry.hpp"
-#include "ConnectionStyle.hpp"
 #include "TypeConverter.hpp"
 #include "QUuidStdHash.hpp"
 #include "Export.hpp"
@@ -88,7 +87,7 @@ public:
 public:
 
   ConnectionGraphicsObject&
-  connectionGraphicsObject() const;
+  getConnectionGraphicsObject() const;
 
   ConnectionState const &
   connectionState() const;
@@ -116,31 +115,33 @@ public:
   NodeDataType
   dataType(PortType portType) const;
 
+  TypeConverter& typeConverter();
+
   void
   setTypeConverter(TypeConverter converter);
 
-  ConnectionStyle style() const
-  {
-      return _style;
-  }
-
-  void setStyle(ConnectionStyle style)
-  {
-      _style = style;
-  }
+  bool
+  complete() const;
 
 public: // data propagation
 
   void
-  propagateData(std::shared_ptr<NodeData> nodeData) const;
+  propagateData() const;
 
   void
   propagateEmptyData() const;
 
+Q_SIGNALS:
+
+  void
+  connectionCompleted(Connection const&) const;
+
+  void
+  connectionMadeIncomplete(Connection const&) const;
+
 private:
 
   QUuid _uid;
-  ConnectionStyle _style;
 
 private:
 
@@ -159,7 +160,7 @@ private:
 
   TypeConverter _converter;
 
-signals:
+Q_SIGNALS:
 
   void
   updated(Connection& conn) const;

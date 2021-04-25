@@ -26,6 +26,7 @@
 #endif
 
 #define NODE_EDITOR_SHARED
+#define NODE_EDITOR_EXPORTS
 
 #if defined (NODE_EDITOR_SHARED) && !defined (NODE_EDITOR_STATIC)
 #  ifdef NODE_EDITOR_EXPORTS

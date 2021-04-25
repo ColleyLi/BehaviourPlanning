@@ -9,14 +9,21 @@
 #include <QtCore/QJsonArray>
 
 #include <QDebug>
+#include <QRandomGenerator>
 
 #include "StyleCollection.hpp"
 
 using QtNodes::ConnectionStyle;
 
+// inline void initResources() { Q_INIT_RESOURCE(nodeeditor); }
+
 ConnectionStyle::
 ConnectionStyle()
 {
+  // Explicit resources inialization for preventing the static initialization
+  // order fiasco: https://isocpp.org/wiki/faq/ctors#static-init-order
+  // initResources();
+
   // This configuration is stored inside the compiled unit and is loaded statically
   loadJsonFile(":DefaultStyle.json");
 }
@@ -160,8 +167,8 @@ normalColor(QString typeId) const
 
   std::size_t const hue_range = 0xFF;
 
-  qsrand(hash);
-  std::size_t hue = qrand() % hue_range;
+  QRandomGenerator random{static_cast<quint32>(hash)};
+  std::size_t hue = random.generate() % hue_range;
 
   std::size_t sat = 120 + hash % 129;
 

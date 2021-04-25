@@ -7,6 +7,7 @@
 
 #include "NodeGeometry.hpp"
 #include "NodeState.hpp"
+#include "Export.hpp"
 
 class QGraphicsProxyWidget;
 
@@ -18,7 +19,7 @@ class FlowItemEntry;
 
 /// Class reacts on GUI events, mouse clicks and
 /// forwards painting operation.
-class NodeGraphicsObject : public QGraphicsObject
+class NODE_EDITOR_PUBLIC NodeGraphicsObject : public QGraphicsObject
 {
   Q_OBJECT
 
@@ -54,9 +55,6 @@ public:
   void
   lock(bool locked);
 
-  void
-  updateEmbeddedQWidget();
-
 protected:
   void
   paint(QPainter*                       painter,
@@ -91,6 +89,10 @@ protected:
   contextMenuEvent(QGraphicsSceneContextMenuEvent* event) override;
 
 private:
+  void
+  embedQWidget();
+
+private:
 
   FlowScene & _scene;
 
@@ -98,10 +100,7 @@ private:
 
   bool _locked;
 
-  bool _double_clicked;
-
   // either nullptr or owned by parent QGraphicsItem
   QGraphicsProxyWidget * _proxyWidget;
-  QPoint _press_pos;
 };
 }

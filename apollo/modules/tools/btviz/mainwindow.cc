@@ -121,6 +121,9 @@ MainWindow::MainWindow(QWidget *parent):
 
     QObject::connect(ui->actionLoad, &QAction::triggered,
                      scene, &FlowScene::load);
+
+    QObject::connect(ui->actionGenerateProtobuf, &QAction::triggered,
+                     scene, &BTvizFlowScene::saveProtobuf);
 }
 
 MainWindow::~MainWindow()

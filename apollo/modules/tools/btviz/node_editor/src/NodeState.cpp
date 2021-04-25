@@ -48,10 +48,7 @@ NodeState::
 connections(PortType portType, PortIndex portIndex) const
 {
   auto const &connections = getEntries(portType);
-  if( portIndex < 0 || portIndex >= int(connections.size()))
-  {
-    return NodeState::ConnectionPtrSet();
-  }
+
   return connections[portIndex];
 }
 
@@ -65,7 +62,7 @@ setConnection(PortType portType,
   auto &connections = getEntries(portType);
 
   connections.at(portIndex).insert(std::make_pair(connection.id(),
-                                               &connection));
+                                                  &connection));
 }
 
 
@@ -139,4 +136,3 @@ resizing() const
 {
   return _resizing;
 }
-

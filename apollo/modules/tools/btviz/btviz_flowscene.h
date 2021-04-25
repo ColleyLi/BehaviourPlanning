@@ -1,6 +1,7 @@
 #ifndef BTVIZ_FLOWSCENE_H
 #define BTVIZ_FLOWSCENE_H
 
+
 #include <FlowScene.hpp>
 #include <DataModelRegistry.hpp>
 
@@ -16,6 +17,11 @@ class BTvizFlowScene : public QtNodes::FlowScene
         void lock(bool lock) {locked_ = lock;}
 
         QtNodes::Node& createNodeAtPosition(const QString& node_type, const QPointF& scene_pos) override;
+
+        void saveProtobuf() const;
+
+    private:    
+        void generateProtobuf(const QString& file_name) const;
 
     // private:
         // void dragEnterEvent(QGraphicsSceneDragDropEvent* event) override;

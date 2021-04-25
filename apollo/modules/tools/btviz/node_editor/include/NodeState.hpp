@@ -46,7 +46,8 @@ public:
   getEntries(PortType);
 
   ConnectionPtrSet
-  connections(PortType portType, PortIndex portIndex) const;
+  connections(PortType portType,
+              PortIndex portIndex) const;
 
   void
   setConnection(PortType portType,
@@ -70,7 +71,6 @@ public:
   void
   setReaction(ReactToConnectionState reaction,
               PortType reactingPortType = PortType::None,
-
               NodeDataType reactingDataType =
                 NodeDataType());
 

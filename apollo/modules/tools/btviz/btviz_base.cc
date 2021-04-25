@@ -42,6 +42,13 @@ QString nodeTypeToQString(BTreeNodeType type)
     return parts.join(" ");
 }
 
+BTreeNodeType QStringToNodeType(QString string)
+{
+  const google::protobuf::EnumDescriptor* descriptor = apollo::planning::BTreeNodeType_descriptor();
+  QString s = string.toUpper().split(' ', QString::SkipEmptyParts).join("_");
+  return static_cast<apollo::planning::BTreeNodeType>(descriptor->FindValueByName(s.toStdString())->number());
+}
+
 QString nodeCategoryFromNodeName(const QString& name)
 {
     QStringList parts = name.split(' ', QString::SkipEmptyParts);
@@ -52,6 +59,13 @@ QString nodeCategoryFromNodeName(const QString& name)
 std::vector<BTNode> getExistingNodes()
 {
     std::vector<BTNode> nodes;
+
+    BTNode root_node;
+    root_node.name = "Root";
+    root_node.category = "Root";
+    root_node.type = "Root"; 
+        
+    nodes.push_back(root_node);
     
     for (int i = apollo::planning::BTreeNodeType_MIN; i <= apollo::planning::BTreeNodeType_MAX; ++i)
     {

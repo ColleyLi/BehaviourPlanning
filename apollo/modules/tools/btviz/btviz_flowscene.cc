@@ -6,10 +6,18 @@
 #include <QCursor>
 #include <QApplication>
 #include <QGraphicsView>
+#include <QtCore/QFile>
+#include <QtWidgets/QFileDialog>
 #include <Node.hpp>
 
 #include "modules/tools/btviz/models/btree_data_model.h"
 #include "modules/tools/btviz/btviz_flowscene.h"
+
+static int getUid()
+{
+    static int uid = 0;
+    return uid++;
+}
 
 BTvizFlowScene::BTvizFlowScene(std::shared_ptr<QtNodes::DataModelRegistry> registry,
                                  QObject * parent):
@@ -36,6 +44,55 @@ QtNodes::Node& BTvizFlowScene::createNodeAtPosition(const QString& node_type, co
     setNodePosition(node_qt, scene_pos);
 
     return node_qt;
+}
+
+void BTvizFlowScene::saveProtobuf() const
+{
+    QString file_name =
+    QFileDialog::getSaveFileName(nullptr,
+                                 tr("Open Behaviour Tree Protobuf"),
+                                 QDir::homePath(),
+                                 tr("Behaviour Tree Protobuf Files (*.pb.txt)"));
+
+    if (!file_name.isEmpty())
+    {
+        if (!file_name.endsWith("pb.txt", Qt::CaseInsensitive))
+            file_name += ".pb.txt";
+
+        qDebug() << "Will save to: " << file_name;
+
+        generateProtobuf(file_name);
+    }
+}
+
+void BTvizFlowScene::generateProtobuf(const QString& file_name) const
+{
+    BTreeConfig tree;
+    for (auto* node : allNodes())
+    {
+        auto* node_data = dynamic_cast<BTreeDataModel*>(node->nodeDataModel());
+        if (node_data->getNodeType() == "Root")
+        {
+            std::vector<QString> children_ids = node_data->getChildren();
+            if (children_ids.size())
+            {
+                tree.set_root_node_id(children_ids.at(0).toStdString());
+            }
+            continue;
+        }
+
+        auto pb_node = tree.add_node();
+        pb_node->set_id(node_data->getNodeId().toStdString());
+        pb_node->set_name(node_data->getNodeName().toStdString());
+        pb_node->set_type(QStringToNodeType(node_data->getNodeType()));
+
+        std::vector<QString> children_ids = node_data->getChildren();
+        for (auto const& child_id: children_ids)
+        {
+            pb_node->add_child_id(child_id.toStdString());
+        } 
+    }
+    SetProtoToASCIIFile(tree, file_name.toStdString());
 }
 
 // void BTvizFlowScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
