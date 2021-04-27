@@ -339,31 +339,49 @@ void
 Node::
 onPortRemoved(PortType portType, PortIndex index)
 {
+
   // Remove connections to this port
   auto& entries = _nodeState.getEntries(portType);
   int nPorts = _nodeDataModel->nPorts(portType);
   for (int i = nPorts; i < static_cast<int>(entries.size()); ++i)
   {
-    std::vector<Connection*> connections;
-    for (const auto& value : entries[index])
-      connections.push_back(value.second);
+     std::vector<Connection*> connections;
+     for (const auto& value : entries[index]){
+        if(Connection* connection = value.second){
+           connections.push_back(connection);
+        }
+     }
+
+     // connections may be removed from entries in connectionRemoved()
+     for (Connection* connection : connections)
+       Q_EMIT connectionRemoved(*connection);
+  }
+
+  // // Remove connections to this port
+  // auto& entries = _nodeState.getEntries(portType);
+  // int nPorts = _nodeDataModel->nPorts(portType);
+  // for (int i = nPorts; i < static_cast<int>(entries.size()); ++i)
+  // {
+  //   std::vector<Connection*> connections;
+  //   for (const auto& value : entries[index])
+  //     connections.push_back(value.second);
 
     // connections may be removed from entries in connectionRemoved()
-    for (Connection* connection : connections)
-    {
-      int out_port_index = connection->getPortIndex(QtNodes::PortType::Out);
-      int in_port_index = connection->getPortIndex(QtNodes::PortType::In);
-      if ((portType == PortType::In) && (in_port_index == index))
-      {
-        continue;
-      }
-      if ((portType == PortType::Out) && (out_port_index == index))
-      {
-        continue;
-      }
-      Q_EMIT connectionRemoved(*connection);
-    }
-  }
+    // for (Connection* connection : connections)
+    // {
+    //   int out_port_index = connection->getPortIndex(QtNodes::PortType::Out);
+    //   int in_port_index = connection->getPortIndex(QtNodes::PortType::In);
+    //   if ((portType == PortType::In) && (in_port_index == index))
+    //   {
+    //     continue;
+    //   }
+    //   if ((portType == PortType::Out) && (out_port_index == index))
+    //   {
+    //     continue;
+    //   }
+    //   Q_EMIT connectionRemoved(*connection);
+    // }
+  // }
 
   eraseEntry(portType, index);
 

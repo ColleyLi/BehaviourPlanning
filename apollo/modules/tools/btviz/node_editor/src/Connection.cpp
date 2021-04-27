@@ -66,11 +66,6 @@ Connection(Node& nodeIn,
 Connection::
 ~Connection()
 {
-  if (complete())
-  {
-    connectionMadeIncomplete(*this);
-  }
-
   propagateEmptyData();
 
   if (_inNode)
@@ -384,14 +379,18 @@ dataType(PortType portType) const
 {
   if (_inNode && _outNode)
   {
-    auto const & model = (portType == PortType::In) ?
-                        _inNode->nodeDataModel() :
-                        _outNode->nodeDataModel();
+    auto model = (portType == PortType::In) ?
+                  _inNode->nodeDataModel() :
+                  _outNode->nodeDataModel();
     PortIndex index = (portType == PortType::In) ? 
                       _inPortIndex :
                       _outPortIndex;
 
-    return model->dataType(portType, index);
+    if(model){
+      return model->dataType(portType, index);
+    }
+
+    return NodeDataType{};
   }
   else 
   {
@@ -437,7 +436,7 @@ void
 Connection::
 propagateData() const
 {
-  if (_inNode)
+   if (_inNode && _inNode->nodeDataModel())
   {
      if (_inPortIndex < static_cast<int>(_inNode->nodeDataModel()->nPorts(PortType::In)))
     {

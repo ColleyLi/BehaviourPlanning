@@ -252,18 +252,15 @@ unsigned int BTreeDataModel::nPorts(PortType portType) const
 
 void BTreeDataModel::outputConnectionCreated(Connection const& c)
 {
-  // TODO: fix removal
+  int out_port_index = static_cast<int>(c.getPortIndex(QtNodes::PortType::Out));
 
-  int out_port_index = c.getPortIndex(QtNodes::PortType::Out);
-  // int in_port_index = c.getPortIndex(QtNodes::PortType::In);
-  // qDebug() << "Creating port";
-  // qDebug() << "Out port index: " << out_port_index;
-  // qDebug() << "In port index: " << in_port_index;
-
-  if (out_port_index == static_cast<int>(_children_list.size()))
+  if ((out_port_index == static_cast<int>(_children_list.size())) && c.complete())
   {
     _children_list.push_back(c.getNode(QtNodes::PortType::In)->nodeDataModel()->name());
-    Q_EMIT portAdded(PortType::Out, _children_list.size());
+    if (node_.category != "Root")
+    {
+      Q_EMIT portAdded(PortType::Out, static_cast<int>(_children_list.size()));
+    }
   }
   else
   {
@@ -274,26 +271,27 @@ void BTreeDataModel::outputConnectionCreated(Connection const& c)
 
 void BTreeDataModel::outputConnectionDeleted(Connection const& c)
 {
-  int out_port_index = c.getPortIndex(QtNodes::PortType::Out);
-  int in_port_index = c.getPortIndex(QtNodes::PortType::In);
+  int out_port_index = static_cast<int>(c.getPortIndex(QtNodes::PortType::Out));
   
-  // qDebug() << "Removing port";
-  // qDebug() << "Out port index: " << out_port_index;
-  // qDebug() << "In port index: " << in_port_index;
-  
-  if((out_port_index != -1) && (in_port_index != -1))
+  if((out_port_index != -1) && (out_port_index != static_cast<int>(_children_list.size())) && (!c.complete()))
   {
-    if (out_port_index < static_cast<int>(_children_list.size()))
+    _children_list.erase(_children_list.begin() + out_port_index);
+    if (node_.category != "Root")
     {
-      _children_list.erase(_children_list.begin() + out_port_index);
       Q_EMIT portRemoved(PortType::Out, out_port_index);
+    }
+
+    for(int i = out_port_index; i < static_cast<int>(_children_list.size()); ++i)
+    {
+      Q_EMIT dataUpdated(i);
     }
   }
 }
 
 bool BTreeDataModel::hasDynamicPorts(QtNodes::PortType portType) const
 {
-  if(portType == PortType::Out)
+  qDebug() << node_.category;
+  if(portType == PortType::Out && node_.category != "Root")
   {
     return true;
   }
