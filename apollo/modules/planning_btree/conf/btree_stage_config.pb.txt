@@ -1,0 +1,193 @@
+stage_config
+{
+    type: LANE_FOLLOW_STAGE
+    tree
+    {
+        root_node_id: "lane_follow_sequence"
+        node
+        {
+           id: "lane_follow_sequence"
+           name: "Lane Follow Sequence"
+           type: SEQUENCE
+           child_id: "obstacle_processor_task"
+           child_id: "action_selector" 
+           config
+           {
+              default_config
+              {
+              }
+           }
+        }
+        node
+        {
+           id: "obstacle_processor_task"
+           name: "Obstacle Processor Task"
+           type: OBSTACLE_PROCESSOR_TASK
+           config
+           {
+              default_config
+              {
+              }
+           }
+        }
+        node
+        {
+           id: "action_selector"
+           name: "Action Selector"
+           type: SELECTOR
+           child_id: "emergency_sequence"
+           child_id: "maneuver_sequence" 
+           config
+           {
+              default_config
+              {
+              }
+           }
+        }
+        node
+        {
+           id: "emergency_sequence"
+           name: "Emergency Sequence"
+           type: SEQUENCE
+           child_id: "collision_check"
+           child_id: "fallback_path_generator_task" 
+           child_id: "fallback_speed_generator_task" 
+           config
+           {
+              default_config
+              {
+              }
+           }
+        }
+        node
+        {
+           id: "maneuver_sequence"
+           name: "Maneuver Sequence"
+           type: SEQUENCE
+           child_id: "lane_prioritizer_task"
+           child_id: "lane_priority_selector" 
+           config
+           {
+              default_config
+              {
+              }
+           }
+        }  
+        node
+        {
+           id: "collision_check"
+           name: "Collision check"
+           type: COLLISION_CHECK
+           config
+           {
+              default_config
+              {
+              }
+           }
+        }
+        node
+        {
+           id: "fallback_path_generator_task"
+           name: "Fallback Path Generator Task"
+           type: FALLBACK_PATH_GENERATOR_TASK
+           config
+           {
+              default_config
+              {
+              }
+           }
+        }
+        node
+        {
+           id: "fallback_speed_generator_task"
+           name: "Fallback Speed Generator Task"
+           type: FALLBACK_SPEED_GENERATOR_TASK
+           config
+           {
+              default_config
+              {
+              }
+           }
+        }
+        node
+        {
+           id: "lane_prioritizer_task"
+           name: "Lane Prioritizer Task"
+           type: LANE_PRIORITIZER_TASK
+           config
+           {
+              default_config
+              {
+              }
+           }
+        } 
+        node
+        {
+           id: "lane_priority_selector"
+           name: "Lane Priority Selector"
+           type: LANE_PRIORITY_SELECTOR
+           child_id: "lane_process_sequence"
+           config
+           {
+              default_config
+              {
+              }
+           }
+        }
+        node
+        {
+           id: "lane_process_sequence"
+           name: "Lane Process Sequence"
+           type: SEQUENCE
+           child_id: "safe_lane_change_check"
+           child_id: "path_generator_task" 
+           child_id: "speed_generator_task"
+           config
+           {
+              default_config
+              {
+              }
+           }
+        }
+        node
+        {
+           id: "safe_lane_change_check"
+           name: "Safe Lane Change check"
+           type: SAFE_LANE_CHANGE_CHECK
+           config
+           {
+              default_config
+              {
+              }
+           }
+        }
+        node
+        {
+           id: "path_generator_task"
+           name: "Path Generator Task"
+           type: PATH_GENERATOR_TASK
+           config
+           {
+              default_config
+              {
+              }
+           }
+        } 
+        node
+        {
+           id: "speed_generator_task"
+           name: "Speed Generator Task"
+           type: SPEED_GENERATOR_TASK
+           config
+           {
+              default_config
+              {
+              }
+           }
+        }  
+    }
+    parameters
+    {
+
+    }
+}

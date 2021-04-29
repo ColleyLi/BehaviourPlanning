@@ -1,0 +1,32 @@
+syntax = "proto2";
+
+package apollo.planning_btree;
+
+import "modules/planning_btree/proto/btree_context_config.proto";
+
+message TopicConfig {
+  optional string chassis_topic = 1;
+  optional string hmi_status_topic = 2;
+  optional string localization_topic = 3;
+  // optional string planning_pad_topic = 4;
+  optional string planning_trajectory_topic = 5;
+  optional string prediction_topic = 6;
+  // optional string relative_map_topic = 7;
+  optional string routing_request_topic = 8;
+  optional string routing_response_topic = 9;
+  // optional string story_telling_topic = 10;
+  // optional string traffic_light_detection_topic = 11;
+  // optional string planning_learning_data_topic = 12;
+}
+
+message BTreePlanningParameters
+{
+
+}
+
+message BTreePlanningConfig
+{
+  optional TopicConfig topic_config = 1;
+  repeated BTreeContextType context_to_use = 2;
+  optional BTreePlanningParameters parameters = 3;
+}

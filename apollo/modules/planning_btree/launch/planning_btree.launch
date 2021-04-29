@@ -1,0 +1,7 @@
+<cyber>
+    <module>
+        <name>planning_btree</name>
+        <dag_conf>/apollo/modules/planning_btree/dag/planning_btree.dag</dag_conf>
+        <process_name>planning_btree</process_name>
+    </module>
+</cyber>

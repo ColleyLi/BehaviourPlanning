@@ -1,0 +1,49 @@
+syntax = "proto2";
+
+package apollo.planning_btree;
+
+import "modules/planning_btree/proto/btree_stage_config.proto";
+
+enum BTreeContextState
+{
+  CONTEXT_NOT_INITIALIZED = 1;
+  CONTEXT_INITIALIZED = 2;
+  CONTEXT_DONE = 3;
+  CONTEXT_FAILED = 4;
+  CONTEXT_RUNNING = 5;
+}
+
+message StageFSM
+{
+  message Transition
+  {
+    optional BTreeStageState on_state = 1;
+    optional BTreeStageType from_stage = 2;
+    optional BTreeStageType to_stage = 3; 
+  };
+
+  repeated BTreeStageType stage = 1;
+  repeated Transition transition = 2;
+  optional BTreeStageType initial_stage = 3;
+}
+
+message BTreeContextParameters
+{
+}
+
+enum BTreeContextType
+{
+  LANE_FOLLOW_CONTEXT = 0;
+}
+
+message BTreeContextConfig
+{
+  optional BTreeContextType type = 1;
+  optional StageFSM stage_fsm = 2;
+  optional BTreeContextParameters parameters = 3;
+}
+
+message BTreeContextConfigs
+{
+  repeated BTreeContextConfig context_config = 1;
+}

@@ -8,6 +8,7 @@
 !/apollo/modules/
 /apollo/modules/*
 !/apollo/modules/planning/
+!/apollo/modules/planning_btree/
 !/apollo/modules/routing/
 !/apollo/modules/map/
 !/apollo/modules/calibration/
