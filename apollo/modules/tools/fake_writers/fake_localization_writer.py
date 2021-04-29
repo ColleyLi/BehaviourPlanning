@@ -194,28 +194,28 @@ def main():
     # imu_msg.imu.euler_angles.y = -6.2684
     # imu_msg.imu.euler_angles.z = -2.0071
 
-    # chassis_msg = Chassis()
+    chassis_msg = Chassis()
 
-    # chassis_msg.engine_started = 1
-    # chassis_msg.engine_rpm = 800.0
-    # chassis_msg.speed_mps = 0.0
-    # chassis_msg.brake_percentage = 100.0
-    # chassis_msg.driving_mode = COMPLETE_AUTO_DRIVE
-    # chassis_msg.gear_location = GEAR_DRIVE
+    chassis_msg.engine_started = 1
+    chassis_msg.engine_rpm = 800.0
+    chassis_msg.speed_mps = 0.0
+    chassis_msg.brake_percentage = 100.0
+    chassis_msg.driving_mode = COMPLETE_AUTO_DRIVE
+    chassis_msg.gear_location = GEAR_DRIVE
 
-    # chassis_msg.header.module_name = 'chassis'
+    chassis_msg.header.module_name = 'chassis'
 
-    # chassis_msg.chassis_gps.year = 1970
-    # chassis_msg.chassis_gps.month = 1
-    # chassis_msg.chassis_gps.day = 1
-    # chassis_msg.chassis_gps.hours = 3
-    # chassis_msg.chassis_gps.compass_direction = 135.0
-    # chassis_msg.chassis_gps.pdop = 0.0
-    # chassis_msg.chassis_gps.hdop = 0.0
-    # chassis_msg.chassis_gps.vdop = 0.0
-    # chassis_msg.chassis_gps.heading = 115
-    # chassis_msg.chassis_gps.num_satellites = 15
-    # chassis_msg.chassis_gps.gps_speed = 0.0
+    chassis_msg.chassis_gps.year = 1970
+    chassis_msg.chassis_gps.month = 1
+    chassis_msg.chassis_gps.day = 1
+    chassis_msg.chassis_gps.hours = 3
+    chassis_msg.chassis_gps.compass_direction = 135.0
+    chassis_msg.chassis_gps.pdop = 0.0
+    chassis_msg.chassis_gps.hdop = 0.0
+    chassis_msg.chassis_gps.vdop = 0.0
+    chassis_msg.chassis_gps.heading = 115
+    chassis_msg.chassis_gps.num_satellites = 15
+    chassis_msg.chassis_gps.gps_speed = 0.0
 
 
     localization_msg = LocalizationEstimate()
@@ -259,7 +259,7 @@ def main():
         # odometry_msg.header.timestamp_sec = timestamp
         # status_msg.header.timestamp_sec = timestamp
         # imu_msg.header.timestamp_sec = timestamp
-        # chassis_msg.header.timestamp_sec = timestamp
+        chassis_msg.header.timestamp_sec = timestamp
         localization_msg.header.timestamp_sec = timestamp
         localization_status.header.timestamp_sec = timestamp
         localization_status.measurement_time = timestamp
@@ -273,7 +273,7 @@ def main():
         # odometry_writer.write(odometry_msg)
         # status_writer.write(status_msg)
         # imu_writer.write(imu_msg)
-        # chassis_writer.write(chassis_msg)
+        chassis_writer.write(chassis_msg)
 
         sequence_num += 1
 

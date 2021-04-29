@@ -16,3 +16,13 @@ py_binary(
         "//modules/canbus/proto:chassis_py_pb2",
     ],
 )
+
+py_binary(
+    name = "fake_routing_request_writer",
+    srcs = ["fake_routing_request_writer.py"],
+    deps = [
+        "//cyber/python/cyber_py3:cyber",
+        "//cyber/python/cyber_py3:cyber_time",
+        "//modules/routing/proto:routing_py_pb2",
+    ],
+)
