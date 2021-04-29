@@ -117,11 +117,19 @@ Module that is being called by `reference_line_provider.cc` when the `Frame` dat
 
 The planning module then shrinks reference lines and segments with look forward/backward distances, and initializes current frame with them + future route waypoints
 
+### PNC Map Path
+
+#### Map Path point
+
+### PNC Map Route Segment
+
 ### PNC Map and Reference Line Provider
 
 PNC Map is contained in the Reference Line Provider. Here is the scheme of the Reference Line Provider invocation:
 
 ![Reference Line Provider Scheme](images/reference_line_provider_scheme.png)
+
+## Relative map
 
 ## Links
 
