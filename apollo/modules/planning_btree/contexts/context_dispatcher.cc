@@ -5,6 +5,12 @@
 namespace apollo {
 namespace planning_btree {
 
+ContextDispatcher::ContextDispatcher(const std::shared_ptr<DependencyInjector>& injector)
+    :injector_(injector)
+{
+
+}
+
 bool ContextDispatcher::Init()
 {
     RegisterContexts();
@@ -14,12 +20,12 @@ bool ContextDispatcher::Init()
 
 void ContextDispatcher::RegisterContexts() 
 {
-    context_factory_.Register(BTreeContextType::LANE_FOLLOW_CONTEXT, []() -> Context* { return new LaneFollowContext();});
+    context_factory_.Register(BTreeContextType::LANE_FOLLOW_CONTEXT, [](const std::shared_ptr<DependencyInjector>& injector) -> Context* { return new LaneFollowContext(injector);});
 }
 
 std::shared_ptr<Context> ContextDispatcher::Dispatch(const BTreeContextType& context_type)
 {
-    return context_factory_.CreateObject(context_type);
+    return context_factory_.CreateObject(context_type, injector_);
 }
 
 } // namespace planning_btree

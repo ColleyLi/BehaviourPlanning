@@ -53,6 +53,7 @@ cc_library(
         "//cyber/common:file",
         "//modules/planning_btree/proto:btree_context_config_cc_proto",
         "//modules/planning_btree/common:btree_planning_gflags",
+        "//modules/planning_btree/common:dependency_injector",
     ],
 )
 

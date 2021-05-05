@@ -24,7 +24,7 @@ BTreeStageState LaneFollowStage::Execute(const TrajectoryPoint& planning_start_p
     //     ref_line.SetDrivable(false);
     //     ref_line.set_is_path_lane_borrow(true);
     //     ref_line.SetCost(0.0);
-    // } 
+    // }
 
     behaviour_tree_->Execute(frame);
 

@@ -6,6 +6,31 @@ load("//tools:python_rules.bzl", "py_proto_library")
 package(default_visibility = ["//visibility:public"])
 
 cc_proto_library(
+    name = "reference_line_smoother_config_cc_proto",
+    deps = [
+        ":reference_line_smoother_config_proto",
+    ],
+)
+
+proto_library(
+    name = "reference_line_smoother_config_proto",
+    srcs = ["reference_line_smoother_config.proto"],
+    deps = [
+        "//modules/planning_btree/proto/math:cos_theta_smoother_config_proto",
+        "//modules/planning_btree/proto/math:fem_pos_deviation_smoother_config_proto",
+    ],
+)
+
+py_proto_library(
+    name = "reference_line_smoother_config_py_pb2",
+    deps = [
+        ":reference_line_smoother_config_proto",
+        "//modules/planning_btree/proto/math:cos_theta_smoother_config_py_pb2",
+        "//modules/planning_btree/proto/math:fem_pos_deviation_smoother_config_py_pb2",
+    ],
+)
+
+cc_proto_library(
     name = "btree_context_config_cc_proto",
     deps = [
         ":btree_context_config_proto",
@@ -75,6 +100,33 @@ py_proto_library(
 )
 
 cc_proto_library(
+    name = "btree_planning_state_cc_proto",
+    deps = [
+        ":btree_planning_state_proto",
+    ],
+)
+
+proto_library(
+    name = "btree_planning_state_proto",
+    srcs = ["btree_planning_state.proto"],
+    deps = [
+        ":btree_context_config_proto",
+        ":btree_stage_config_proto",
+        "//modules/routing/proto:routing_proto",
+    ],
+)
+
+py_proto_library(
+    name = "btree_planning_state_py_pb2",
+    deps = [
+        ":btree_context_config_py_pb2",
+        ":btree_planning_state_proto",
+        ":btree_stage_config_py_pb2",
+        "//modules/routing/proto:routing_py_pb2",
+    ],
+)
+
+cc_proto_library(
     name = "btree_planning_config_cc_proto",
     deps = [
         ":btree_planning_config_proto",
@@ -94,6 +146,29 @@ py_proto_library(
     deps = [
         ":btree_context_config_py_pb2",
         ":btree_planning_config_proto",
+    ],
+)
+
+cc_proto_library(
+    name = "sl_boundary_cc_proto",
+    deps = [
+        ":sl_boundary_proto",
+    ],
+)
+
+proto_library(
+    name = "sl_boundary_proto",
+    srcs = ["sl_boundary.proto"],
+    deps = [
+        "//modules/common/proto:pnc_point_proto",
+    ],
+)
+
+py_proto_library(
+    name = "sl_boundary_py_pb2",
+    deps = [
+        ":sl_boundary_proto",
+        "//modules/common/proto:pnc_point_py_pb2",
     ],
 )
 

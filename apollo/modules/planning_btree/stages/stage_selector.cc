@@ -4,19 +4,24 @@
 namespace apollo {
 namespace planning_btree {
 
+StageSelector::StageSelector(const std::shared_ptr<DependencyInjector>& injector)
+    :injector_(injector)
+{
+
+}
 bool StageSelector::Init(const StageFSM& fsm_config)
 {
-    stage_dispatcher_.Init();
+    stage_dispatcher_ = std::make_unique<StageDispatcher>();
+    stage_dispatcher_->Init();
     stages_.clear();
     transitions_.clear();
 
-    BTreeStageConfigs stage_configs;
-    cyber::common::GetProtoFromFile(FLAGS_btree_stage_config_file, &stage_configs);
+    auto stage_configs = injector_->planning_state()->btplan().stage_configs();
 
     for(int i = 0; i < fsm_config.stage_size(); ++i)
     {
         auto stage_type = fsm_config.stage(i);
-        auto stage = stage_dispatcher_.Dispatch(stage_type);
+        auto stage = stage_dispatcher_->Dispatch(stage_type);
 
         // TODO: Speed-up config lookup
         for (int i = 0; i < stage_configs.stage_config_size(); ++i)

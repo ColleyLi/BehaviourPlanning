@@ -18,6 +18,7 @@
 #include "modules/planning_btree/contexts/context_selector.h"
 #include "modules/planning_btree/contexts/context.h"
 // #include "modules/common/util/message_util.h"
+#include "modules/planning_btree/common/dependency_injector.h"
 
 namespace apollo {
 namespace planning_btree {
@@ -27,7 +28,7 @@ using apollo::planning::ADCTrajectory;
 class BTreePlanner
 {
  public:
-  BTreePlanner();
+  BTreePlanner(const std::shared_ptr<DependencyInjector>& injector);
 
   ~BTreePlanner();
 
@@ -40,7 +41,9 @@ class BTreePlanner
                       ADCTrajectory* ptr_computed_trajectory);
   private:
     BTreePlanningConfig config_;
-    ContextSelector context_selector_;
+    std::unique_ptr<ContextSelector> context_selector_ = nullptr;
+    
+    std::shared_ptr<DependencyInjector> injector_;
 };
 
 }  // namespace planning_btree

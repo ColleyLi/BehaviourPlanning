@@ -4,6 +4,49 @@ load("//tools:cpplint.bzl", "cpplint")
 package(default_visibility = ["//visibility:public"])
 PLANNING_COPTS = ["-DMODULE_NAME=\\\"planning_btree\\\""]
 
+
+cc_library(
+    name = "indexed_list",
+    hdrs = ["indexed_list.h"],
+    copts = PLANNING_COPTS,
+    deps = [
+        "//modules/common/util:map_util",
+        "@boost",
+    ],
+)
+
+cc_test(
+    name = "indexed_list_test",
+    size = "small",
+    srcs = ["indexed_list_test.cc"],
+    deps = [
+        ":indexed_list",
+        "//modules/common/util",
+        "@boost",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_library(
+    name = "indexed_queue",
+    hdrs = ["indexed_queue.h"],
+    copts = PLANNING_COPTS,
+    deps = [
+        "//modules/common/util:map_util",
+    ],
+)
+
+cc_test(
+    name = "indexed_queue_test",
+    size = "small",
+    srcs = ["indexed_queue_test.cc"],
+    deps = [
+        ":indexed_queue",
+        "//modules/common/util",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
 cc_library(
     name = "planning_input",
     hdrs = ["planning_input.h"],
@@ -26,7 +69,9 @@ cc_library(
     hdrs = ["btree_frame.h"],
     copts = PLANNING_COPTS,
     deps = [
+        ":indexed_queue",
         ":planning_input",
+        ":dynamic_reference_line",
         "//cyber/common:log",
         "//modules/common/configs:vehicle_config_helper",
         "//modules/common/monitor_log",
@@ -34,6 +79,7 @@ cc_library(
         "//modules/map/hdmap:hdmap_util",
         "//modules/map/pnc_map",
         "//modules/planning/proto:planning_cc_proto",
+        "//modules/planning_btree/reference_line:reference_line_provider",
         "@eigen",
     ],
 )
@@ -47,4 +93,32 @@ cc_library(
         "@com_github_gflags_gflags//:gflags",
     ],
 )
+
+cc_library(
+    name = "dependency_injector",
+    hdrs = ["dependency_injector.h"],
+    copts = PLANNING_COPTS,
+    deps = [
+        "//modules/planning_btree/proto:btree_planning_state_cc_proto",
+    ],
+)
+
+cc_library(
+    name = "dynamic_reference_line",
+    srcs = ["dynamic_reference_line.cc"],
+    hdrs = ["dynamic_reference_line.h"],
+    copts = PLANNING_COPTS,
+    deps = [
+        "//cyber/common:log",
+        "//modules/common/math",
+        "//modules/common/proto:pnc_point_cc_proto",
+        "//modules/common/util:point_factory",
+        "//modules/common/vehicle_state:vehicle_state_provider",
+        "//modules/map/pnc_map",
+        "//modules/map/proto:map_cc_proto",
+        "//modules/planning_btree/reference_line",
+        "@eigen",
+    ],
+)
+
 cpplint()

@@ -7,10 +7,6 @@
 #include "modules/common/util/util.h"
 #include "modules/map/hdmap/hdmap_util.h"
 #include "modules/map/pnc_map/pnc_map.h"
-// #include "modules/planning/common/history.h"
-// #include "modules/planning/common/planning_context.h"
-// #include "modules/planning/navi_planning.h"
-// #include "modules/planning/on_lane_planning.h"
 
 namespace apollo {
 namespace planning_btree {
@@ -24,7 +20,8 @@ using apollo::routing::RoutingResponse;
 using apollo::planning::ADCTrajectory;
 
 bool BTreePlanningComponent::Init() {
-  planning_base_ = std::make_unique<BTreePlanningBase>();
+  injector_ = std::make_shared<DependencyInjector>();
+  planning_base_ = std::make_unique<BTreePlanningBase>(injector_);
 
   AERROR << "Init btree planning component";
 
@@ -188,15 +185,13 @@ bool BTreePlanningComponent::Proc(
 }
 
 void BTreePlanningComponent::CheckRerouting() {
-  // auto* rerouting = injector_->planning_context()
-  //                       ->mutable_planning_status()
-  //                       ->mutable_rerouting();
-  // if (!rerouting->need_rerouting()) {
-    // return;
-  // }
-  // common::util::FillHeader(node_->Name(), rerouting->mutable_routing_request());
-  // rerouting->set_need_rerouting(false);
-  // rerouting_writer_->Write(rerouting->routing_request());
+  auto* rerouting = injector_->planning_state()->mutable_rerouting_state();
+  if (!rerouting->need_rerouting()) {
+    return;
+  }
+  common::util::FillHeader(node_->Name(), rerouting->mutable_routing_request());
+  rerouting->set_need_rerouting(false);
+  rerouting_writer_->Write(rerouting->routing_request());
 }
 
 bool BTreePlanningComponent::CheckInput() {

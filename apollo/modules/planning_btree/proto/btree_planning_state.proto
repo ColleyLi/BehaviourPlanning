@@ -1,0 +1,26 @@
+syntax = "proto2";
+
+package apollo.planning_btree;
+
+import "modules/routing/proto/routing.proto";
+import "modules/planning_btree/proto/btree_context_config.proto";
+import "modules/planning_btree/proto/btree_stage_config.proto";
+
+message BTPlan
+{
+    optional BTreeStageConfigs stage_configs = 1; 
+    optional BTreeContextConfigs context_configs = 2;
+}
+
+message ReroutingState
+{
+  optional double last_rerouting_time = 1;
+  optional bool need_rerouting = 2 [default = false];
+  optional apollo.routing.RoutingRequest routing_request = 3;
+}
+
+message BTreePlanningState 
+{
+    optional BTPlan btplan = 1;
+    optional ReroutingState rerouting_state = 2;
+}

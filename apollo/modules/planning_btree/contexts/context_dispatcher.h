@@ -12,7 +12,7 @@ namespace planning_btree {
 class ContextDispatcher
 {
     public:
-        ContextDispatcher() = default;
+        ContextDispatcher(const std::shared_ptr<DependencyInjector>& injector);
         ~ContextDispatcher() = default;
 
         bool Init();
@@ -21,7 +21,11 @@ class ContextDispatcher
     private:
         void RegisterContexts();
 
-        common::util::Factory<BTreeContextType, Context> context_factory_;
+        common::util::Factory<BTreeContextType, Context, 
+                              Context *(*)(const std::shared_ptr<DependencyInjector> &injector),
+                              std::unordered_map<BTreeContextType, Context *(*)(const std::shared_ptr<DependencyInjector> &injector), std::hash<int>>> context_factory_;
+        
+        std::shared_ptr<DependencyInjector> injector_;
 };
 
 } // namespace planning_btree

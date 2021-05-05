@@ -15,17 +15,17 @@
 #include "modules/common/vehicle_state/proto/vehicle_state.pb.h"
 // #include "modules/localization/proto/pose.pb.h"
 // #include "modules/planning/common/ego_info.h"
-// #include "modules/planning/common/indexed_queue.h"
+#include "modules/planning_btree/common/indexed_queue.h"
 #include "modules/planning_btree/common/planning_input.h"
 // #include "modules/planning/common/obstacle.h"
 // #include "modules/planning/common/open_space_info.h"
-// #include "modules/planning/common/reference_line_info.h"
+#include "modules/planning_btree/common/dynamic_reference_line.h"
 // #include "modules/planning/common/trajectory/publishable_trajectory.h"
 // #include "modules/planning/proto/pad_msg.pb.h"
 // #include "modules/planning/proto/planning.pb.h"
 // #include "modules/planning/proto/planning_config.pb.h"
 // #include "modules/planning/proto/planning_internal.pb.h"
-// #include "modules/planning/reference_line/reference_line_provider.h"
+#include "modules/planning_btree/reference_line/reference_line_provider.h"
 // #include "modules/prediction/proto/prediction_obstacle.pb.h"
 // #include "modules/routing/proto/routing.pb.h"
 
@@ -34,27 +34,26 @@ namespace planning_btree {
 
 class BTreeFrame {
  public:
-  BTreeFrame(uint32_t sequence_num) {};
+  explicit BTreeFrame(uint32_t sequence_num);
 
-  // BTreeFrame(uint32_t sequence_num, const PlanningInput &planning_input,
-  //       const common::TrajectoryPoint &planning_start_point,
-  //       const common::VehicleState &vehicle_state,
-  //       ReferenceLineProvider *reference_line_provider);
+  BTreeFrame(uint32_t sequence_num, const PlanningInput &planning_input,
+        const common::TrajectoryPoint &planning_start_point,
+        const common::VehicleState &vehicle_state,
+        ReferenceLineProvider *reference_line_provider);
 
-  // BTreeFrame(uint32_t sequence_num, const PlanningInput &planning_input,
-        // const common::TrajectoryPoint &planning_start_point,
-        // const common::VehicleState &vehicle_state);
+  BTreeFrame(uint32_t sequence_num, const PlanningInput &planning_input,
+        const common::TrajectoryPoint &planning_start_point,
+        const common::VehicleState &vehicle_state);
 
-  // virtual ~BTreeFrame();
+  ~BTreeFrame() = default;
 
   // const common::TrajectoryPoint &PlanningStartPoint() const;
 
-  // common::Status Init(
-      // const common::VehicleStateProvider *vehicle_state_provider,
-      // const std::list<ReferenceLine> &reference_lines,
-      // const std::list<hdmap::RouteSegments> &segments,
-      // const std::vector<routing::LaneWaypoint> &future_route_waypoints,
-      // const EgoInfo *ego_info);
+  common::Status Init(
+      const common::VehicleStateProvider *vehicle_state_provider,
+      const std::list<ReferenceLine> &reference_lines,
+      const std::list<hdmap::RouteSegments> &segments,
+      const std::vector<routing::LaneWaypoint> &future_route_waypoints);
 
 //   uint32_t SequenceNum() const;
 
@@ -172,11 +171,11 @@ class BTreeFrame {
   uint32_t sequence_num_ = 0;
   PlanningInput planning_input_;
 //   const hdmap::HDMap *hdmap_ = nullptr;
-//   common::TrajectoryPoint planning_start_point_;
-//   common::VehicleState vehicle_state_;
-//   std::list<ReferenceLineInfo> reference_line_info_;
+  common::TrajectoryPoint planning_start_point_;
+  common::VehicleState vehicle_state_;
+  std::list<DynamicReferenceLine> dynamic_reference_lines_;
 
-//   bool is_near_destination_ = false;
+  bool is_near_destination_ = false;
 
 //   const ReferenceLineInfo *drive_reference_line_info_ = nullptr;
 
@@ -191,7 +190,7 @@ class BTreeFrame {
   // current frame path for future possible speed fallback
 //   DiscretizedPath current_frame_planned_path_;
 
-//   const ReferenceLineProvider *reference_line_provider_ = nullptr;
+  const ReferenceLineProvider *reference_line_provider_ = nullptr;
 // 
 //   OpenSpaceInfo open_space_info_;
 
@@ -200,10 +199,11 @@ class BTreeFrame {
 //   common::monitor::MonitorLogBuffer monitor_logger_buffer_;
 };
 
-// class FrameHistory : public IndexedQueue<uint32_t, Frame> {
-//  public:
-//   FrameHistory();
-// };
+class BTreeFrameHistory : public IndexedQueue<uint32_t, BTreeFrame> 
+{
+ public:
+  BTreeFrameHistory();
+};
 
 }  // namespace planning_btree
 }  // namespace apollo

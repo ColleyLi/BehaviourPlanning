@@ -8,7 +8,8 @@ namespace apollo
 namespace planning_btree
 {
 
-BTreePlanner::BTreePlanner()
+BTreePlanner::BTreePlanner(const std::shared_ptr<DependencyInjector>& injector)
+  : injector_(injector)
 {
 
 }
@@ -32,7 +33,8 @@ Status BTreePlanner::Init(const BTreePlanningConfig& config)
     config_contexts.insert(context);
   }
 
-  context_selector_.Init(config_contexts);
+  context_selector_ = std::make_unique<ContextSelector>(injector_);
+  context_selector_->Init(config_contexts);
 
   return Status::OK();
 }
@@ -45,7 +47,7 @@ Status BTreePlanner::Execute(const TrajectoryPoint& planning_start_point,
 
   AERROR << "Running BTree planner";
 
-  auto current_context = context_selector_.GetCurrentContext(planning_start_point, frame);
+  auto current_context = context_selector_->GetCurrentContext(planning_start_point, frame);
 
   current_context->Execute(planning_start_point, frame);
 

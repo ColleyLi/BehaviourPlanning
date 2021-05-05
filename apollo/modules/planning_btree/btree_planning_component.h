@@ -17,6 +17,7 @@
 // #include "modules/planning/proto/pad_msg.pb.h"
 #include "modules/planning/proto/planning.pb.h"
 #include "modules/planning_btree/proto/btree_planning_config.pb.h"
+#include "modules/planning_btree/common/dependency_injector.h"
 
 
 namespace apollo {
@@ -45,6 +46,8 @@ class BTreePlanningComponent final
   bool CheckInput();
 
  private:
+  std::shared_ptr<DependencyInjector> injector_;
+  
   std::shared_ptr<cyber::Reader<perception::TrafficLightDetection>>
       traffic_light_reader_;
   std::shared_ptr<cyber::Reader<routing::RoutingResponse>> routing_reader_;

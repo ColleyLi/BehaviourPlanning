@@ -29,6 +29,7 @@ cc_library(
         "//modules/prediction/proto:prediction_obstacle_cc_proto",
         "//modules/planning/proto:planning_cc_proto",
         "//modules/planning_btree/proto:btree_planning_config_cc_proto",
+        "//modules/planning_btree/common:dependency_injector",
         "//modules/map/pnc_map:pnc_map",
         "@com_google_googletest//:gtest_main",
     ],
@@ -56,6 +57,7 @@ cc_library(
         "//modules/planning/proto:planning_cc_proto",
         "//modules/planning_btree/proto:btree_planning_config_cc_proto",
         "//modules/planning_btree/common:planning_input",
+        "//modules/planning_btree/common:dependency_injector",
     ],
 )
 

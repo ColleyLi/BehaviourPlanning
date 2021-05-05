@@ -3,6 +3,12 @@
 namespace apollo {
 namespace planning_btree {
 
+LaneFollowContext::LaneFollowContext(const std::shared_ptr<DependencyInjector>& injector)
+    :Context(injector)
+{
+
+}
+
 BTreeContextState LaneFollowContext::Init(const BTreeContextConfig& config)
 {
     state_ = Context::Init(config);
@@ -14,7 +20,7 @@ BTreeContextState LaneFollowContext::Execute(const TrajectoryPoint& planning_sta
 {
     AERROR << "Executed LaneFollow context";
 
-    auto current_stage = stage_selector_.GetCurrentStage(planning_start_point, frame);
+    auto current_stage = stage_selector_->GetCurrentStage(planning_start_point, frame);
 
     current_stage->Execute(planning_start_point, frame);
 

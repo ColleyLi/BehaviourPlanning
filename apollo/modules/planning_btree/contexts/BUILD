@@ -15,6 +15,7 @@ cc_library(
     deps = [
         "//modules/planning_btree/stages:stage_selector",
         "//modules/planning_btree/common:btree_frame",
+        "//modules/planning_btree/common:dependency_injector",
         "//modules/planning_btree/proto:btree_context_config_cc_proto",
     ],
 )
@@ -31,6 +32,7 @@ cc_library(
     deps = [
         ":context",
         "//modules/planning_btree/common:btree_frame",
+        "//modules/planning_btree/common:dependency_injector",
         "//modules/planning_btree/proto:btree_context_config_cc_proto",
         "//modules/planning_btree/contexts/lane_follow:lane_follow_context",
     ],
@@ -49,6 +51,7 @@ cc_library(
         ":context",
         ":context_dispatcher",
         "//modules/planning_btree/common:btree_frame",
+        "//modules/planning_btree/common:dependency_injector",
         "//modules/planning_btree/proto:btree_context_config_cc_proto",
     ],
 )
