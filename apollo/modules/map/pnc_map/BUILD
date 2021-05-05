@@ -73,6 +73,7 @@ cc_library(
         "//modules/common/vehicle_state/proto:vehicle_state_cc_proto",
         "//modules/map/hdmap",
         "//modules/planning/common:planning_gflags",
+        "//modules/planning_btree/common:btree_planning_gflags",
         "//modules/routing/common:routing_gflags",
         "@com_google_googletest//:gtest",
     ],

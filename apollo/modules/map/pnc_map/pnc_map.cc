@@ -31,10 +31,8 @@
 #include "modules/map/hdmap/hdmap_util.h"
 #include "modules/map/pnc_map/path.h"
 #include "modules/planning/common/planning_gflags.h"
+#include "modules/planning_btree/common/btree_planning_gflags.h"
 #include "modules/routing/common/routing_gflags.h"
-
-DEFINE_bool(generate_neighbors, false,
-            "whether to generate all neighbors to the current lane");
 
 DEFINE_double(
     look_backward_distance, 50,
@@ -370,11 +368,11 @@ std::vector<int> PncMap::GenerateNeighborPassages(
   }
 
   auto* left_passage = road_segment.add_passage();
-  left_passage->set_change_lane_type(routing::FORWARD);
+  left_passage->set_change_lane_type(routing::RIGHT);
   left_passage->set_can_exit(true);
 
   auto* right_passage = road_segment.add_passage();
-  right_passage->set_change_lane_type(routing::FORWARD);
+  right_passage->set_change_lane_type(routing::LEFT);
   right_passage->set_can_exit(true);
 
   result.emplace_back(current_passage_index);
@@ -494,7 +492,7 @@ bool PncMap::GetRouteSegments(const VehicleState &vehicle_state,
   
   // Raw filter to find all neighboring passages
   std::vector<int> drive_passages;
-  if(FLAGS_generate_neighbors)
+  if(FLAGS_btree_generate_neighbors)
   {
     auto mutable_road = routing_.mutable_road(road_index);
     drive_passages = GenerateNeighborPassages(*mutable_road, passage_index);
