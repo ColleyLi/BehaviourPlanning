@@ -51,7 +51,7 @@ Every map is described by at least three files:
 
 There are tools to convert Base map to Routing or Sim map. Check out `/apollo/modules/map/data/README.md`
 
-Map data structures are defined with protocol buffers. `map/proto` folder contains protobuf message defintions. You can find more information about the meaning of messages [here](https://github.com/daohu527/Dig-into-Apollo/tree/master/modules/map#%E5%9C%B0%E5%9B%BE%E4%BF%A1%E6%81%AF%E5%A4%B4)
+Map data structures are defined with protocol buffers. `map/proto` folder contains protobuf message definitions. You can find more information about the meaning of messages [here](https://github.com/daohu527/Dig-into-Apollo/tree/master/modules/map#%E5%9C%B0%E5%9B%BE%E4%BF%A1%E6%81%AF%E5%A4%B4)
 
 In addition there is a PNC map:
 
@@ -95,7 +95,7 @@ landmark {
 }
 ```
 
-This endpoint will appear in Deamview on the `Route Editing -> Add Point of Interest` Tab:
+This endpoint will appear in Dreamview on the `Route Editing -> Add Point of Interest` Tab:
 
 ![Point of interest](./images/point_of_interest.png)
 
@@ -117,11 +117,58 @@ Module that is being called by `reference_line_provider.cc` when the `Frame` dat
 
 The planning module then shrinks reference lines and segments with look forward/backward distances, and initializes current frame with them + future route waypoints
 
+Usage pipeline:
+
+- Set current routing response with `UpdateRoutingResponse(routing_response)`
+- Get current route segments in range `[backward_length, forward_length]` with `GetRouteSegments(vehicle_state, backward_length, forward_length, *route_segments)`. You can also call `GetRouteSegments(vehicle_state, *route_segments)`. In this case `backward_length` and `forward_length` will be defined from adc's velocity and config files
+
+Contains:
+
+- `routing` - routing response
+- `route_indices` - vector of structs that contain lane segment along with array of three indices `{road_index, passage_index, lane_index}` 
+- `range_start` -
+- `range_end` -
+- `range_lane_ids` - routing ids in range?
+- `all_lane_ids` - all lane ids for current routing?
+- `routing_waypoint_index` - vector of pairs `index->Waypoint`
+- `next_routing_waypoint_index` - index of next waypoint in `routing_waypoint_index`
+- `hdmap` - pointer to the HD map
+- `is_same_routing` - flag for the result of comparison of new and current routing responses
+- `adc_state` - vehicle state
+- `adc_route_index` - index of adc's location in `route_indices`
+- `adc_waypoint` - adc's current waypoint?
+- `stop_for_destination` - flag to help solve problems with looped routing (when we need to pass destination multiple times, but stop only on the last passage)
+
 ### PNC Map Path
 
-#### Map Path point
+Contains several helper classes:
 
-### PNC Map Route Segment
+#### Map Path Point
+
+### PNC Map Route Segments
+
+Represent passages from routing response + adds some additional info. So, we will use `route segment` and `passage` interchangeably in this context. Route Segments class inherits from `std::vector<LaneSegments>`
+
+Some interface usages:
+
+- `Stitch(route_segment)` - stitches current route segment with `route_segment`
+- `Shrink()` - shrinks current route segment based on `look_forward` and `look_backward` distances
+- `FirstWaypoint()` - get the first waypoint from the lane segments
+- `LastWaypoint()` - get the last waypoint from the lane segments
+- `NextAction()` - get the next action to perform
+- `PreviousAction()` - get the action that led to this route segment
+- `CanExit()` - check if the adc can move from this route segment to any other route segment
+
+Contains:
+
+- `route_end_waypoint` - the end point of the original passage in routing. Used to check if the adc is out of current routing
+- `can_exit` - whether this route segment can lead to another route segment in routing response
+- `is_on_segment` - flag that shows whether the adc is on this route segment
+- `is_neighbor` - shows whether this route segment is a neighbor to the adc's current route segment
+- `next_action` -  next action adc should perform if the adc is on this route segment. One of: `FORWARD`, `LEFT`, `RIGHT`
+- `previous_action` - previous action adc had performed to reach this route segment. One of: `FORWARD`, `LEFT`, `RIGHT`
+- `id` - id of the route segment?
+- `stop_for_destination` - whether the adc should stop for the destination 
 
 ### PNC Map and Reference Line Provider
 
