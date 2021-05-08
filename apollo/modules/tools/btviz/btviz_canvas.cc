@@ -2,7 +2,7 @@
 
 #include <typeinfo>
 
-BTvizCanvas::BTvizCanvas(QWidget *parent): QObject(parent)
+BTvizCanvas::BTvizCanvas(QWidget *parent): QTabWidget(parent)
 {
     flow_view_ = std::make_unique<QtNodes::FlowView>();
     
@@ -33,6 +33,10 @@ BTvizCanvas::BTvizCanvas(QWidget *parent): QObject(parent)
     QString btplan_id = "btplan_1";
     QString btplan_name = "My Plan";
     QString context_scene_id = "context_1";
+    
+    current_tab_id_ = btplan_id;
+    tabs_[btplan_id] = addTab(getView(), btplan_name);
+
     createScene(FlowSceneType::CONTEXT_SCENE, context_scene_id, btplan_id, btplan_name);
     setScene(FlowSceneType::CONTEXT_SCENE, context_scene_id);
 }
@@ -116,7 +120,7 @@ void BTvizCanvas::setScene(const FlowSceneType& scene_type, const QString& scene
     current_scene_type_ = scene_type;
     flow_scene_ = scene;
 
-    flow_view_->setScene(flow_scene_.get());
+    flow_view_->setScene(getScene());
 
     // fitToScreen();
 

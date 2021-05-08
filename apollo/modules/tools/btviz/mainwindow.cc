@@ -80,19 +80,22 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     setStyle();
 
     btree_canvas_ = std::make_unique<BTvizCanvas>(this);
-    ui->tabWidget->addTab(btree_canvas_->view(), "My Plan");
+    
+    ui->frameLayout->addWidget(btree_canvas_.get());
+    ui->frameLayout->setContentsMargins(0, 0, 0, 0);
+    ui->frameLayout->setSpacing(0);
 
     QObject::connect(ui->actionSave, &QAction::triggered,
-                     btree_canvas_->scene(), &FlowScene::save);
+                     btree_canvas_->getScene(), &FlowScene::save);
 
     QObject::connect(ui->actionLoad, &QAction::triggered,
-                     btree_canvas_->scene(), &FlowScene::load);
+                     btree_canvas_->getScene(), &FlowScene::load);
 
     // Scene is generic FlowScene object, so will need to handle this
     // QObject::connect(ui->actionGenerateProtobuf, &QAction::triggered,
                     //  btree_canvas_->scene(), &BTvizBTreeFlowScene::saveProtobuf);
 
-    QObject::connect(ui->actionFitToScreen, &QAction::triggered,
+    QObject::connect(ui->actionFitView, &QAction::triggered,
                      this, &MainWindow::fitToScreen);
 }
 

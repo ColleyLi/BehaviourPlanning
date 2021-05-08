@@ -6,7 +6,7 @@
 
 #include <QString>
 #include <QObject>
-#include <QWidget>
+#include <QTabWidget>
 #include <QLineEdit>
 
 #include "modules/tools/btviz/btviz_base.h"
@@ -25,14 +25,14 @@
 #include <FlowScene.h>
 #include <FlowView.h>
 
-class BTvizCanvas : public QObject
+class BTvizCanvas : public QTabWidget
 {
     Q_OBJECT
 public:
     BTvizCanvas(QWidget *parent = nullptr);
 
-    QtNodes::FlowScene* scene() { return flow_scene_.get(); }
-    QtNodes::FlowView*  view() { return flow_view_.get(); } 
+    QtNodes::FlowScene* getScene() { return flow_scene_.get(); }
+    QtNodes::FlowView*  getView() { return flow_view_.get(); } 
 
     void fitToScreen() const;
     
@@ -59,6 +59,9 @@ private:
     std::unordered_map<QString, std::shared_ptr<BTvizContextFlowScene>> context_flow_scenes_;
     std::unordered_map<QString, std::shared_ptr<BTvizStageFlowScene>> stage_flow_scenes_;
     std::unordered_map<QString, std::shared_ptr<BTvizBTreeFlowScene>> btree_flow_scenes_;
+
+    QString current_tab_id_ = "";
+    std::unordered_map<QString, int> tabs_;
 
     FlowSceneType current_scene_type_ = FlowSceneType::NO_SCENE;
     QString current_scene_id_ = ""; 
