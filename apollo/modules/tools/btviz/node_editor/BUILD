@@ -5,11 +5,11 @@ package(default_visibility = ["//visibility:public"])
 qt_cc_library(
     name = "node_editor_lib",
     srcs = glob(
-        ["src/*.cpp"],
+        ["src/*.cc"],
     ),
     hdrs = glob([
-        "src/*.hpp",
-        "include/*.hpp",
+        "src/*.h",
+        "include/*.h",
     ]),
     copts = [
         "-Iexternal/qt",

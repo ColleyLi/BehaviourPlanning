@@ -30,13 +30,13 @@ using QtNodes::NodeValidationState;
 using QtNodes::NodeStyle;
 using QtNodes::Connection;
 
-class BTreeDataModel : public NodeDataModel
+class ContextDataModel : public NodeDataModel
 {
   Q_OBJECT
 
   public:
-    BTreeDataModel(const BTvizNode& node);
-    ~BTreeDataModel() override;
+    ContextDataModel(const BTvizNode& node);
+    ~ContextDataModel() override;
 
     void Init();
  
@@ -65,12 +65,6 @@ class BTreeDataModel : public NodeDataModel
     QWidget *embeddedWidget() final;
   
   public: 
-    const QString& getStageName();
-    void setStageName(const QString& name);
-    
-    const QString& getStageSceneId();
-    void setStageSceneId(const QString& scene_id);
-
     void setNodeName(const QString& name);
     
     void setNodeId(const QString& id);
@@ -83,8 +77,10 @@ class BTreeDataModel : public NodeDataModel
     
     const QString& getNodeCategory();
 
-    std::vector<QString> getChildren();
-  
+    const QString& getStageSceneId();
+
+    void setStageSceneId(const QString& scene_id);
+
     QJsonObject save() const override;
 
     void restore(QJsonObject const &) override;
@@ -102,11 +98,10 @@ class BTreeDataModel : public NodeDataModel
 
   private:
     BTvizNode node_;
+    
+    QString stage_scene_id_ = "";
 
-    QString stage_name_;
-    QString stage_scene_id_;
-
-    std::vector<QString> children_list_;
+    std::vector<QString> contexts_;
 
     QFrame*  main_widget_;
     QVBoxLayout* main_layout_;

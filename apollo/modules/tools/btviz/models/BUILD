@@ -23,7 +23,9 @@ qt_cc_library(
     deps = [
         "//modules/tools/btviz:btviz_base_lib",
         "//modules/tools/btviz/node_editor:node_editor_lib",
-        "//modules/planning/proto:b_tree_config_cc_proto",
+        "//modules/planning_btree/proto:btree_context_config_cc_proto",
+        "//modules/planning_btree/proto:btree_stage_config_cc_proto",
+        "//modules/planning_btree/proto:btree_config_cc_proto",
         "@qt//:qt_core",
         "@qt//:qt_gui",
         "@qt//:qt_opengl",

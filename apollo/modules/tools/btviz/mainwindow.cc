@@ -5,24 +5,15 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QMenuBar>
 
-#include <NodeData.hpp>
-#include <FlowScene.hpp>
-#include <FlowView.hpp>
-#include <NodeStyle.hpp>
-#include <ConnectionStyle.hpp>
-#include <FlowViewStyle.hpp>
-#include <TypeConverter.hpp>
+#include <FlowScene.h>
+#include <NodeStyle.h>
+#include <ConnectionStyle.h>
+#include <FlowViewStyle.h>
 
-#include "modules/tools/btviz/models/btree_data_model.h"
-
-using QtNodes::DataModelRegistry;
-using QtNodes::FlowScene;
-using QtNodes::FlowView;
 using QtNodes::NodeStyle;
 using QtNodes::ConnectionStyle;
 using QtNodes::FlowViewStyle;
-using QtNodes::TypeConverter;
-using QtNodes::TypeConverterId;
+using QtNodes::FlowScene;
 
 void MainWindow::setStyle()
 {
@@ -83,47 +74,31 @@ void MainWindow::setStyle()
   )");
 }
 
-MainWindow::MainWindow(QWidget *parent):
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     setStyle();
 
-    model_registry_ = std::make_shared<QtNodes::DataModelRegistry>();
-    auto registerNode = [this](const BTNode& node)
-    {
-        QtNodes::DataModelRegistry::RegistryItemCreator creator;
-        creator = [node]() -> QtNodes::DataModelRegistry::RegistryItemPtr
-        {
-            auto ptr = new BTreeDataModel(node);
-            return std::unique_ptr<BTreeDataModel>(ptr);
-        };
-        model_registry_->registerModel(node.category, creator, node.type);
-    };
-
-    for (const auto& node: getExistingNodes())
-    {
-      qDebug() << "Adding node of type " << node.type << " to " << node.category;
-      registerNode(node);
-      nodes_.push_back(node);
-    }
-
-    auto scene = new BTvizFlowScene(model_registry_, this);
-    scene->setLayout(QtNodes::PortLayout::Vertical);
-    
-    ui->frameLayout->addWidget(new FlowView(scene));
-    ui->frameLayout->setContentsMargins(0, 0, 0, 0);
-    ui->frameLayout->setSpacing(0);
+    btree_canvas_ = std::make_unique<BTvizCanvas>(this);
+    ui->tabWidget->addTab(btree_canvas_->view(), "My Plan");
 
     QObject::connect(ui->actionSave, &QAction::triggered,
-                     scene, &FlowScene::save);
+                     btree_canvas_->scene(), &FlowScene::save);
 
     QObject::connect(ui->actionLoad, &QAction::triggered,
-                     scene, &FlowScene::load);
+                     btree_canvas_->scene(), &FlowScene::load);
 
-    QObject::connect(ui->actionGenerateProtobuf, &QAction::triggered,
-                     scene, &BTvizFlowScene::saveProtobuf);
+    // Scene is generic FlowScene object, so will need to handle this
+    // QObject::connect(ui->actionGenerateProtobuf, &QAction::triggered,
+                    //  btree_canvas_->scene(), &BTvizBTreeFlowScene::saveProtobuf);
+
+    QObject::connect(ui->actionFitToScreen, &QAction::triggered,
+                     this, &MainWindow::fitToScreen);
+}
+
+void MainWindow::fitToScreen() const
+{
+  btree_canvas_->fitToScreen();
 }
 
 MainWindow::~MainWindow()

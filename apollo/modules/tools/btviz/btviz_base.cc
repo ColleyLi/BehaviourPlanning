@@ -1,38 +1,15 @@
 #include "modules/tools/btviz/btviz_base.h"
 
-void BTvizTree::clear()
+QString nodeCategoryFromNodeType(const QString& type)
 {
-    nodes_.clear();
+    QStringList parts = type.split(' ', QString::SkipEmptyParts);
+
+    return parts[parts.size() - 1] + "s"; 
 }
 
-BTvizTree::~BTvizTree()
+QString BTreeContextTypeToQString(BTreeContextType type)
 {
-    clear();
-}
-
-std::shared_ptr<BTvizNode> BTvizTree::getRootNode()
-{
-    return nodes_[root_node_id_];
-}
-
-void BTvizTree::addNode(std::shared_ptr<BTvizNode> node)
-{
-    if(node->parent_id.length())
-    {
-        nodes_[node->parent_id]->children_ids.push_back(node->bt_node.id);
-    }
-    else
-    {
-        clear();
-        root_node_id_ = node->bt_node.id;
-    }
-
-    nodes_[node->bt_node.id] = node;
-}
-
-QString nodeTypeToQString(BTreeNodeType type)
-{
-    const google::protobuf::EnumDescriptor* descriptor = apollo::planning::BTreeNodeType_descriptor();
+    const google::protobuf::EnumDescriptor* descriptor = apollo::planning_btree::BTreeContextType_descriptor();
     QString s = QString::fromStdString(descriptor->FindValueByNumber(type)->name());
     QStringList parts = s.toLower().split('_', QString::SkipEmptyParts);
     for (int i = 0; i < parts.size(); ++i)
@@ -42,45 +19,138 @@ QString nodeTypeToQString(BTreeNodeType type)
     return parts.join(" ");
 }
 
-BTreeNodeType QStringToNodeType(QString string)
+BTreeContextType QStringToBTreeContextType(QString string)
 {
-  const google::protobuf::EnumDescriptor* descriptor = apollo::planning::BTreeNodeType_descriptor();
+  const google::protobuf::EnumDescriptor* descriptor = apollo::planning_btree::BTreeContextType_descriptor();
   QString s = string.toUpper().split(' ', QString::SkipEmptyParts).join("_");
-  return static_cast<apollo::planning::BTreeNodeType>(descriptor->FindValueByName(s.toStdString())->number());
+  return static_cast<apollo::planning_btree::BTreeContextType>(descriptor->FindValueByName(s.toStdString())->number());
 }
 
-QString nodeCategoryFromNodeName(const QString& name)
+QString BTreeStageTypeToQString(BTreeStageType type)
 {
-    QStringList parts = name.split(' ', QString::SkipEmptyParts);
-
-    return parts[parts.size() - 1] + "s"; 
+    const google::protobuf::EnumDescriptor* descriptor = apollo::planning_btree::BTreeStageType_descriptor();
+    QString s = QString::fromStdString(descriptor->FindValueByNumber(type)->name());
+    QStringList parts = s.toLower().split('_', QString::SkipEmptyParts);
+    for (int i = 0; i < parts.size(); ++i)
+    {
+        parts[i].replace(0, 1, parts[i][0].toUpper());
+    }
+    return parts.join(" ");
 }
 
-std::vector<BTNode> getExistingNodes()
+BTreeStageType QStringToBTreeStageType(QString string)
 {
-    std::vector<BTNode> nodes;
+  const google::protobuf::EnumDescriptor* descriptor = apollo::planning_btree::BTreeStageType_descriptor();
+  QString s = string.toUpper().split(' ', QString::SkipEmptyParts).join("_");
+  return static_cast<apollo::planning_btree::BTreeStageType>(descriptor->FindValueByName(s.toStdString())->number());
+}
 
-    BTNode root_node;
-    root_node.name = "Root";
-    root_node.category = "Root";
-    root_node.type = "Root"; 
+QString BTreeNodeTypeToQString(BTreeNodeType type)
+{
+    const google::protobuf::EnumDescriptor* descriptor = apollo::planning_btree::BTreeNodeType_descriptor();
+    QString s = QString::fromStdString(descriptor->FindValueByNumber(type)->name());
+    QStringList parts = s.toLower().split('_', QString::SkipEmptyParts);
+    for (int i = 0; i < parts.size(); ++i)
+    {
+        parts[i].replace(0, 1, parts[i][0].toUpper());
+    }
+    return parts.join(" ");
+}
+
+BTreeNodeType QStringToBTreeNodeType(QString string)
+{
+  const google::protobuf::EnumDescriptor* descriptor = apollo::planning_btree::BTreeNodeType_descriptor();
+  QString s = string.toUpper().split(' ', QString::SkipEmptyParts).join("_");
+  return static_cast<apollo::planning_btree::BTreeNodeType>(descriptor->FindValueByName(s.toStdString())->number());
+}
+
+std::vector<BTvizNode> getExistingContextNodes()
+{
+    std::vector<BTvizNode> nodes;
+
+    BTvizNode root_node;
+    root_node.name = CONTEXT_ROOT_TYPE;
+    root_node.category = CONTEXT_ROOT_TYPE;
+    root_node.type = CONTEXT_ROOT_TYPE; 
         
     nodes.push_back(root_node);
     
-    for (int i = apollo::planning::BTreeNodeType_MIN; i <= apollo::planning::BTreeNodeType_MAX; ++i)
+    for (int i = apollo::planning_btree::BTreeContextType_MIN; i <= apollo::planning_btree::BTreeContextType_MAX; ++i)
     {
-        if (!apollo::planning::BTreeNodeType_IsValid(i))
+        if (!apollo::planning_btree::BTreeContextType_IsValid(i))
         {
             continue;
         }
 
-        apollo::planning::BTreeNodeType node_type = static_cast<apollo::planning::BTreeNodeType>(i);
-        QString node_name = nodeTypeToQString(node_type);
+        QString node_type = BTreeContextTypeToQString(static_cast<BTreeContextType>(i));
         
-        BTNode node;
-        node.name = node_name;
-        node.category = nodeCategoryFromNodeName(node_name);
-        node.type = node_name; 
+        BTvizNode node;
+        node.name = node_type;
+        node.category = nodeCategoryFromNodeType(node_type);
+        node.type = node_type; 
+        
+        nodes.push_back(node);
+    }
+
+    return nodes;
+}
+
+
+std::vector<BTvizNode> getExistingStageNodes()
+{
+    std::vector<BTvizNode> nodes;
+
+    BTvizNode root_node;
+    root_node.name = STAGE_ROOT_TYPE;
+    root_node.category = STAGE_ROOT_TYPE;
+    root_node.type = STAGE_ROOT_TYPE; 
+        
+    nodes.push_back(root_node);
+    
+    for (int i = apollo::planning_btree::BTreeStageType_MIN; i <= apollo::planning_btree::BTreeStageType_MAX; ++i)
+    {
+        if (!apollo::planning_btree::BTreeStageType_IsValid(i))
+        {
+            continue;
+        }
+
+        QString node_type = BTreeStageTypeToQString(static_cast<BTreeStageType>(i));
+        
+        BTvizNode node;
+        node.name = node_type;
+        node.category = nodeCategoryFromNodeType(node_type);
+        node.type = node_type; 
+        
+        nodes.push_back(node);
+    }
+
+    return nodes;
+}
+
+std::vector<BTvizNode> getExistingBTreeNodes()
+{
+    std::vector<BTvizNode> nodes;
+
+    BTvizNode root_node;
+    root_node.name = BTREE_ROOT_TYPE;
+    root_node.category = BTREE_ROOT_TYPE;
+    root_node.type = BTREE_ROOT_TYPE; 
+        
+    nodes.push_back(root_node);
+    
+    for (int i = apollo::planning_btree::BTreeNodeType_MIN; i <= apollo::planning_btree::BTreeNodeType_MAX; ++i)
+    {
+        if (!apollo::planning_btree::BTreeNodeType_IsValid(i))
+        {
+            continue;
+        }
+
+        QString node_type = BTreeNodeTypeToQString(static_cast<BTreeNodeType>(i));
+        
+        BTvizNode node;
+        node.name = node_type;
+        node.category = nodeCategoryFromNodeType(node_type);
+        node.type = node_type; 
         
         nodes.push_back(node);
     }

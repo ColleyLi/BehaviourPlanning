@@ -1,8 +1,8 @@
-#include "btree_data_model.h"
+#include "stage_data_model.h"
 
 #define MARGIN 10
 
-BTreeDataModel::BTreeDataModel(const BTvizNode & node):
+StageDataModel::StageDataModel(const BTvizNode & node):
   node_(node)
 {
   main_widget_ = new QFrame();
@@ -47,12 +47,12 @@ BTreeDataModel::BTreeDataModel(const BTvizNode & node):
   });
 }
 
-BTreeDataModel::~BTreeDataModel()
+StageDataModel::~StageDataModel()
 {
 
 }
 
-void BTreeDataModel::Init()
+void StageDataModel::Init()
 {
   if(!style_icon_.isEmpty())
   {
@@ -80,14 +80,44 @@ void BTreeDataModel::Init()
   QPalette caption_palette = caption_label_->palette();
   caption_palette.setColor(caption_label_->backgroundRole(), Qt::transparent);
   // capt_palette.setColor(caption_label_->foregroundRole(), _style_caption_color);
-
-  if (node_.category == BTREE_ROOT_TYPE)
-  {
+ if (node_.category == STAGE_ROOT_TYPE)
+ {
     setNodeStyle(NodeStyle(
     R"(
     {
-      "NodeStyle": 
-      {
+        "NodeStyle": 
+        {
+        "NormalBoundaryColor": [255, 138, 222],
+        "SelectedBoundaryColor": [255, 165, 0],
+        "GradientColor0": [255, 138, 222],
+        "GradientColor1": [255, 138, 222],
+        "GradientColor2": [255, 138, 222],
+        "GradientColor3": [255, 138, 222],
+        "ShadowColor": [200, 200, 200],
+        "FontColor" : "black",
+        "FontColorFaded" : "gray",
+        "ConnectionPointColor": [169, 169, 169],
+        "FilledConnectionPointColor": "cyan",
+        "ErrorColor": "red",
+        "WarningColor": [255, 173, 31],
+
+        "PenWidth": 1.0,
+        "HoveredPenWidth": 1.5,
+
+        "ConnectionPointDiameter": 8.0,
+
+        "Opacity": 1.0
+        }
+    }
+    )"));
+ }
+ else
+ {
+    setNodeStyle(NodeStyle(
+    R"(
+    {
+        "NodeStyle": 
+        {
         "NormalBoundaryColor": [185, 162, 231],
         "SelectedBoundaryColor": [255, 165, 0],
         "GradientColor0": [185, 162, 231],
@@ -108,106 +138,11 @@ void BTreeDataModel::Init()
         "ConnectionPointDiameter": 8.0,
 
         "Opacity": 1.0
-      }
+        }
     }
     )"));
   }
 
-  if (node_.category == "Tasks")
-  {
-    setNodeStyle(NodeStyle(
-    R"(
-    {
-      "NodeStyle": 
-      {
-        "NormalBoundaryColor": [218, 232, 252],
-        "SelectedBoundaryColor": [255, 165, 0],
-        "GradientColor0": [218, 232, 252],
-        "GradientColor1": [218, 232, 252],
-        "GradientColor2": [218, 232, 252],
-        "GradientColor3": [218, 232, 252],
-        "ShadowColor": [200, 200, 200],
-        "FontColor" : "black",
-        "FontColorFaded" : "gray",
-        "ConnectionPointColor": [169, 169, 169],
-        "FilledConnectionPointColor": "cyan",
-        "ErrorColor": "red",
-        "WarningColor": [255, 173, 31],
-
-        "PenWidth": 1.0,
-        "HoveredPenWidth": 1.5,
-
-        "ConnectionPointDiameter": 8.0,
-
-        "Opacity": 1.0
-      }
-    }
-    )"));
-  }
-  
-  if (node_.category == "Selectors")
-  {
-    setNodeStyle(NodeStyle(
-    R"(
-    {
-      "NodeStyle": 
-      {
-        "NormalBoundaryColor": [225, 213, 231],
-        "SelectedBoundaryColor": [255, 165, 0],
-        "GradientColor0": [225, 213, 231],
-        "GradientColor1": [225, 213, 231],
-        "GradientColor2": [225, 213, 231],
-        "GradientColor3": [225, 213, 231],
-        "ShadowColor": [200, 200, 200],
-        "FontColor" : "black",
-        "FontColorFaded" : "gray",
-        "ConnectionPointColor": [169, 169, 169],
-        "FilledConnectionPointColor": "cyan",
-        "ErrorColor": "red",
-        "WarningColor": [255, 173, 31],
-
-        "PenWidth": 1.0,
-        "HoveredPenWidth": 1.5,
-
-        "ConnectionPointDiameter": 8.0,
-
-        "Opacity": 1.0
-      }
-    }
-    )"));
-  }
-  
-  if (node_.category == "Checks")
-  {
-    setNodeStyle(NodeStyle(
-    R"(
-    {
-      "NodeStyle": 
-      {
-        "NormalBoundaryColor": [213, 232, 212],
-        "SelectedBoundaryColor": [255, 165, 0],
-        "GradientColor0": [213, 232, 212],
-        "GradientColor1": [213, 232, 212],
-        "GradientColor2": [213, 232, 212],
-        "GradientColor3": [213, 232, 212],
-        "ShadowColor": [200, 200, 200],
-        "FontColor" : "black",
-        "FontColorFaded" : "gray",
-        "ConnectionPointColor": [169, 169, 169],
-        "FilledConnectionPointColor": "cyan",
-        "ErrorColor": "red",
-        "WarningColor": [255, 173, 31],
-
-        "PenWidth": 1.0,
-        "HoveredPenWidth": 1.5,
-
-        "ConnectionPointDiameter": 8.0,
-
-        "Opacity": 1.0
-      }
-    }
-    )"));
-  }
   caption_label_->setPalette(caption_palette);
 
   caption_logo_left_->adjustSize();
@@ -217,81 +152,77 @@ void BTreeDataModel::Init()
   updateNodeSize();
 }
 
-unsigned int BTreeDataModel::nPorts(PortType portType) const
+unsigned int StageDataModel::nPorts(PortType portType) const
 {
   int result = 0;
   if(portType == QtNodes::PortType::Out)
   {
-    if (node_.category == "Tasks" || node_.category == "Checks")
-    {
-      result = 0;
-    }
-    else if (node_.category == BTREE_ROOT_TYPE)
+    if (node_.category == STAGE_ROOT_TYPE)
     {
       result = 1;
     }
     else
     {
-      result = children_list_.size() + 1;
+      result = out_list_.size() + 1;
     }
   }
   else if( portType == QtNodes::PortType::In)
   {
-    if (node_.category == BTREE_ROOT_TYPE)
+    if (node_.category == STAGE_ROOT_TYPE)
     {
       result = 0;
     }
     else
     {
-      result = 1;
+      result = in_list_.size() + 1;
     }
   }
 
   return result;
 }
 
-void BTreeDataModel::outputConnectionCreated(Connection const& c)
+void StageDataModel::outputConnectionCreated(Connection const& c)
 {
   int out_port_index = static_cast<int>(c.getPortIndex(QtNodes::PortType::Out));
 
-  if ((out_port_index == static_cast<int>(children_list_.size())) && c.complete())
+  if ((out_port_index == static_cast<int>(out_list_.size())) && c.complete())
   {
-    children_list_.push_back(c.getNode(QtNodes::PortType::In)->nodeDataModel()->name());
-    if (node_.category != BTREE_ROOT_TYPE)
+    out_list_.push_back(c.getNode(QtNodes::PortType::In)->nodeDataModel()->name());
+    if (node_.category != STAGE_ROOT_TYPE)
     {
-      Q_EMIT portAdded(PortType::Out, static_cast<int>(children_list_.size()));
+      Q_EMIT portAdded(PortType::Out, static_cast<int>(out_list_.size()));
     }
   }
   else
   {
-    children_list_[out_port_index] = c.getNode(QtNodes::PortType::In)->nodeDataModel()->name(); 
+    out_list_[out_port_index] = c.getNode(QtNodes::PortType::In)->nodeDataModel()->name(); 
   }
 }
 
 
-void BTreeDataModel::outputConnectionDeleted(Connection const& c)
+void StageDataModel::outputConnectionDeleted(Connection const& c)
 {
   int out_port_index = static_cast<int>(c.getPortIndex(QtNodes::PortType::Out));
   
-  if((out_port_index != -1) && (out_port_index != static_cast<int>(children_list_.size())) && (!c.complete()))
+  if((out_port_index != -1) && (out_port_index != static_cast<int>(out_list_.size())) && (!c.complete()))
   {
-    children_list_.erase(children_list_.begin() + out_port_index);
-    if (node_.category != BTREE_ROOT_TYPE)
+    out_list_.erase(out_list_.begin() + out_port_index);
+    if (node_.category != STAGE_ROOT_TYPE)
     {
       Q_EMIT portRemoved(PortType::Out, out_port_index);
     }
 
-    for(int i = out_port_index; i < static_cast<int>(children_list_.size()); ++i)
+    for(int i = out_port_index; i < static_cast<int>(out_list_.size()); ++i)
     {
       Q_EMIT dataUpdated(i);
     }
   }
 }
 
-bool BTreeDataModel::hasDynamicPorts(QtNodes::PortType portType) const
+bool StageDataModel::hasDynamicPorts(QtNodes::PortType portType) const
 {
   qDebug() << node_.category;
-  if(portType == PortType::Out && node_.category != BTREE_ROOT_TYPE)
+  if(portType == PortType::Out && node_.category != STAGE_ROOT_TYPE)
   {
     return true;
   }
@@ -299,58 +230,37 @@ bool BTreeDataModel::hasDynamicPorts(QtNodes::PortType portType) const
   return false;
 }
 
-NodeDataModel::ConnectionPolicy BTreeDataModel::portOutConnectionPolicy(PortIndex) const
+NodeDataModel::ConnectionPolicy StageDataModel::portOutConnectionPolicy(PortIndex) const
 {
   return ConnectionPolicy::One;
 }
 
-NodeDataModel::ConnectionPolicy BTreeDataModel::portInConnectionPolicy(PortIndex) const
+NodeDataModel::ConnectionPolicy StageDataModel::portInConnectionPolicy(PortIndex) const
 {
   return ConnectionPolicy::One;
 }
 
-NodeDataType BTreeDataModel:: dataType(PortType, PortIndex) const
+NodeDataType StageDataModel:: dataType(PortType, PortIndex) const
 {
   return NodeDataType();
 }
 
-std::shared_ptr<NodeData> BTreeDataModel::outData(PortIndex)
+std::shared_ptr<NodeData> StageDataModel::outData(PortIndex)
 {
   return nullptr;
 }
 
-QString BTreeDataModel::name() const
+QString StageDataModel::name() const
 {
   return node_.id;
 }
 
-QWidget* BTreeDataModel::embeddedWidget()
+QWidget* StageDataModel::embeddedWidget()
 {
   return main_widget_;
 }
 
-const QString& BTreeDataModel::getStageName()
-{
-  return stage_name_;
-}
-
-void BTreeDataModel::setStageName(const QString& name)
-{
-  stage_name_ = name;
-}
-
-const QString& BTreeDataModel::getStageSceneId()
-{
-  return stage_scene_id_;
-}
-
-void BTreeDataModel::setStageSceneId(const QString& scene_id)
-{
-  stage_scene_id_ = scene_id;
-}
-
-
-void BTreeDataModel::setNodeName(const QString& name)
+void StageDataModel::setNodeName(const QString& name)
 {
     node_.name = name;
     node_name_line_edit_->setText(name);
@@ -359,37 +269,62 @@ void BTreeDataModel::setNodeName(const QString& name)
     emit nodeNameChanged();
 }
 
-void BTreeDataModel::setNodeId(const QString& id)
+const QString& StageDataModel::getContextSceneId()
+{
+  return context_scene_id_;
+}
+
+void StageDataModel::setContextSceneId(const QString& scene_id)
+{
+  context_scene_id_ = scene_id;
+}
+
+const QString& StageDataModel::getContextName()
+{
+  return context_name_;
+}
+
+void StageDataModel::setContextName(const QString& name)
+{
+  context_name_ = name;
+}
+
+const QString& StageDataModel::getBTreeSceneId()
+{
+  return btree_scene_id_;
+}
+
+void StageDataModel::setBTreeSceneId(const QString& scene_id)
+{
+  btree_scene_id_ = scene_id;
+}
+
+void StageDataModel::setNodeId(const QString& id)
 {
   node_.id = id;
 }
 
-const QString& BTreeDataModel::getNodeId()
+const QString& StageDataModel::getNodeId()
 {
   return node_.id;
 }
 
-const QString& BTreeDataModel::getNodeName()
+const QString& StageDataModel::getNodeName()
 {
   return node_.name;
 }
 
-const QString& BTreeDataModel::getNodeType()
+const QString& StageDataModel::getNodeType()
 {
   return node_.type;
 }
 
-const QString& BTreeDataModel::getNodeCategory()
+const QString& StageDataModel::getNodeCategory()
 {
   return node_.category;
 }
 
-std::vector<QString> BTreeDataModel::getChildren()
-{
-  return children_list_;
-}
-
-void BTreeDataModel::updateNodeSize()
+void StageDataModel::updateNodeSize()
 {
     int caption_width = caption_label_->width();
     caption_width += caption_logo_left_->width() + caption_logo_right_->width();
@@ -415,7 +350,7 @@ void BTreeDataModel::updateNodeSize()
     emit embeddedWidgetSizeUpdated();
 }
 
-QJsonObject BTreeDataModel::save() const
+QJsonObject StageDataModel::save() const
 {
   QJsonObject node_json;
 
@@ -446,7 +381,7 @@ QJsonObject BTreeDataModel::save() const
 }
 
 
-void BTreeDataModel::restore(QJsonObject const &modelJson)
+void StageDataModel::restore(QJsonObject const &modelJson)
 {
   node_.name = modelJson["name"].toString();
   node_.type = modelJson["type"].toString();
@@ -456,7 +391,7 @@ void BTreeDataModel::restore(QJsonObject const &modelJson)
   int n_outs = modelJson["dynamic_outputs"].toInt();
   if(n_outs > 0)
   {
-    children_list_.resize(n_outs);
+    out_list_.resize(n_outs);
   }
 
   Init();

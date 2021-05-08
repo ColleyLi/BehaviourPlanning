@@ -1,29 +1,35 @@
+#pragma once
+
 #ifndef BTVIZ_BASE_H
 #define BTVIZ_BASE_H
 
 #include <QString>
-#include <QPointF>
-#include <QSizeF>
 #include <QDebug>
-
-#include <Node.hpp>
-#include <QStringStdHash.hpp>
 
 #include <unordered_map>
 #include <memory>
 #include <vector>
 
-#include "modules/planning/proto/b_tree_config.pb.h"
+#include "modules/planning_btree/proto/btree_context_config.pb.h"
+#include "modules/planning_btree/proto/btree_stage_config.pb.h"
+#include "modules/planning_btree/proto/btree_config.pb.h"
 #include "cyber/cyber.h"
 
-using QtNodes::Node;
-using apollo::planning::BTreeNodeState;
-using apollo::planning::BTreeNodeType;
-using apollo::planning::BTreeConfig;
-using apollo::planning::BTreeNodeDescription;
+using apollo::planning_btree::BTreeContextState;
+using apollo::planning_btree::BTreeContextType;
+using apollo::planning_btree::BTreeStageState;
+using apollo::planning_btree::BTreeStageType;
+using apollo::planning_btree::BTreeNodeState;
+using apollo::planning_btree::BTreeNodeType;
+using apollo::planning_btree::BTreeConfig;
+using apollo::planning_btree::BTreeNodeDescription;
 using apollo::cyber::common::SetProtoToASCIIFile;
 
-struct BTNode
+const QString CONTEXT_ROOT_TYPE = "BTPlan";
+const QString STAGE_ROOT_TYPE = "Context";
+const QString BTREE_ROOT_TYPE = "Stage";
+
+struct BTvizNode
 {
     QString id;
     QString name;
@@ -31,49 +37,21 @@ struct BTNode
     QString category;
 };
 
-std::vector<BTNode> getExistingNodes();
-QString nodeCategoryFromNodeName(const QString& name);
-QString nodeTypeToQString(BTreeNodeType type);
-BTreeNodeType QStringToNodeType(QString string);
+QString nodeCategoryFromNodeType(const QString& type);
 
-struct BTvizNode
-{
-    BTvizNode():
-        graphic_node(nullptr)
-    {
-    }
+// TODO: refactor to make those methods general. Templates?
 
-    BTNode bt_node;
-    
-    QString parent_id;
-    std::vector<QString> children_ids;
-    
-    BTreeNodeState state;
-    QPointF position;
-    Node* graphic_node;
-};
+QString BTreeContextTypeToQString(BTreeContextType type);
+BTreeContextType QStringToBTreeContextType(QString string);
 
-class BTvizTree
-{
-    typedef  std::unordered_map<QString, std::shared_ptr<BTvizNode>> BTvizNodes;
+QString BTreeStageTypeToQString(BTreeStageType type);
+BTreeStageType QStringToBTreeStageType(QString string);
 
-    public:
-        BTvizTree(){}
-        ~BTvizTree();
+QString BTreeNodeTypeToQString(BTreeNodeType type);
+BTreeNodeType QStringToBTreeNodeType(QString string);
 
-        BTvizNodes& nodes() {return nodes_;}
-
-        std::shared_ptr<BTvizNode> getNode(QString id) {return nodes_[id];}
-        std::shared_ptr<BTvizNode> getRootNode();
-
-        void addNode(std::shared_ptr<BTvizNode> node);
-        void clear();
-
-    private:
-        BTvizNodes nodes_;
-        QString root_node_id_;
-};
-
-Q_DECLARE_METATYPE(BTvizTree);
+std::vector<BTvizNode> getExistingContextNodes();
+std::vector<BTvizNode> getExistingStageNodes();
+std::vector<BTvizNode> getExistingBTreeNodes();
 
 #endif // BTVIZ_BASE_H
