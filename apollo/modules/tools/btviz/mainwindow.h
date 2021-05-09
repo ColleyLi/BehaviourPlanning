@@ -1,5 +1,4 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <memory>
 #include <map>
@@ -18,17 +17,14 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QWidget *parent = Q_NULLPTR);
     ~MainWindow();
 
 private:
-    void setStyle();
+    void loadDefaultStyle();
 
 private:
     Ui::MainWindow *ui;
 
-    std::unique_ptr<BTvizCanvas> btree_canvas_;
-
-    void fitToScreen() const;
+    std::unique_ptr<BTVizCanvas> btviz_canvas_;
 };
-#endif // MAINWINDOW_H

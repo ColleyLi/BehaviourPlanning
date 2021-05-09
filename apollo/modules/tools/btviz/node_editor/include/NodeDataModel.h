@@ -12,6 +12,8 @@
 #include "Export.h"
 #include "memory.h"
 
+#include "modules/tools/btviz/btviz_base.h"
+
 namespace QtNodes
 {
 
@@ -34,18 +36,21 @@ class NODE_EDITOR_PUBLIC NodeDataModel
 
 public:
 
-  NodeDataModel();
+  NodeDataModel(const BTVizNode& node);
 
   virtual
   ~NodeDataModel() = default;
 
+  virtual void
+  Init() {};
+
   /// Caption is used in GUI
   virtual QString
-  caption() const = 0;
+  caption() const { return QString(); }
 
   /// It is possible to hide caption in GUI
   virtual bool
-  captionVisible() const { return true; }
+  captionVisible() const { return false; }
 
   /// Port caption is used in GUI to label individual ports
   virtual QString
@@ -57,7 +62,7 @@ public:
 
   /// Name makes this model unique
   virtual QString
-  name() const = 0;
+  name() const  {return node_.id; }
 
 public:
 
@@ -109,6 +114,19 @@ public:
 
   void
   setNodeStyle(NodeStyle const& style);
+  
+  void setNodeId(const QString& id);
+
+  const QString& getNodeId();
+
+  virtual void setNodeName(const QString& name);
+
+  const QString& getNodeName();
+  
+  const QString& getNodeType();
+  
+  const QString& getNodeCategory();
+
 
 public:
 
@@ -186,6 +204,9 @@ Q_SIGNALS:
 
   void
   portRemoved(PortType type, PortIndex index);
+
+protected:
+  BTVizNode node_;
 
 private:
 

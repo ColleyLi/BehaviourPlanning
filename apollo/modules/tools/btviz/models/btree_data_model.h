@@ -35,17 +35,12 @@ class BTreeDataModel : public NodeDataModel
   Q_OBJECT
 
   public:
-    BTreeDataModel(const BTvizNode& node);
+    BTreeDataModel(const BTVizNode& node);
     ~BTreeDataModel() override;
 
-    void Init();
+    void Init() override;
  
   public:
-
-    QString caption() const override {return "";}
-
-    bool captionVisible() const override { return false; }
-
     unsigned int nPorts(PortType portType) const override;
 
     bool hasDynamicPorts(PortType) const override;
@@ -60,29 +55,11 @@ class BTreeDataModel : public NodeDataModel
 
     std::shared_ptr<NodeData> outData(PortIndex port) final;
 
-    QString name() const final;
-
     QWidget *embeddedWidget() final;
   
   public: 
-    const QString& getStageName();
-    void setStageName(const QString& name);
+    void setNodeName(const QString& name) override;
     
-    const QString& getStageSceneId();
-    void setStageSceneId(const QString& scene_id);
-
-    void setNodeName(const QString& name);
-    
-    void setNodeId(const QString& id);
-
-    const QString& getNodeId();
-    
-    const QString& getNodeName();
-    
-    const QString& getNodeType();
-    
-    const QString& getNodeCategory();
-
     std::vector<QString> getChildren();
   
     QJsonObject save() const override;
@@ -101,11 +78,6 @@ class BTreeDataModel : public NodeDataModel
     void nodeNameChanged();
 
   private:
-    BTvizNode node_;
-
-    QString stage_name_;
-    QString stage_scene_id_;
-
     std::vector<QString> children_list_;
 
     QFrame*  main_widget_;

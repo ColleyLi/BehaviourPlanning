@@ -2,8 +2,7 @@
 
 #define MARGIN 10
 
-ContextDataModel::ContextDataModel(const BTvizNode & node):
-  node_(node)
+ContextDataModel::ContextDataModel(const BTVizNode & node): NodeDataModel(node)
 {
   main_widget_ = new QFrame();
   node_name_line_edit_ = new QLineEdit(main_widget_);
@@ -245,11 +244,6 @@ std::shared_ptr<NodeData> ContextDataModel::outData(PortIndex)
   return nullptr;
 }
 
-QString ContextDataModel::name() const
-{
-  return node_.id;
-}
-
 QWidget* ContextDataModel::embeddedWidget()
 {
   return main_widget_;
@@ -262,41 +256,6 @@ void ContextDataModel::setNodeName(const QString& name)
 
     updateNodeSize();
     emit nodeNameChanged();
-}
-
-void ContextDataModel::setNodeId(const QString& id)
-{
-  node_.id = id;
-}
-
-const QString& ContextDataModel::getNodeId()
-{
-  return node_.id;
-}
-
-const QString& ContextDataModel::getNodeName()
-{
-  return node_.name;
-}
-
-const QString& ContextDataModel::getNodeType()
-{
-  return node_.type;
-}
-
-const QString& ContextDataModel::getNodeCategory()
-{
-  return node_.category;
-}
-
-const QString& ContextDataModel::getStageSceneId()
-{
-  return stage_scene_id_;
-}
-
-void ContextDataModel::setStageSceneId(const QString& scene_id)
-{
-  stage_scene_id_ = scene_id;
 }
 
 void ContextDataModel::updateNodeSize()

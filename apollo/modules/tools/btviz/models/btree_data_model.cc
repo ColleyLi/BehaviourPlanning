@@ -2,8 +2,7 @@
 
 #define MARGIN 10
 
-BTreeDataModel::BTreeDataModel(const BTvizNode & node):
-  node_(node)
+BTreeDataModel::BTreeDataModel(const BTVizNode & node): NodeDataModel(node)
 {
   main_widget_ = new QFrame();
   node_name_line_edit_ = new QLineEdit(main_widget_);
@@ -319,36 +318,10 @@ std::shared_ptr<NodeData> BTreeDataModel::outData(PortIndex)
   return nullptr;
 }
 
-QString BTreeDataModel::name() const
-{
-  return node_.id;
-}
-
 QWidget* BTreeDataModel::embeddedWidget()
 {
   return main_widget_;
 }
-
-const QString& BTreeDataModel::getStageName()
-{
-  return stage_name_;
-}
-
-void BTreeDataModel::setStageName(const QString& name)
-{
-  stage_name_ = name;
-}
-
-const QString& BTreeDataModel::getStageSceneId()
-{
-  return stage_scene_id_;
-}
-
-void BTreeDataModel::setStageSceneId(const QString& scene_id)
-{
-  stage_scene_id_ = scene_id;
-}
-
 
 void BTreeDataModel::setNodeName(const QString& name)
 {
@@ -357,31 +330,6 @@ void BTreeDataModel::setNodeName(const QString& name)
 
     updateNodeSize();
     emit nodeNameChanged();
-}
-
-void BTreeDataModel::setNodeId(const QString& id)
-{
-  node_.id = id;
-}
-
-const QString& BTreeDataModel::getNodeId()
-{
-  return node_.id;
-}
-
-const QString& BTreeDataModel::getNodeName()
-{
-  return node_.name;
-}
-
-const QString& BTreeDataModel::getNodeType()
-{
-  return node_.type;
-}
-
-const QString& BTreeDataModel::getNodeCategory()
-{
-  return node_.category;
 }
 
 std::vector<QString> BTreeDataModel::getChildren()

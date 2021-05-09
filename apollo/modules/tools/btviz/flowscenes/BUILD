@@ -3,31 +3,32 @@ load("//third_party/qt5:qt.bzl", "qt_cc_library")
 package(default_visibility = ["//visibility:public"])
 
 qt_cc_library(
-    name = "node_editor_lib",
+    name = "btviz_flowscenes_lib",
     srcs = glob(
-        ["src/*.cc"],
+        ["*.cc"],
     ),
     hdrs = glob([
-        "src/*.h",
-        "include/*.h",
+        "*.h",
     ]),
     copts = [
         "-Iexternal/qt",
     ],
     includes = [
-        "./include",
     ],
     linkstatic = False,
+    res = [
+    ],
     uis = glob([
-        "*.ui",
     ]),
     deps = [
-        "//modules/tools/btviz/resources:btviz_resource_lib",
         "//modules/tools/btviz:btviz_base_lib",
+        "//modules/tools/btviz/node_editor:node_editor_lib",
+        "//modules/planning_btree/proto:btree_context_config_cc_proto",
+        "//modules/planning_btree/proto:btree_stage_config_cc_proto",
+        "//modules/planning_btree/proto:btree_config_cc_proto",
         "@qt//:qt_core",
         "@qt//:qt_gui",
         "@qt//:qt_opengl",
         "@qt//:qt_widgets",
-        "@qt//:qt_svg",
     ],
 )

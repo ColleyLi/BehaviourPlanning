@@ -35,17 +35,12 @@ class ContextDataModel : public NodeDataModel
   Q_OBJECT
 
   public:
-    ContextDataModel(const BTvizNode& node);
+    ContextDataModel(const BTVizNode& node);
     ~ContextDataModel() override;
 
-    void Init();
+    void Init() override;
  
   public:
-
-    QString caption() const override {return "";}
-
-    bool captionVisible() const override { return false; }
-
     unsigned int nPorts(PortType portType) const override;
 
     bool hasDynamicPorts(PortType) const override;
@@ -60,26 +55,10 @@ class ContextDataModel : public NodeDataModel
 
     std::shared_ptr<NodeData> outData(PortIndex port) final;
 
-    QString name() const final;
-
     QWidget *embeddedWidget() final;
   
   public: 
-    void setNodeName(const QString& name);
-    
-    void setNodeId(const QString& id);
-
-    const QString& getNodeId();
-    
-    const QString& getNodeName();
-    
-    const QString& getNodeType();
-    
-    const QString& getNodeCategory();
-
-    const QString& getStageSceneId();
-
-    void setStageSceneId(const QString& scene_id);
+    void setNodeName(const QString& name) override;
 
     QJsonObject save() const override;
 
@@ -97,10 +76,6 @@ class ContextDataModel : public NodeDataModel
     void nodeNameChanged();
 
   private:
-    BTvizNode node_;
-    
-    QString stage_scene_id_ = "";
-
     std::vector<QString> contexts_;
 
     QFrame*  main_widget_;

@@ -9,8 +9,8 @@ using QtNodes::PortIndex;
 using QtNodes::PortType;
 
 NodeDataModel::
-NodeDataModel()
-  : _nodeStyle(StyleCollection::nodeStyle())
+NodeDataModel(const BTVizNode& node)
+  : node_(node), _nodeStyle(StyleCollection::nodeStyle())
 {
   // Derived classes can initialize specific style here
 }
@@ -97,4 +97,34 @@ setInData(std::vector<std::shared_ptr<NodeData> > nodeData, PortIndex port)
   {
     Q_ASSERT(false);
   }
+}
+
+void NodeDataModel::setNodeId(const QString& id)
+{
+  node_.id = id;
+}
+
+const QString& NodeDataModel::getNodeId()
+{
+  return node_.id;
+}
+
+void NodeDataModel::setNodeName(const QString& name)
+{
+  node_.name = name;
+}
+
+const QString& NodeDataModel::getNodeName()
+{
+  return node_.name;
+}
+
+const QString& NodeDataModel::getNodeType()
+{
+  return node_.type;
+}
+
+const QString& NodeDataModel::getNodeCategory()
+{
+  return node_.category;
 }

@@ -1,18 +1,20 @@
 {
-  "FlowViewStyle": {
+  "FlowViewStyle": 
+  {
     "BackgroundColor": [255, 255, 255],
-    "FineGridColor": [60, 60, 60],
-    "CoarseGridColor": [25, 25, 25]
+    "FineGridColor": [240, 240, 240],
+    "CoarseGridColor": [220, 220, 220]
   },
-  "NodeStyle": {
-    "NormalBoundaryColor": [255, 255, 255],
+  "NodeStyle": 
+  {
+    "NormalBoundaryColor": [255, 242, 204],
     "SelectedBoundaryColor": [255, 165, 0],
-    "GradientColor0": "gray",
-    "GradientColor1": [80, 80, 80],
-    "GradientColor2": [64, 64, 64],
-    "GradientColor3": [58, 58, 58],
-    "ShadowColor": [20, 20, 20],
-    "FontColor" : "white",
+    "GradientColor0": [255, 242, 204],
+    "GradientColor1": [255, 242, 204],
+    "GradientColor2": [255, 242, 204],
+    "GradientColor3": [255, 242, 204],
+    "ShadowColor": [200, 200, 200],
+    "FontColor" : "black",
     "FontColorFaded" : "gray",
     "ConnectionPointColor": [169, 169, 169],
     "FilledConnectionPointColor": "cyan",
@@ -24,9 +26,11 @@
 
     "ConnectionPointDiameter": 8.0,
 
-    "Opacity": 0.8
+    "Opacity": 1.0
   },
-  "ConnectionStyle": {
+  
+  "ConnectionStyle":
+  {
     "ConstructionColor": "gray",
     "NormalColor": "darkcyan",
     "SelectedColor": [100, 100, 100],

@@ -6,7 +6,7 @@
 int main(int argc, char* argv[])
 {
     QApplication qt_app(argc, argv);
-    qt_app.setApplicationName("BTviz");
+    qt_app.setApplicationName("BTViz");
     qt_app.setWindowIcon(QPixmap(":images/btviz_logo.png"));
     
     apollo::cyber::Init(argv[0]);

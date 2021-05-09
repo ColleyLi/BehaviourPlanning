@@ -9,6 +9,7 @@
 #include <functional>
 
 #include "QUuidStdHash.h"
+#include "QStringStdHash.h"
 #include "Export.h"
 #include "DataModelRegistry.h"
 #include "TypeConverter.h"
@@ -39,6 +40,12 @@ public:
 
   ~FlowScene() override;
 
+  static int getUid()
+  {
+    static int uid = 0;
+    return uid++;
+  }
+
 public:
 
   std::shared_ptr<Connection>
@@ -59,8 +66,10 @@ public:
 
   Node&createNode(std::unique_ptr<NodeDataModel> && dataModel);
 
+  virtual Node& createRootNode(const QString& root_node_type); 
+  
   virtual Node& createNodeAtPosition(const QString& node_type, const QPointF& scene_pos);
-
+  
   Node&restoreNode(QJsonObject const& nodeJson);
 
   void removeNode(Node& node);
@@ -120,6 +129,20 @@ public:
 
   QtNodes::PortLayout layout() const;
 
+  bool isLocked() const {return _locked;}
+  void lock() {_locked = true;}
+  void unlock() {_locked = false;}
+
+  const QString& getParentSceneId() {return _parent_scene_id;}
+  void setParentSceneId(const QString& scene_id) {_parent_scene_id = scene_id;}
+
+  const QString& getParentName() {return _parent_name;}
+  void setParentName(const QString& parent_name) {_parent_name = parent_name;}
+
+  std::vector<QString> getChildSceneIds() const;
+  const QString& getChildSceneId(const QString& node_id) {return _child_scene_ids[node_id];}
+  void setChildSceneId(const QString& node_id, const QString scene_id) {_child_scene_ids[node_id] = scene_id;}
+
 Q_SIGNALS:
 
   /**
@@ -169,6 +192,15 @@ private:
   std::unordered_map<QUuid, UniqueNode>       _nodes;
 
   QtNodes::PortLayout _layout;
+
+  bool _locked;
+  QString _parent_scene_id;
+  QString _parent_name;
+
+  // Mapping from node id to node's internal scene id
+  // For root node -> upper-level scene
+  // For child node -> lower-level scene
+  std::unordered_map<QString, QString> _child_scene_ids;
 
 private Q_SLOTS:
 

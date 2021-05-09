@@ -2,8 +2,7 @@
 
 #define MARGIN 10
 
-StageDataModel::StageDataModel(const BTvizNode & node):
-  node_(node)
+StageDataModel::StageDataModel(const BTVizNode & node): NodeDataModel(node)
 {
   main_widget_ = new QFrame();
   node_name_line_edit_ = new QLineEdit(main_widget_);
@@ -250,11 +249,6 @@ std::shared_ptr<NodeData> StageDataModel::outData(PortIndex)
   return nullptr;
 }
 
-QString StageDataModel::name() const
-{
-  return node_.id;
-}
-
 QWidget* StageDataModel::embeddedWidget()
 {
   return main_widget_;
@@ -267,61 +261,6 @@ void StageDataModel::setNodeName(const QString& name)
 
     updateNodeSize();
     emit nodeNameChanged();
-}
-
-const QString& StageDataModel::getContextSceneId()
-{
-  return context_scene_id_;
-}
-
-void StageDataModel::setContextSceneId(const QString& scene_id)
-{
-  context_scene_id_ = scene_id;
-}
-
-const QString& StageDataModel::getContextName()
-{
-  return context_name_;
-}
-
-void StageDataModel::setContextName(const QString& name)
-{
-  context_name_ = name;
-}
-
-const QString& StageDataModel::getBTreeSceneId()
-{
-  return btree_scene_id_;
-}
-
-void StageDataModel::setBTreeSceneId(const QString& scene_id)
-{
-  btree_scene_id_ = scene_id;
-}
-
-void StageDataModel::setNodeId(const QString& id)
-{
-  node_.id = id;
-}
-
-const QString& StageDataModel::getNodeId()
-{
-  return node_.id;
-}
-
-const QString& StageDataModel::getNodeName()
-{
-  return node_.name;
-}
-
-const QString& StageDataModel::getNodeType()
-{
-  return node_.type;
-}
-
-const QString& StageDataModel::getNodeCategory()
-{
-  return node_.category;
 }
 
 void StageDataModel::updateNodeSize()

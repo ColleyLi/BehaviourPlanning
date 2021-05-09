@@ -64,11 +64,11 @@ BTreeNodeType QStringToBTreeNodeType(QString string)
   return static_cast<apollo::planning_btree::BTreeNodeType>(descriptor->FindValueByName(s.toStdString())->number());
 }
 
-std::vector<BTvizNode> getExistingContextNodes()
+std::vector<BTVizNode> getExistingContextNodes()
 {
-    std::vector<BTvizNode> nodes;
+    std::vector<BTVizNode> nodes;
 
-    BTvizNode root_node;
+    BTVizNode root_node;
     root_node.name = CONTEXT_ROOT_TYPE;
     root_node.category = CONTEXT_ROOT_TYPE;
     root_node.type = CONTEXT_ROOT_TYPE; 
@@ -84,7 +84,7 @@ std::vector<BTvizNode> getExistingContextNodes()
 
         QString node_type = BTreeContextTypeToQString(static_cast<BTreeContextType>(i));
         
-        BTvizNode node;
+        BTVizNode node;
         node.name = node_type;
         node.category = nodeCategoryFromNodeType(node_type);
         node.type = node_type; 
@@ -96,11 +96,11 @@ std::vector<BTvizNode> getExistingContextNodes()
 }
 
 
-std::vector<BTvizNode> getExistingStageNodes()
+std::vector<BTVizNode> getExistingStageNodes()
 {
-    std::vector<BTvizNode> nodes;
+    std::vector<BTVizNode> nodes;
 
-    BTvizNode root_node;
+    BTVizNode root_node;
     root_node.name = STAGE_ROOT_TYPE;
     root_node.category = STAGE_ROOT_TYPE;
     root_node.type = STAGE_ROOT_TYPE; 
@@ -116,7 +116,7 @@ std::vector<BTvizNode> getExistingStageNodes()
 
         QString node_type = BTreeStageTypeToQString(static_cast<BTreeStageType>(i));
         
-        BTvizNode node;
+        BTVizNode node;
         node.name = node_type;
         node.category = nodeCategoryFromNodeType(node_type);
         node.type = node_type; 
@@ -127,11 +127,11 @@ std::vector<BTvizNode> getExistingStageNodes()
     return nodes;
 }
 
-std::vector<BTvizNode> getExistingBTreeNodes()
+std::vector<BTVizNode> getExistingBTreeNodes()
 {
-    std::vector<BTvizNode> nodes;
+    std::vector<BTVizNode> nodes;
 
-    BTvizNode root_node;
+    BTVizNode root_node;
     root_node.name = BTREE_ROOT_TYPE;
     root_node.category = BTREE_ROOT_TYPE;
     root_node.type = BTREE_ROOT_TYPE; 
@@ -147,7 +147,7 @@ std::vector<BTvizNode> getExistingBTreeNodes()
 
         QString node_type = BTreeNodeTypeToQString(static_cast<BTreeNodeType>(i));
         
-        BTvizNode node;
+        BTVizNode node;
         node.name = node_type;
         node.category = nodeCategoryFromNodeType(node_type);
         node.type = node_type; 

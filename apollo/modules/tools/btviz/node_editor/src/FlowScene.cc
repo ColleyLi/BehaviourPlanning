@@ -42,6 +42,7 @@ FlowScene(std::shared_ptr<DataModelRegistry> registry,
           QObject * parent)
   : QGraphicsScene(parent)
   , _registry(std::move(registry))
+  , _locked(false)
 {
   setItemIndexMethod(QGraphicsScene::NoIndex);
 
@@ -216,16 +217,47 @@ createNode(std::unique_ptr<NodeDataModel> && dataModel)
   return *nodePtr;
 }
 
+
+Node& 
+FlowScene::
+createRootNode(const QString& root_node_type)  
+{
+    QString node_id = root_node_type + " " + QString::number(getUid());
+    auto node = registry().create(root_node_type);
+    if(!node)
+    {
+        char buffer[250];
+        sprintf(buffer, "No registered node with type: [%s]", root_node_type.toStdString().c_str());
+        throw std::runtime_error(buffer);
+    }
+    node->setNodeId(node_id);
+    node->Init();
+    node->setNodeName(_parent_name);
+    auto& node_qt = createNode(std::move(node));
+    setNodePosition(node_qt, QPointF(0, 0));
+
+    return node_qt;
+}
+
 Node&
 FlowScene::
 createNodeAtPosition(const QString& node_type, const QPointF& scene_pos)
 {
-  Node& node = createNode(registry().create(node_type));
-  setNodePosition(node, scene_pos);
+  QString node_id = node_type + " " + QString::number(getUid());
+  auto node = registry().create(node_type);
+  if(!node)
+  {
+      char buffer[250];
+      sprintf(buffer, "No registered node with type: [%s]", node_type.toStdString().c_str());
+      throw std::runtime_error(buffer);
+  }
+  node->setNodeId(node_id);
+  node->Init();
+  auto& node_qt = createNode(std::move(node));
+  setNodePosition(node_qt, scene_pos);
 
-  return node;
+  return node_qt;;
 }
-
 
 Node&
 FlowScene::
@@ -455,6 +487,21 @@ allNodes() const
                  [](std::pair<QUuid const, std::unique_ptr<Node>> const & p) { return p.second.get(); });
 
   return nodes;
+}
+
+
+std::vector<QString>
+FlowScene::
+getChildSceneIds() const
+{
+  std::vector<QString> ids;
+
+  std::transform(_child_scene_ids.begin(),
+                 _child_scene_ids.end(),
+                 std::back_inserter(ids),
+                 [](std::pair<QString, QString> const & p) { return p.second; });
+
+  return ids;
 }
 
 

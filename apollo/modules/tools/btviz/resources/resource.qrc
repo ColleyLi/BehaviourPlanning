@@ -1,6 +1,6 @@
 <RCC version="1.0">
     <qresource>
-        <file>DefaultStyle.json</file>
+        <file>btviz_style.json</file>
         <file>images/convert.png</file>
         <file>images/btviz_logo.png</file>
     </qresource>

@@ -29,16 +29,10 @@ qt_cc_library(
     srcs = [
         "main.cc",
         "mainwindow.cc",
-        "btviz_context_flowscene.cc",
-        "btviz_stage_flowscene.cc",
-        "btviz_btree_flowscene.cc",
         "btviz_canvas.cc",
     ],
     hdrs = [
         "mainwindow.h",
-        "btviz_context_flowscene.h",
-        "btviz_stage_flowscene.h",
-        "btviz_btree_flowscene.h",
         "btviz_canvas.h",
     ],
     copts = [
@@ -54,10 +48,8 @@ qt_cc_library(
     deps = [
         ":btviz_base_lib",
         "//cyber",
-        "//modules/planning_btree/proto:btree_context_config_cc_proto",
-        "//modules/planning_btree/proto:btree_stage_config_cc_proto",
-        "//modules/planning_btree/proto:btree_config_cc_proto",
         "//modules/tools/btviz/node_editor:node_editor_lib",
+        "//modules/tools/btviz/flowscenes:btviz_flowscenes_lib",
         "//modules/tools/btviz/models:btviz_models_lib",
         "//modules/tools/btviz/resources:btviz_resource_lib",
         "@qt//:qt_core",
@@ -86,10 +78,10 @@ qt_cc_library(
     linkstatic = False,
     deps = [
         "//cyber",
+        "//modules/planning_btree/proto:btree_planning_state_cc_proto",
         "//modules/planning_btree/proto:btree_context_config_cc_proto",
         "//modules/planning_btree/proto:btree_stage_config_cc_proto",
         "//modules/planning_btree/proto:btree_config_cc_proto",
-        "//modules/tools/btviz/node_editor:node_editor_lib",
         "@qt//:qt_core",
         "@qt//:qt_gui",
         "@qt//:qt_opengl",
