@@ -2,8 +2,6 @@ syntax = "proto2";
 
 package apollo.planning_btree;
 
-import "modules/planning_btree/proto/btree_context_config.proto";
-
 message TopicConfig {
   optional string chassis_topic = 1;
   optional string hmi_status_topic = 2;
@@ -19,14 +17,8 @@ message TopicConfig {
   // optional string planning_learning_data_topic = 12;
 }
 
-message BTreePlanningParameters
-{
-
-}
-
 message BTreePlanningConfig
 {
   optional TopicConfig topic_config = 1;
-  repeated BTreeContextType context_to_use = 2;
-  optional BTreePlanningParameters parameters = 3;
+  optional string btplan_path = 2;
 }

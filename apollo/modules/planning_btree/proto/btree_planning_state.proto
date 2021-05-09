@@ -6,10 +6,17 @@ import "modules/routing/proto/routing.proto";
 import "modules/planning_btree/proto/btree_context_config.proto";
 import "modules/planning_btree/proto/btree_stage_config.proto";
 
+message BTPlanParameters
+{
+  optional string name = 1;
+  optional string description = 2;
+}
+
 message BTPlan
 {
-    optional BTreeStageConfigs stage_configs = 1; 
-    optional BTreeContextConfigs context_configs = 2;
+    optional BTreeContextConfigs context_configs = 1;
+    optional BTreeStageConfigs stage_configs = 2;
+    optional BTPlanParameters parameters = 3; 
 }
 
 message ReroutingState
