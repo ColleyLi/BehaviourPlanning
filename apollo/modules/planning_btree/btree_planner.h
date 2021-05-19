@@ -37,12 +37,11 @@ class BTreePlanner
   common::Status Init(const BTreePlanningConfig& config);
 
   common::Status Execute(const common::TrajectoryPoint& planning_init_point,
-                      BTreeFrame* frame,
-                      ADCTrajectory* ptr_computed_trajectory);
+                         BTreeFrame* frame,
+                         ADCTrajectory* ptr_computed_trajectory);
   private:
     BTreePlanningConfig config_;
     std::unique_ptr<ContextSelector> context_selector_ = nullptr;
-    
     std::shared_ptr<DependencyInjector> injector_;
 };
 

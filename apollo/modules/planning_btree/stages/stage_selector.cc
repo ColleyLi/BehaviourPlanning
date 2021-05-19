@@ -7,17 +7,15 @@ namespace planning_btree {
 StageSelector::StageSelector(const std::shared_ptr<DependencyInjector>& injector)
     :injector_(injector)
 {
-
+    stage_dispatcher_ = std::make_unique<StageDispatcher>();
+    stage_dispatcher_->Init();
 }
 bool StageSelector::Init(const StageFSM& fsm_config)
 {
-    stage_dispatcher_ = std::make_unique<StageDispatcher>();
-    stage_dispatcher_->Init();
     stages_.clear();
     transitions_.clear();
 
     auto stage_configs = injector_->planning_state()->btplan().stage_configs();
-
     for(int i = 0; i < fsm_config.stage_size(); ++i)
     {
         auto stage_type = fsm_config.stage(i);

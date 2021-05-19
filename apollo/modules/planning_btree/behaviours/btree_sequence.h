@@ -22,13 +22,15 @@ class BTreeSequence: public BTreeNode
       {
         if(!(child->Execute(frame) == BTreeNodeState::NODE_DONE))
         {
-          std::string msg("Task failed: ");
+          std::string msg("Child of sequence failed: ");
           msg += child->GetName();
           ADEBUG << msg;
           state_ = BTreeNodeState::NODE_FAILED;
           return state_;
         }
       }
+
+      ADEBUG << "All children of sequence '" << GetName() << "' are done";
       state_ = BTreeNodeState::NODE_DONE;
       return state_;
     }

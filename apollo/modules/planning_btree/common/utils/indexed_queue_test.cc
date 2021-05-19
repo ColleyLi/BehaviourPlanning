@@ -18,7 +18,7 @@
  * @file
  **/
 
-#include "modules/planning_btree/common/indexed_queue.h"
+#include "modules/planning_btree/common/utils/indexed_queue.h"
 
 #include "gtest/gtest.h"
 #include "modules/common/util/future.h"

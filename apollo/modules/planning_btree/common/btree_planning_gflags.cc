@@ -1,14 +1,9 @@
 #include "modules/planning_btree/common/btree_planning_gflags.h"
 
 #include <limits>
-
-DEFINE_string(btree_context_config_file,
-             "/apollo/modules/planning_btree/conf/btree_context_config.pb.txt",
-             "behaviour tree context config file");
-
-DEFINE_string(btree_stage_config_file,
-             "/apollo/modules/planning_btree/conf/btree_stage_config.pb.txt",
-             "behaviour tree stage config file");
+DEFINE_string(btree_traffic_rule_config_filename,
+             "/apollo/modules/planning_btree/conf/traffic_rule_config.pb.txt",
+             "behaviour tree planner traffic rule config file");
 DEFINE_string(btplan_file,
              "/apollo/modules/planning_btree/conf/btplan.pb.txt",
              "behaviour tree plan file");

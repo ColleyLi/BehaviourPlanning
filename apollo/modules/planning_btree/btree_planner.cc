@@ -25,16 +25,8 @@ using common::TrajectoryPoint;
 Status BTreePlanner::Init(const BTreePlanningConfig& config) 
 {
   config_ = config;
-
-  std::set<BTreeContextType> config_contexts;
-  // for (int i = 0; i < config_.context_to_use_size(); ++i) 
-  // {
-  //   const BTreeContextType context = config_.context_to_use(i); 
-  //   config_contexts.insert(context);
-  // }
-
   context_selector_ = std::make_unique<ContextSelector>(injector_);
-  context_selector_->Init(config_contexts);
+  context_selector_->Init();
 
   return Status::OK();
 }
@@ -45,10 +37,7 @@ Status BTreePlanner::Execute(const TrajectoryPoint& planning_start_point,
 {
   DCHECK_NOTNULL(frame);
 
-  AERROR << "Running BTree planner";
-
   auto current_context = context_selector_->GetCurrentContext(planning_start_point, frame);
-
   current_context->Execute(planning_start_point, frame);
 
   return Status::OK();

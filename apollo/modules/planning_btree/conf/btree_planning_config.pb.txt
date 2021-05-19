@@ -13,4 +13,4 @@ topic_config {
   # planning_learning_data_topic: "/apollo/planning/learning_data"
 }
 
-context_to_use: LANE_FOLLOW_CONTEXT 
+btplan_path: "/apollo/modules/planning_btree/conf/plan_v3.pb.btplan" 

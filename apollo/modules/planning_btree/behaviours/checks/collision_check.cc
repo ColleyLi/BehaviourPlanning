@@ -9,11 +9,6 @@ BTreeNodeState CollisionCheck::Init(const BTreeNodeConfig& config)
   return state_;
 }
 
-// BTreeNodeState CollisionCheck::Execute(BTreeFrame* frame, ReferenceLineInfo* reference_line_info)
-// {
-//     return Execute(frame);
-// }
-
 BTreeNodeState CollisionCheck::Execute(BTreeFrame* frame)
 {
     state_ = BTreeNodeState::NODE_FAILED;

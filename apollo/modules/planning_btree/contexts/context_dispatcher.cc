@@ -13,6 +13,7 @@ ContextDispatcher::ContextDispatcher(const std::shared_ptr<DependencyInjector>& 
 
 bool ContextDispatcher::Init()
 {
+    context_factory_.Clear();
     RegisterContexts();
 
     return true;

@@ -9,7 +9,6 @@ class CollisionCheck: public BTreeCheck
 {
     BTreeNodeState Init(const BTreeNodeConfig& config);
     BTreeNodeState Execute(BTreeFrame* frame);
-    // BTreeNodeState Execute(BTreeFrame* frame, ReferenceLineInfo* reference_line_info);
 };
 
 } // namespace planning_btree

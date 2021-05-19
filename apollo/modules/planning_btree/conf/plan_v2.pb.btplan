@@ -1,0 +1,501 @@
+context_configs {
+  context_config {
+    type: LANE_FOLLOW_CONTEXT
+    stage_fsm {
+      stage: LANE_FOLLOW_STAGE
+      transition {
+        on_state: STAGE_NOT_INITIALIZED
+        from_stage: LANE_FOLLOW_STAGE
+        to_stage: LANE_FOLLOW_STAGE
+      }
+      transition {
+        on_state: STAGE_INITIALIZED
+        from_stage: LANE_FOLLOW_STAGE
+        to_stage: LANE_FOLLOW_STAGE
+      }
+      transition {
+        on_state: STAGE_FAILED
+        from_stage: LANE_FOLLOW_STAGE
+        to_stage: LANE_FOLLOW_STAGE
+      }
+      transition {
+        on_state: STAGE_RUNNING
+        from_stage: LANE_FOLLOW_STAGE
+        to_stage: LANE_FOLLOW_STAGE
+      }
+      transition {
+        on_state: STAGE_DONE
+        from_stage: LANE_FOLLOW_STAGE
+        to_stage: LANE_FOLLOW_STAGE
+      }
+      initial_stage: LANE_FOLLOW_STAGE
+    }
+    parameters {
+    }
+  }
+  context_config {
+    type: CROSSWALK_CONTEXT
+    stage_fsm {
+      stage: CROSSWALK_APPROACH_STAGE
+      stage: CROSSWALK_YIELD_STAGE
+      stage: CROSSWALK_LEAVE_STAGE
+      transition {
+        on_state: STAGE_NOT_INITIALIZED
+        from_stage: CROSSWALK_APPROACH_STAGE
+        to_stage: CROSSWALK_APPROACH_STAGE
+      }
+      transition {
+        on_state: STAGE_INITIALIZED
+        from_stage: CROSSWALK_APPROACH_STAGE
+        to_stage: CROSSWALK_APPROACH_STAGE
+      }
+      transition {
+        on_state: STAGE_FAILED
+        from_stage: CROSSWALK_APPROACH_STAGE
+        to_stage: CROSSWALK_APPROACH_STAGE
+      }
+      transition {
+        on_state: STAGE_RUNNING
+        from_stage: CROSSWALK_APPROACH_STAGE
+        to_stage: CROSSWALK_APPROACH_STAGE
+      }
+      transition {
+        on_state: STAGE_DONE
+        from_stage: CROSSWALK_APPROACH_STAGE
+        to_stage: CROSSWALK_YIELD_STAGE
+      }
+      transition {
+        on_state: STAGE_NOT_INITIALIZED
+        from_stage: CROSSWALK_YIELD_STAGE
+        to_stage: CROSSWALK_YIELD_STAGE
+      }
+      transition {
+        on_state: STAGE_INITIALIZED
+        from_stage: CROSSWALK_YIELD_STAGE
+        to_stage: CROSSWALK_YIELD_STAGE
+      }
+      transition {
+        on_state: STAGE_FAILED
+        from_stage: CROSSWALK_YIELD_STAGE
+        to_stage: CROSSWALK_YIELD_STAGE
+      }
+      transition {
+        on_state: STAGE_RUNNING
+        from_stage: CROSSWALK_YIELD_STAGE
+        to_stage: CROSSWALK_YIELD_STAGE
+      }
+      transition {
+        on_state: STAGE_DONE
+        from_stage: CROSSWALK_YIELD_STAGE
+        to_stage: CROSSWALK_LEAVE_STAGE
+      }
+      transition {
+        on_state: STAGE_NOT_INITIALIZED
+        from_stage: CROSSWALK_LEAVE_STAGE
+        to_stage: CROSSWALK_LEAVE_STAGE
+      }
+      transition {
+        on_state: STAGE_INITIALIZED
+        from_stage: CROSSWALK_LEAVE_STAGE
+        to_stage: CROSSWALK_LEAVE_STAGE
+      }
+      transition {
+        on_state: STAGE_FAILED
+        from_stage: CROSSWALK_LEAVE_STAGE
+        to_stage: CROSSWALK_LEAVE_STAGE
+      }
+      transition {
+        on_state: STAGE_RUNNING
+        from_stage: CROSSWALK_LEAVE_STAGE
+        to_stage: CROSSWALK_LEAVE_STAGE
+      }
+      transition {
+        on_state: STAGE_DONE
+        from_stage: CROSSWALK_LEAVE_STAGE
+        to_stage: CROSSWALK_APPROACH_STAGE
+      }
+      initial_stage: CROSSWALK_APPROACH_STAGE
+    }
+    parameters {
+    }
+  }
+  context_config {
+    type: INTERSECTION_CONTEXT
+    stage_fsm {
+      stage: INTERSECTION_APPROACH_STAGE
+      stage: INTERSECTION_LEAVE_STAGE
+      stage: INTERSECTION_YIELD_STAGE
+      transition {
+        on_state: STAGE_NOT_INITIALIZED
+        from_stage: INTERSECTION_APPROACH_STAGE
+        to_stage: INTERSECTION_APPROACH_STAGE
+      }
+      transition {
+        on_state: STAGE_INITIALIZED
+        from_stage: INTERSECTION_APPROACH_STAGE
+        to_stage: INTERSECTION_APPROACH_STAGE
+      }
+      transition {
+        on_state: STAGE_FAILED
+        from_stage: INTERSECTION_APPROACH_STAGE
+        to_stage: INTERSECTION_APPROACH_STAGE
+      }
+      transition {
+        on_state: STAGE_RUNNING
+        from_stage: INTERSECTION_APPROACH_STAGE
+        to_stage: INTERSECTION_APPROACH_STAGE
+      }
+      transition {
+        on_state: STAGE_DONE
+        from_stage: INTERSECTION_APPROACH_STAGE
+        to_stage: INTERSECTION_YIELD_STAGE
+      }
+      transition {
+        on_state: STAGE_NOT_INITIALIZED
+        from_stage: INTERSECTION_LEAVE_STAGE
+        to_stage: INTERSECTION_LEAVE_STAGE
+      }
+      transition {
+        on_state: STAGE_INITIALIZED
+        from_stage: INTERSECTION_LEAVE_STAGE
+        to_stage: INTERSECTION_LEAVE_STAGE
+      }
+      transition {
+        on_state: STAGE_FAILED
+        from_stage: INTERSECTION_LEAVE_STAGE
+        to_stage: INTERSECTION_LEAVE_STAGE
+      }
+      transition {
+        on_state: STAGE_RUNNING
+        from_stage: INTERSECTION_LEAVE_STAGE
+        to_stage: INTERSECTION_LEAVE_STAGE
+      }
+      transition {
+        on_state: STAGE_DONE
+        from_stage: INTERSECTION_LEAVE_STAGE
+        to_stage: INTERSECTION_APPROACH_STAGE
+      }
+      transition {
+        on_state: STAGE_NOT_INITIALIZED
+        from_stage: INTERSECTION_YIELD_STAGE
+        to_stage: INTERSECTION_YIELD_STAGE
+      }
+      transition {
+        on_state: STAGE_INITIALIZED
+        from_stage: INTERSECTION_YIELD_STAGE
+        to_stage: INTERSECTION_YIELD_STAGE
+      }
+      transition {
+        on_state: STAGE_FAILED
+        from_stage: INTERSECTION_YIELD_STAGE
+        to_stage: INTERSECTION_YIELD_STAGE
+      }
+      transition {
+        on_state: STAGE_RUNNING
+        from_stage: INTERSECTION_YIELD_STAGE
+        to_stage: INTERSECTION_YIELD_STAGE
+      }
+      transition {
+        on_state: STAGE_DONE
+        from_stage: INTERSECTION_YIELD_STAGE
+        to_stage: INTERSECTION_LEAVE_STAGE
+      }
+      initial_stage: INTERSECTION_APPROACH_STAGE
+    }
+    parameters {
+    }
+  }
+}
+stage_configs {
+  stage_config {
+    type: LANE_FOLLOW_STAGE
+    tree {
+      root_node_id: "Sequence 5"
+      node {
+        id: "Fallback Speed Generator Task 7"
+        name: "Fallback Speed Generator Task"
+        type: FALLBACK_SPEED_GENERATOR_TASK
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Collision Check 5"
+        name: "Collision Check"
+        type: COLLISION_CHECK
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Path Generator Task 16"
+        name: "Path Generator Task"
+        type: PATH_GENERATOR_TASK
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Lane Priority Selector 12"
+        name: "Lane Priority Selector"
+        type: LANE_PRIORITY_SELECTOR
+        child_id: "Sequence 13"
+        child_id: "Sequence 14"
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Obstacle Processor Task 1"
+        name: "Obstacle Processor Task"
+        type: OBSTACLE_PROCESSOR_TASK
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Lane Prioritizer Task 11"
+        name: "Lane Prioritizer Task"
+        type: LANE_PRIORITIZER_TASK
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Safe Lane Change Check 17"
+        name: "Safe Lane Change Check"
+        type: SAFE_LANE_CHANGE_CHECK
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Path Bounds Generator Task 5"
+        name: "Path Bounds Generator Task"
+        type: PATH_BOUNDS_GENERATOR_TASK
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Sequence 14"
+        name: "Cruise"
+        type: SEQUENCE
+        child_id: "Path Bounds Generator Task 5"
+        child_id: "Path Generator Task 16"
+        child_id: "Speed Bounds Generator Task 6"
+        child_id: "Speed Generator Task 15"
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Selector 2"
+        name: "High-level action selector"
+        type: SELECTOR
+        child_id: "Sequence 3"
+        child_id: "Sequence 10"
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Sequence 13"
+        name: "Lane change"
+        type: SEQUENCE
+        child_id: "Safe Lane Change Check 17"
+        child_id: "Path Bounds Generator Task 1"
+        child_id: "Path Generator Task 3"
+        child_id: "Speed Bounds Generator Task 2"
+        child_id: "Speed Generator Task 4"
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Speed Bounds Generator Task 2"
+        name: "Speed Bounds Generator Task"
+        type: SPEED_BOUNDS_GENERATOR_TASK
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Speed Bounds Generator Task 6"
+        name: "Speed Bounds Generator Task"
+        type: SPEED_BOUNDS_GENERATOR_TASK
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Path Generator Task 3"
+        name: "Path Generator Task"
+        type: PATH_GENERATOR_TASK
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Sequence 10"
+        name: " Meneuver action"
+        type: SEQUENCE
+        child_id: "Lane Prioritizer Task 11"
+        child_id: "Lane Priority Selector 12"
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Fallback Path Generator Task 6"
+        name: "Fallback Path Generator Task"
+        type: FALLBACK_PATH_GENERATOR_TASK
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Sequence 3"
+        name: "Emergency maneuver action"
+        type: SEQUENCE
+        child_id: "Collision Check 5"
+        child_id: "Fallback Path Generator Task 6"
+        child_id: "Fallback Speed Generator Task 7"
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Path Bounds Generator Task 1"
+        name: "Path Bounds Generator Task"
+        type: PATH_BOUNDS_GENERATOR_TASK
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Speed Generator Task 4"
+        name: "Speed Generator Task"
+        type: SPEED_GENERATOR_TASK
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Speed Generator Task 15"
+        name: "Speed Generator Task"
+        type: SPEED_GENERATOR_TASK
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Sequence 5"
+        name: "Lane follow sequence"
+        type: SEQUENCE
+        child_id: "Obstacle Processor Task 1"
+        child_id: "Selector 2"
+        config {
+          default_config {
+          }
+        }
+      }
+    }
+    parameters {
+    }
+  }
+  stage_config {
+    type: CROSSWALK_LEAVE_STAGE
+    tree {
+      root_node_id: "Sequence 22"
+      node {
+        id: "Sequence 20"
+        name: "Crosswalk Approach Sequence"
+        type: SEQUENCE
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Sequence 21"
+        name: "Crosswalk Yield Sequece"
+        type: SEQUENCE
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Sequence 22"
+        name: "Crosswalk Leave Sequence"
+        type: SEQUENCE
+        config {
+          default_config {
+          }
+        }
+      }
+    }
+    parameters {
+    }
+  }
+  stage_config {
+    type: INTERSECTION_YIELD_STAGE
+    tree {
+      root_node_id: "Sequence 11"
+      node {
+        id: "Sequence 9"
+        name: "Intersection Approach Sequence"
+        type: SEQUENCE
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Sequence 13"
+        name: "Intersection Leave Sequence"
+        type: SEQUENCE
+        config {
+          default_config {
+          }
+        }
+      }
+      node {
+        id: "Sequence 11"
+        name: "Intersection Yield Sequence"
+        type: SEQUENCE
+        config {
+          default_config {
+          }
+        }
+      }
+    }
+    parameters {
+    }
+  }
+}
+parameters {
+  name: "My Plan"
+  description: "Description of my plan"
+}

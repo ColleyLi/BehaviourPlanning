@@ -26,8 +26,13 @@ message ReroutingState
   optional apollo.routing.RoutingRequest routing_request = 3;
 }
 
+message DestinationState {
+  optional bool has_passed_destination = 1 [default = false];
+}
+
 message BTreePlanningState 
 {
     optional BTPlan btplan = 1;
     optional ReroutingState rerouting_state = 2;
+    optional DestinationState destination_state = 3;
 }

@@ -8,32 +8,22 @@ namespace planning_btree {
 ContextSelector::ContextSelector(const std::shared_ptr<DependencyInjector>& injector)
     : injector_(injector)
 {
-
-}
-
-bool ContextSelector::Init(const std::set<BTreeContextType>& contexts_to_use)
-{
     context_dispatcher_ = std::make_unique<ContextDispatcher>(injector_);
     context_dispatcher_->Init();
+}
+
+bool ContextSelector::Init()
+{
+    contexts_.clear();
+
     auto context_configs = injector_->planning_state()->btplan().context_configs();
 
-    for (auto it = contexts_to_use.begin(); it != contexts_to_use.end(); ++it) 
+    for (int i = 0; i < context_configs.context_config_size(); ++i)
     {
-        auto context_type = *it;
-        auto context = context_dispatcher_->Dispatch(context_type);
-        
-        // TODO: Speed-up config lookup
-        for (int i = 0; i < context_configs.context_config_size(); ++i)
-        {
-            auto context_config = context_configs.context_config(i);
-            if (context_config.type() == context_type)
-            {
-                context->Init(context_config);
-                break;
-            } 
-        }
-
-        contexts_[context_type] = context;
+        auto context_config = context_configs.context_config(i);
+        auto context = context_dispatcher_->Dispatch(context_config.type());
+        context->Init(context_config);
+        contexts_[context_config.type()] = context;
     }
 
     return true;

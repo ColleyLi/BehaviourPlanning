@@ -77,6 +77,44 @@ py_proto_library(
 )
 
 cc_proto_library(
+    name = "traffic_rule_config_cc_proto",
+    deps = [
+        ":traffic_rule_config_proto",
+    ],
+)
+
+proto_library(
+    name = "traffic_rule_config_proto",
+    srcs = ["traffic_rule_config.proto"],
+)
+
+py_proto_library(
+    name = "traffic_rule_config_py_pb2",
+    deps = [
+        ":traffic_rule_config_proto",
+    ],
+)
+
+cc_proto_library(
+    name = "st_drivable_boundary_cc_proto",
+    deps = [
+        ":st_drivable_boundary_proto",
+    ],
+)
+
+proto_library(
+    name = "st_drivable_boundary_proto",
+    srcs = ["st_drivable_boundary.proto"],
+)
+
+py_proto_library(
+    name = "st_drivable_boundary_py_pb2",
+    deps = [
+        ":st_drivable_boundary_proto",
+    ],
+)
+
+cc_proto_library(
     name = "btree_config_cc_proto",
     deps = [
         ":btree_config_proto",
@@ -127,6 +165,33 @@ py_proto_library(
 )
 
 cc_proto_library(
+    name = "decision_cc_proto",
+    deps = [
+        ":decision_proto",
+    ],
+)
+
+proto_library(
+    name = "decision_proto",
+    srcs = ["decision.proto"],
+    deps = [
+        "//modules/common/proto:geometry_proto",
+        "//modules/common/proto:vehicle_signal_proto",
+        "//modules/routing/proto:routing_proto",
+    ],
+)
+
+py_proto_library(
+    name = "decision_py_pb2",
+    deps = [
+        ":decision_proto",
+        "//modules/common/proto:geometry_py_pb2",
+        "//modules/common/proto:vehicle_signal_py_pb2",
+        "//modules/routing/proto:routing_py_pb2",
+    ],
+)
+
+cc_proto_library(
     name = "btree_planning_config_cc_proto",
     deps = [
         ":btree_planning_config_proto",
@@ -136,15 +201,11 @@ cc_proto_library(
 proto_library(
     name = "btree_planning_config_proto",
     srcs = ["btree_planning_config.proto"],
-    deps = [
-        ":btree_context_config_proto",
-    ],
 )
 
 py_proto_library(
     name = "btree_planning_config_py_pb2",
     deps = [
-        ":btree_context_config_py_pb2",
         ":btree_planning_config_proto",
     ],
 )

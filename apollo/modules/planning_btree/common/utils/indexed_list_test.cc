@@ -18,7 +18,7 @@
  * @file
  **/
 
-#include "modules/planning_btree/common/indexed_list.h"
+#include "modules/planning_btree/common/utils/indexed_list.h"
 
 #include "gtest/gtest.h"
 #include "modules/common/util/util.h"

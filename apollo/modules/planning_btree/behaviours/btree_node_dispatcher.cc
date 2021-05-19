@@ -3,8 +3,10 @@
 #include "modules/planning_btree/behaviours/btree_sequence.h"
 #include "modules/planning_btree/behaviours/btree_selector.h"
 #include "modules/planning_btree/behaviours/tasks/obstacle_processor/obstacle_processor.h"
+#include "modules/planning_btree/behaviours/tasks/path_bounds_generator/path_bounds_generator.h"
 #include "modules/planning_btree/behaviours/tasks/path_generator/path_generator.h"
 #include "modules/planning_btree/behaviours/tasks/speed_generator/speed_generator.h"
+#include "modules/planning_btree/behaviours/tasks/speed_bounds_generator/speed_bounds_generator.h"
 #include "modules/planning_btree/behaviours/tasks/lane_prioritizer/lane_prioritizer.h"
 #include "modules/planning_btree/behaviours/tasks/fallback_path_generator/fallback_path_generator.h"
 #include "modules/planning_btree/behaviours/tasks/fallback_speed_generator/fallback_speed_generator.h"
@@ -30,7 +32,11 @@ void BTreeNodeDispatcher::RegisterNodes()
     
     node_factory_.Register(BTreeNodeType::OBSTACLE_PROCESSOR_TASK, []() -> BTreeNode* { return new ObstacleProcessor();});
     
+    node_factory_.Register(BTreeNodeType::PATH_BOUNDS_GENERATOR_TASK, []() -> BTreeNode* { return new PathBoundsGenerator();});
+    
     node_factory_.Register(BTreeNodeType::PATH_GENERATOR_TASK, []() -> BTreeNode* { return new PathGenerator();});
+    
+    node_factory_.Register(BTreeNodeType::SPEED_BOUNDS_GENERATOR_TASK, []() -> BTreeNode* { return new SpeedBoundsGenerator();});
     
     node_factory_.Register(BTreeNodeType::SPEED_GENERATOR_TASK, []() -> BTreeNode* { return new SpeedGenerator();});
     

@@ -98,7 +98,9 @@ cc_library(
         "//modules/planning_btree/behaviours/tasks/fallback_speed_generator:fallback_speed_generator",
         "//modules/planning_btree/behaviours/tasks/lane_prioritizer:lane_prioritizer",
         "//modules/planning_btree/behaviours/tasks/obstacle_processor:obstacle_processor",
+        "//modules/planning_btree/behaviours/tasks/path_bounds_generator:path_bounds_generator",
         "//modules/planning_btree/behaviours/tasks/path_generator:path_generator",
+        "//modules/planning_btree/behaviours/tasks/speed_bounds_generator:speed_bounds_generator",
         "//modules/planning_btree/behaviours/tasks/speed_generator:speed_generator",
     ],
 )

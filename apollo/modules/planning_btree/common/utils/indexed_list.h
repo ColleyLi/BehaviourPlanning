@@ -14,10 +14,6 @@
  * limitations under the License.
  *****************************************************************************/
 
-/**
- * @file indexed_list.h
- **/
-
 #pragma once
 
 #include <unordered_map>

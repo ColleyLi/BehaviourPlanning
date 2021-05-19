@@ -4,49 +4,6 @@ load("//tools:cpplint.bzl", "cpplint")
 package(default_visibility = ["//visibility:public"])
 PLANNING_COPTS = ["-DMODULE_NAME=\\\"planning_btree\\\""]
 
-
-cc_library(
-    name = "indexed_list",
-    hdrs = ["indexed_list.h"],
-    copts = PLANNING_COPTS,
-    deps = [
-        "//modules/common/util:map_util",
-        "@boost",
-    ],
-)
-
-cc_test(
-    name = "indexed_list_test",
-    size = "small",
-    srcs = ["indexed_list_test.cc"],
-    deps = [
-        ":indexed_list",
-        "//modules/common/util",
-        "@boost",
-        "@com_google_googletest//:gtest_main",
-    ],
-)
-
-cc_library(
-    name = "indexed_queue",
-    hdrs = ["indexed_queue.h"],
-    copts = PLANNING_COPTS,
-    deps = [
-        "//modules/common/util:map_util",
-    ],
-)
-
-cc_test(
-    name = "indexed_queue_test",
-    size = "small",
-    srcs = ["indexed_queue_test.cc"],
-    deps = [
-        ":indexed_queue",
-        "//modules/common/util",
-        "@com_google_googletest//:gtest_main",
-    ],
-)
-
 cc_library(
     name = "planning_input",
     hdrs = ["planning_input.h"],
@@ -69,7 +26,7 @@ cc_library(
     hdrs = ["btree_frame.h"],
     copts = PLANNING_COPTS,
     deps = [
-        ":indexed_queue",
+        "//modules/planning_btree/common/utils:indexed_queue",
         ":planning_input",
         ":dynamic_reference_line",
         "//cyber/common:log",
@@ -80,6 +37,7 @@ cc_library(
         "//modules/map/pnc_map",
         "//modules/planning/proto:planning_cc_proto",
         "//modules/planning_btree/reference_line:reference_line_provider",
+        ":obstacle",
         "@eigen",
     ],
 )
@@ -117,7 +75,61 @@ cc_library(
         "//modules/map/pnc_map",
         "//modules/map/proto:map_cc_proto",
         "//modules/planning_btree/reference_line",
+        "//modules/planning_btree/common/path:path_data",
+        "//modules/planning_btree/common/speed:speed_data",
+        "//modules/planning_btree/common/speed:st_graph_data",
+        "//modules/planning_btree/common/path:path_boundary",
+        "//modules/planning_btree/common/trajectory:discretized_trajectory",
+        ":obstacle",
+        ":obstacle_decisions",
         "@eigen",
+    ],
+)
+
+cc_library(
+    name = "trajectory_stitcher",
+    srcs = ["trajectory_stitcher.cc"],
+    hdrs = ["trajectory_stitcher.h"],
+    copts = PLANNING_COPTS,
+    deps = [
+        "//cyber/common:log",
+        "//modules/common/proto:pnc_point_cc_proto",
+        "//modules/common/vehicle_model",
+        "//modules/planning_btree/common/trajectory:publishable_trajectory",
+        "//modules/planning_btree/reference_line",
+        "@com_google_absl//absl/strings",
+    ],
+)
+
+cc_library(
+    name = "obstacle",
+    srcs = ["obstacle.cc"],
+    hdrs = ["obstacle.h"],
+    copts = PLANNING_COPTS,
+    deps = [
+        "//modules/common/configs:vehicle_config_helper",
+        "//modules/common/util:map_util",
+        "//modules/planning_btree/common/utils:indexed_list",
+        "//modules/planning_btree/common/speed:st_boundary",
+        "//modules/planning_btree/reference_line",
+        "//modules/planning_btree/proto:decision_cc_proto",
+        "//modules/prediction/proto:feature_cc_proto",
+        "//modules/prediction/proto:lane_graph_cc_proto",
+        "//modules/prediction/proto:prediction_obstacle_cc_proto",
+        "//modules/prediction/proto:prediction_point_cc_proto",
+        "//modules/prediction/proto:scenario_cc_proto",
+    ],
+)
+
+cc_library(
+    name = "obstacle_decisions",
+    srcs = ["obstacle_decisions.cc"],
+    hdrs = ["obstacle_decisions.h"],
+    copts = PLANNING_COPTS,
+    deps = [
+        ":obstacle",
+        "//modules/planning_btree/reference_line",
+        "//modules/planning_btree/proto:decision_cc_proto",
     ],
 )
 

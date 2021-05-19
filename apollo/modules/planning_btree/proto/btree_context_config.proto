@@ -34,6 +34,8 @@ message BTreeContextParameters
 enum BTreeContextType
 {
   LANE_FOLLOW_CONTEXT = 0;
+  CROSSWALK_CONTEXT = 1;
+  INTERSECTION_CONTEXT = 2;
 }
 
 message BTreeContextConfig

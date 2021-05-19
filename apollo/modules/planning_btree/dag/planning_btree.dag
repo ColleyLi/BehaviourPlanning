@@ -6,7 +6,7 @@ module_config {
     config {
       name: "planning_btree"
       config_file_path:  "/apollo/modules/planning_btree/conf/btree_planning_config.pb.txt"
-      flag_file_path:  "/apollo/modules/planning_btree/conf/btree_planning.conf"
+      flag_file_path:  "/apollo/modules/planning_btree/conf/planning_btree.conf"
       readers: [
         {
           channel: "/apollo/prediction"

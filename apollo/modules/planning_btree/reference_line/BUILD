@@ -154,7 +154,7 @@ cc_library(
         "//modules/common/util:factory",
         "//modules/common/vehicle_state:vehicle_state_provider",
         "//modules/map/pnc_map",
-        "//modules/planning_btree/common:indexed_queue",
+        "//modules/planning_btree/common/utils:indexed_queue",
         "//modules/planning_btree/proto:reference_line_smoother_config_cc_proto",
         "//modules/planning_btree/proto:sl_boundary_cc_proto",
         "@eigen",

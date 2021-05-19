@@ -104,8 +104,6 @@ bool BTreePlanningComponent::Proc(
   // check and process possible rerouting request
   // CheckRerouting();
 
-  AERROR << "Proc";
-
   // process fused input data
   planning_input_.prediction_obstacles = prediction_obstacles;
   planning_input_.chassis = chassis;
@@ -214,17 +212,22 @@ bool BTreePlanningComponent::CheckInput() {
     // nothing
   }
 
-  // if (FLAGS_use_navigation_mode) {
+  // if (FLAGS_use_navigation_mode) 
+  // {
     // if (!planning_input_.relative_map->has_header()) {
       // not_ready->set_reason("relative map not ready");
     // }
-  // } else {
-    if (!planning_input_.routing->has_header()) {
-      not_ready->set_reason("routing not ready");
-    }
+  // } 
+  // else 
+  // {
+  if (!planning_input_.routing->has_header()) 
+  {
+    not_ready->set_reason("routing not ready");
+  }
   // }
 
-  if (not_ready->has_reason()) {
+  if (not_ready->has_reason()) 
+  {
     AERROR << not_ready->reason() << "; skip the planning cycle.";
     common::util::FillHeader(node_->Name(), &trajectory_pb);
     planning_writer_->Write(trajectory_pb);

@@ -1,0 +1,29 @@
+syntax = "proto2";
+
+package apollo.planning_btree;
+
+message DestinationConfig 
+{
+  // stop distance from destination line
+  optional double stop_distance = 1 [default = 0.5];  // meter
+}
+
+message TrafficRuleConfig 
+{
+  enum RuleId 
+  {
+    DESTINATION = 1;
+  }
+
+  optional RuleId rule_id = 1;
+  optional bool enabled = 2;
+  oneof config 
+  {
+    DestinationConfig destination = 3;
+  }
+}
+
+message TrafficRuleConfigs 
+{
+  repeated TrafficRuleConfig config = 1;
+}

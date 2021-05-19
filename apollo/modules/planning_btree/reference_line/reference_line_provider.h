@@ -36,7 +36,7 @@
 #include "modules/common/vehicle_state/vehicle_state_provider.h"
 #include "modules/map/pnc_map/pnc_map.h"
 #include "modules/map/relative_map/proto/navigation.pb.h"
-#include "modules/planning_btree/common/indexed_queue.h"
+#include "modules/planning_btree/common/utils/indexed_queue.h"
 #include "modules/planning_btree/math/smoothing_spline/spline_2d_solver.h"
 #include "modules/planning_btree/reference_line/discrete_points_reference_line_smoother.h"
 #include "modules/planning_btree/reference_line/qp_spline_reference_line_smoother.h"

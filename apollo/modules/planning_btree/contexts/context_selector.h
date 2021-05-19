@@ -17,7 +17,7 @@ class ContextSelector
     public:
         ContextSelector(const std::shared_ptr<DependencyInjector>& injector);
 
-        bool Init(const std::set<BTreeContextType>& contexts_to_use);
+        bool Init();
 
         std::shared_ptr<Context> GetCurrentContext(const TrajectoryPoint& planning_start_point, BTreeFrame* const frame);
 

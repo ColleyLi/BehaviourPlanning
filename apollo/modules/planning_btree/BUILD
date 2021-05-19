@@ -58,6 +58,9 @@ cc_library(
         "//modules/planning_btree/proto:btree_planning_config_cc_proto",
         "//modules/planning_btree/common:planning_input",
         "//modules/planning_btree/common:dependency_injector",
+        "//modules/planning_btree/common/trajectory:publishable_trajectory",
+        "//modules/planning_btree/common:trajectory_stitcher",
+        "//modules/planning_btree/traffic_rules:traffic_rule_dispatcher",
     ],
 )
 

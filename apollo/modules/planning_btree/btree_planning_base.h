@@ -13,10 +13,8 @@
 #include "modules/map/hdmap/hdmap.h"
 // #include "modules/perception/proto/traffic_light_detection.pb.h"
 #include "modules/planning_btree/common/btree_frame.h"
-// #include "modules/planning/common/trajectory/publishable_trajectory.h"
-// #include "modules/planning/proto/planning.pb.h"
-// #include "modules/planning/proto/planning_config.pb.h"
-// #include "modules/planning/proto/traffic_rule_config.pb.h"
+#include "modules/planning_btree/common/trajectory/publishable_trajectory.h"
+#include "modules/planning_btree/proto/traffic_rule_config.pb.h"
 #include "modules/prediction/proto/prediction_obstacle.pb.h"
 #include "modules/routing/proto/routing.pb.h"
 #include "modules/planning_btree/common/planning_input.h"
@@ -67,12 +65,13 @@ class BTreePlanningBase {
   size_t seq_num_ = 0;
 
   BTreePlanningConfig config_;
-  // TrafficRuleConfigs traffic_rule_configs_;
+  TrafficRuleConfigs traffic_rule_configs_;
 
   std::unique_ptr<BTreeFrame> frame_;
   std::unique_ptr<BTreePlanner> planner_;
-  // std::unique_ptr<PublishableTrajectory> last_publishable_trajectory_;
   std::shared_ptr<DependencyInjector> injector_;
+
+  std::unique_ptr<PublishableTrajectory> last_publishable_trajectory_;
   
   routing::RoutingResponse last_routing_;
   std::unique_ptr<ReferenceLineProvider> reference_line_provider_;

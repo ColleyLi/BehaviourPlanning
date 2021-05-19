@@ -13,39 +13,36 @@ BTreeStageState LaneFollowStage::Init(const BTreeStageConfig& config)
 
 BTreeStageState LaneFollowStage::Execute(const TrajectoryPoint& planning_start_point, BTreeFrame* const frame)
 {
-    AERROR << "Executed LaneFollow stage";
+    AERROR << "Number of dynamic reference lines:\t" << frame->GetDynamicReferenceLines().size(); 
 
-    // AERROR << "Number of reference lines:\t" << frame->mutable_reference_line_info()->size();
-    // bool has_drivable_lane = false;
+    auto status = behaviour_tree_->Execute(frame);
 
-    // // Refresh states
-    // for (auto& ref_line : *frame->mutable_reference_line_info()) 
-    // {
-    //     ref_line.SetDrivable(false);
-    //     ref_line.set_is_path_lane_borrow(true);
-    //     ref_line.SetCost(0.0);
-    // }
-
-    behaviour_tree_->Execute(frame);
-
-    // AERROR << "Reference lines after planning: ";
-    // for (auto& ref_line : *frame->mutable_reference_line_info()) 
-    // {
-    //     AERROR << "Id: " << ref_line.Lanes().Id() << " Cost: " << ref_line.Cost() << " IsDrivable: " << ref_line.IsDrivable() << " IsChangeLane: " << ref_line.IsChangeLanePath();
-    //     if (ref_line.IsDrivable())
-    //     {
+    if (status == BTreeNodeState::NODE_FAILED)
+    {
+        AERROR << "Btree execution status: FAILED";
+    }
+    else if (status == BTreeNodeState::NODE_DONE)
+    {
+        AERROR << "Btree execution status: DONE";
+    }
+    
+    for (auto& ref_line : *frame->GetMutableDynamicReferenceLines()) 
+    {
+        AERROR << "Id: " << ref_line.GetRouteSegments().Id() << " Cost: " << ref_line.GetCost() << " Is Drivable: " << ref_line.IsDrivable() << " Is Lane Change: " << ref_line.IsLaneChangePath();
+        if (ref_line.IsDrivable())
+        {
     //     ref_line.set_trajectory_type(ADCTrajectory::NORMAL);
 
-    //     DiscretizedTrajectory trajectory;
-    //     if (ref_line.CombinePathAndSpeedProfile(planning_start_point.relative_time(),
-    //                                             planning_start_point.path_point().s(), 
-    //                                             &trajectory)) 
-    //     {
-    //         ref_line.SetTrajectory(trajectory);
-    //         // has_drivable_lane = true;
-    //     }
-    //     }
-    // }
+        DiscretizedTrajectory trajectory;
+        if (ref_line.CombinePathAndSpeedProfiles(planning_start_point.relative_time(),
+                                                planning_start_point.path_point().s(), 
+                                                &trajectory)) 
+        {
+            ref_line.SetDiscretizedTrajectory(trajectory);
+            // has_drivable_lane = true;
+        }
+        }
+    }
 
     state_ = BTreeStageState::STAGE_DONE;
     return state_;
