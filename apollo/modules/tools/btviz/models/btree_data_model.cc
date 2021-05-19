@@ -289,7 +289,6 @@ void BTreeDataModel::outputConnectionDeleted(Connection const& c)
 
 bool BTreeDataModel::hasDynamicPorts(QtNodes::PortType portType) const
 {
-  qDebug() << node_.category;
   if(portType == PortType::Out && node_.category != BTREE_ROOT_TYPE)
   {
     return true;

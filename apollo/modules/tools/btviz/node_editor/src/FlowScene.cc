@@ -601,6 +601,18 @@ saveToMemory(QJsonDocument::JsonFormat format) const
 {
   QJsonObject sceneJson;
 
+  sceneJson["locked"] = _locked;
+  sceneJson["parent_scene_id"] = _parent_scene_id;
+  sceneJson["parent_name"] = _parent_name;
+
+  QJsonObject childSceneIdsObject;
+  for(auto& element : _child_scene_ids)
+  {
+      childSceneIdsObject[element.first] = element.second;
+  }
+
+  sceneJson["child_scene_ids"] = childSceneIdsObject;
+
   sceneJson["layout"] = (layout() == PortLayout::Horizontal) ?
         QStringLiteral("Horizontal") : QStringLiteral("Vertical");
 
@@ -633,6 +645,13 @@ saveToMemory(QJsonDocument::JsonFormat format) const
   return document.toJson(format);
 }
 
+QJsonObject
+FlowScene::
+getSceneJson()
+{
+  return QJsonDocument::fromJson(saveToMemory(QJsonDocument::Indented)).object();
+}
+
 void
 FlowScene::
 loadFromMemory(const QByteArray& data)
@@ -643,22 +662,31 @@ loadFromMemory(const QByteArray& data)
 
 void FlowScene::loadFromMemory(const QJsonObject& data)
 {
-  QJsonArray nodesJsonArray = data["nodes"].toArray();
+  _locked = data["locked"].toBool();
+  _parent_scene_id = data["parent_scene_id"].toString();
+  _parent_name = data["parent_name"].toString();
+
+  QJsonObject child_scene_ids_json = data["child_scene_ids"].toObject();
+  for(auto key: child_scene_ids_json.keys())
+  {
+      _child_scene_ids[key] = child_scene_ids_json.value(key).toString();
+  }
 
   QString layout = data["layout"].toString();
   setLayout( (layout == "Horizontal") ? PortLayout::Horizontal : PortLayout::Vertical );
 
-   for (QJsonValueRef node : nodesJsonArray)
-   {
+  QJsonArray nodesJsonArray = data["nodes"].toArray();
+  for (QJsonValueRef node : nodesJsonArray)
+  {
       restoreNode(node.toObject());
-   }
+  }
 
-   QJsonArray connectionJsonArray = data["connections"].toArray();
-
-   for (QJsonValueRef connection : connectionJsonArray)
-   {
+  // TODO: fix segfault with connection restoration
+  QJsonArray connectionJsonArray = data["connections"].toArray();
+  for (QJsonValueRef connection : connectionJsonArray)
+  {
       restoreConnection(connection.toObject());
-   }
+  }
 }
 
 QByteArray

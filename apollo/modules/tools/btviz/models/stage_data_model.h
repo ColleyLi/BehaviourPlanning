@@ -58,6 +58,9 @@ class StageDataModel : public NodeDataModel
     QWidget *embeddedWidget() final;
   
   public:
+    std::vector<QString> getInList() {return in_list_;}
+    std::vector<QString> getOutList() {return out_list_;}
+    
     void setNodeName(const QString& name) override;
 
     QJsonObject save() const override;

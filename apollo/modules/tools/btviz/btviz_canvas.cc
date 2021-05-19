@@ -120,7 +120,6 @@ void BTVizCanvas::setScene(const FlowSceneType& scene_type, const QString& scene
     current_scene_ = scene;
 
     flow_view_->setScene(getScene());
-
     // fitToScreen();
 
     // qDebug() << "Connected double click";
@@ -130,9 +129,9 @@ void BTVizCanvas::setScene(const FlowSceneType& scene_type, const QString& scene
 void BTVizCanvas::fitToScreen() const
 {
     QRectF rect = current_scene_->itemsBoundingRect();
-    rect.setBottom(rect.top() + rect.height()* 1.2);
+    rect.setBottom(rect.top() + rect.height() * 1.1);
 
-    const int min_height = 300;
+    const int min_height = 200;
     if(rect.height() < min_height)
     {
         rect.setBottom(rect.top() + min_height);
@@ -145,7 +144,7 @@ void BTVizCanvas::fitToScreen() const
 
 void BTVizCanvas::onNodeDoubleClicked(QtNodes::Node& node)
 {  
-    qDebug() << "Current node data model id:" << node.nodeDataModel()->getNodeId();
+    // qDebug() << "Current node data model id:" << node.nodeDataModel()->getNodeId();
     // qDebug() << "Current scene type: " << int(current_scene_type_);
     if(current_scene_type_ == FlowSceneType::CONTEXT_SCENE)
     {
@@ -155,7 +154,7 @@ void BTVizCanvas::onNodeDoubleClicked(QtNodes::Node& node)
         {   
             auto node_id = node_data->getNodeId();
             auto scene_id = current_scene_->getChildSceneId(node_id);
-            qDebug() << "Current Stage Scene ID: " << scene_id;
+            // qDebug() << "Current Stage Scene ID: " << scene_id;
             if(scene_id.length() && stage_scenes_.find(scene_id) != stage_scenes_.end())
             {
                 // qDebug() << "Current Stage ID is present in stage flow scenes. Opening STAGE_SCENE = 2";
@@ -243,20 +242,165 @@ void BTVizCanvas::onNodeDoubleClicked(QtNodes::Node& node)
     }
 }
 
+void BTVizCanvas::clearCanvas()
+{
+    // TODO: cleanup
+    for (auto& element: context_scenes_)
+    {
+        element.second->clearScene();
+        disconnect(element.second.get(), &QtNodes::FlowScene::nodeDoubleClicked, this, &BTVizCanvas::onNodeDoubleClicked);
+    }
+    context_scenes_.clear();
+
+    for (auto& element: stage_scenes_)
+    {
+        element.second->clearScene();
+        disconnect(element.second.get(), &QtNodes::FlowScene::nodeDoubleClicked, this, &BTVizCanvas::onNodeDoubleClicked);
+    }
+    stage_scenes_.clear();
+
+    for (auto& element: btree_scenes_)
+    {
+        element.second->clearScene();
+        disconnect(element.second.get(), &QtNodes::FlowScene::nodeDoubleClicked, this, &BTVizCanvas::onNodeDoubleClicked);
+    }
+    btree_scenes_.clear();
+}
+
 void BTVizCanvas::loadBTPlan()
 {
-    qDebug() << "Loading BTPlan";
+  QString file_name = QFileDialog::getOpenFileName(nullptr,
+                                 tr("Open BTPlan"),
+                                 QDir::homePath(),
+                                 tr("BTPlan Files (*.btplan)"));
+
+  if (!QFileInfo::exists(file_name))
+  {
+    return;
+  }
+  
+  QFile file(file_name);
+
+  if (file.open(QIODevice::ReadOnly))
+  {
+    loadBTPlanFromJSON(QJsonDocument::fromJson(file.readAll()).object());
+  }
+}
+
+void BTVizCanvas::loadBTPlanFromJSON(const QJsonObject& btplan_json)
+{
+    clearCanvas();
+
+    current_tab_id_ = btplan_json["current_tab_id"].toString();
+    current_scene_id_ = btplan_json["current_scene_id"].toString();
+    current_scene_type_ = static_cast<FlowSceneType>(btplan_json["current_scene_type"].toInt());
+
+    QJsonObject tabs_json = btplan_json["tabs"].toObject();
+    for(auto key: tabs_json.keys())
+    {
+        tabs_[key] = tabs_json.value(key).toInt();
+    }
+
+    // qDebug() << "Loaded tabs";
+
+    QJsonObject context_scenes_json = btplan_json["context_scenes"].toObject();
+    for(auto scene_id: context_scenes_json.keys())
+    {
+        // qDebug() << "Current context scene: " << scene_id;
+        context_scenes_[scene_id] = std::make_shared<BTVizContextFlowScene>(context_model_registry_, this);
+        // qDebug() << "Created scene";
+        context_scenes_[scene_id]->loadFromMemory(context_scenes_json.value(scene_id).toObject());
+        // qDebug() << "Loaded scene from json";
+        connect(context_scenes_[scene_id].get(), &QtNodes::FlowScene::nodeDoubleClicked, this, &BTVizCanvas::onNodeDoubleClicked);
+    }
+
+    // qDebug() << "Loaded context scenes";
+
+    QJsonObject stage_scenes_json = btplan_json["stage_scenes"].toObject();
+    for(auto scene_id: stage_scenes_json.keys())
+    {
+        stage_scenes_[scene_id] = std::make_shared<BTVizStageFlowScene>(stage_model_registry_, this);
+        stage_scenes_[scene_id]->loadFromMemory(stage_scenes_json.value(scene_id).toObject());
+        connect(stage_scenes_[scene_id].get(), &QtNodes::FlowScene::nodeDoubleClicked, this, &BTVizCanvas::onNodeDoubleClicked);
+    }
+    
+    // qDebug() << "Loaded stage scenes";
+    
+    QJsonObject btree_scenes_json = btplan_json["btree_scenes"].toObject();
+    for(auto scene_id: btree_scenes_json.keys())
+    {
+        btree_scenes_[scene_id] = std::make_shared<BTVizBTreeFlowScene>(btree_model_registry_, this);
+        btree_scenes_[scene_id]->loadFromMemory(btree_scenes_json.value(scene_id).toObject());
+        connect(btree_scenes_[scene_id].get(), &QtNodes::FlowScene::nodeDoubleClicked, this, &BTVizCanvas::onNodeDoubleClicked);
+    }
+
+    // qDebug() << "Loaded btree scenes";
+
+    setScene(current_scene_type_, current_scene_id_);
 }
 
 void BTVizCanvas::saveBTPlan()
 {
-    qDebug() << "Saving BTPlan";
+    QString file_name = QFileDialog::getSaveFileName(nullptr,
+                                 tr("Open BTPlan"),
+                                 QDir::homePath(),
+                                 tr("BTPlan Files (*.btplan)"));
+
+    if (!file_name.isEmpty())
+    {
+        if (!file_name.endsWith(".btplan", Qt::CaseInsensitive))
+            file_name += ".btplan";
+
+        saveBTPlanToFile(file_name);
+    }
+}
+
+void BTVizCanvas::saveBTPlanToFile(const QString& file_name)
+{   
+    QJsonObject btplan_json;
+    btplan_json["current_tab_id"] = current_tab_id_;
+    btplan_json["current_scene_type"] = static_cast<int>(current_scene_type_);
+    btplan_json["current_scene_id"] = current_scene_id_;
+    
+    QJsonObject tabs_json;
+    for (auto& element: tabs_)
+    {
+        tabs_json[element.first] = element.second;
+    }
+    btplan_json["tabs"] = tabs_json;
+
+    QJsonObject context_scenes_json;
+    for (auto& element: context_scenes_)
+    {
+        context_scenes_json[element.first] = element.second->getSceneJson();
+    }
+    btplan_json["context_scenes"] = context_scenes_json;
+
+    QJsonObject stage_scenes_json;
+    for (auto& element: stage_scenes_)
+    {
+        stage_scenes_json[element.first] = element.second->getSceneJson();
+    }
+    btplan_json["stage_scenes"] = stage_scenes_json;
+
+    QJsonObject btree_scenes_json;
+    for (auto& element: btree_scenes_)
+    {
+        btree_scenes_json[element.first]= element.second->getSceneJson();
+    }
+    btplan_json["btree_scenes"] = btree_scenes_json;
+
+    QJsonDocument document(btplan_json);
+
+    QFile file(file_name);
+    if (file.open(QIODevice::WriteOnly))
+    {
+      file.write(document.toJson(QJsonDocument::Indented));
+    }
 }
 
 void BTVizCanvas::saveBTPlanProtobuf()
 {
-    qDebug() << "Saving BTPlan protobuf";
-
     QString file_name = QFileDialog::getSaveFileName(nullptr,
                                  tr("Open BTPlan Protobuf"),
                                  QDir::homePath(),
@@ -267,17 +411,13 @@ void BTVizCanvas::saveBTPlanProtobuf()
         if (!file_name.endsWith("pb.btplan", Qt::CaseInsensitive))
             file_name += ".pb.btplan";
 
-        qDebug() << "Will save to: " << file_name;
-
-        saveProtobuf(file_name);
+        saveBTPlanProtobufToFile(file_name);
     }
-    
-    qDebug() << "Saved BTPlan protobuf";
 }
 
 // TODO: This function has two for loops since stage flowscene does not have access to btree_scenes_
 // Maybe will need to refactor
-void BTVizCanvas::saveProtobuf(const QString& file_name)
+void BTVizCanvas::saveBTPlanProtobufToFile(const QString& file_name)
 {
     BTPlan btplan;
     auto parameters = btplan.mutable_parameters();
@@ -292,7 +432,7 @@ void BTVizCanvas::saveProtobuf(const QString& file_name)
         auto context_node_id = context_node_data->getNodeId();
         auto context_node_type = context_node_data->getNodeType();
 
-        qDebug() << "Processing context node with id: " << context_node_id;
+        // qDebug() << "Processing context node with id: " << context_node_id;
 
         if (context_node_type == CONTEXT_ROOT_TYPE)
         {
@@ -303,7 +443,7 @@ void BTVizCanvas::saveProtobuf(const QString& file_name)
         
         auto stage_scene_id = current_context_scene->getChildSceneId(context_node_id);
         auto current_stage_scene = stage_scenes_[stage_scene_id];
-        qDebug() << "Processing stage scene with id: " << stage_scene_id;
+        // qDebug() << "Processing stage scene with id: " << stage_scene_id;
         
         auto context_config = context_configs->add_context_config();
         // TODO: fill parameters
@@ -312,18 +452,41 @@ void BTVizCanvas::saveProtobuf(const QString& file_name)
 
         auto stage_config = stage_configs->add_stage_config();
         auto stage_fsm = context_config->mutable_stage_fsm();
+
+        // TODO: remove root node search 
+        // search is done to make sure root node is always processed first
+
+        for (auto* stage_node : current_stage_scene->allNodes())
+        {   
+            auto* stage_node_data = dynamic_cast<StageDataModel*>(stage_node->nodeDataModel());
+            auto stage_node_type = stage_node_data->getNodeType();
+
+            if (stage_node_type == STAGE_ROOT_TYPE)
+            {
+                auto root_out_list = stage_node_data->getOutList();
+                if (root_out_list.size())
+                {
+                    // TODO: fix string concat for initial stage
+                    QStringList parts = root_out_list.at(0).toLower().split(' ', QString::SkipEmptyParts);
+                    QString stage_string;
+                    for (int i = 0; i < parts.size() - 1; ++i) stage_string += parts[i] + " ";
+                    auto stage_type = QStringToBTreeStageType(stage_string);
+                    stage_fsm->set_initial_stage(stage_type);
+                }
+                break;
+            }
+        }
+
         for (auto* stage_node : current_stage_scene->allNodes())
         {
             auto* stage_node_data = dynamic_cast<StageDataModel*>(stage_node->nodeDataModel());
             auto stage_node_id = stage_node_data->getNodeId();
             auto stage_node_type = stage_node_data->getNodeType();
 
-            qDebug() << "Processing stage node with id: " << stage_node_id;
+            // qDebug() << "Processing stage node with id: " << stage_node_id;
 
             if (stage_node_type == STAGE_ROOT_TYPE)
             {
-                // TODO: add initial stage
-                // stage_fsm->set_initial_stage();
                 continue;
             }
             
@@ -331,9 +494,47 @@ void BTVizCanvas::saveProtobuf(const QString& file_name)
             auto current_btree_scene = btree_scenes_[btree_scene_id];
             auto stage_type = QStringToBTreeStageType(stage_node_type);
 
-            // TODO: fill transitions
+            // TODO: fill transitions according to real FSM
             stage_fsm->add_stage(stage_type);
+
+            std::vector<BTreeStageState> self_transition_states = {
+                BTreeStageState::STAGE_NOT_INITIALIZED,
+                BTreeStageState::STAGE_INITIALIZED,
+                BTreeStageState::STAGE_FAILED,
+                BTreeStageState::STAGE_RUNNING,
+            };
+
+            for (auto self_state: self_transition_states)
+            {
+                auto transition = stage_fsm->add_transition(); 
+                transition->set_on_state(self_state);
+                transition->set_from_stage(stage_type);
+                transition->set_to_stage(stage_type);
+            }
             
+            auto transition = stage_fsm->add_transition(); 
+            transition->set_on_state(BTreeStageState::STAGE_DONE);
+            transition->set_from_stage(stage_type);
+            auto node_out_list = stage_node_data->getOutList();
+            if (node_out_list.size())
+            {
+                // TODO: fix string concat for stage type
+                QStringList parts = node_out_list.at(0).toLower().split(' ', QString::SkipEmptyParts);
+                QString to_stage_string;
+                for (int i = 0; i < parts.size() - 1; ++i) to_stage_string += parts[i] + " ";
+                auto to_stage_type = QStringToBTreeStageType(to_stage_string);
+               
+                transition->set_to_stage(to_stage_type);
+            }
+            else
+            {
+                // Set self on success (to cycle in the last stage)
+                // transition->set_to_stage(stage_type);
+
+                // Set initial stage on success (to go back to the first stage)
+                transition->set_to_stage(stage_fsm->initial_stage());
+            }
+
             // TODO: fill parameters
             stage_config->mutable_parameters();
             stage_config->set_type(stage_type);

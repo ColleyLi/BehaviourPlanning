@@ -109,6 +109,9 @@ public:
 
   /// Load a FileDialog to open a scene from a .flow file
   void load();
+  
+  // Return scene JSON object
+  QJsonObject getSceneJson();
 
   /// Dump the scene on a JSON QByteArray
   QByteArray saveToMemory(QJsonDocument::JsonFormat format = QJsonDocument::Indented) const;

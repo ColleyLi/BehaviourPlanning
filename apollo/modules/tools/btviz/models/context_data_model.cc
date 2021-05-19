@@ -221,6 +221,11 @@ void ContextDataModel::outputConnectionDeleted(Connection const& c)
 
 bool ContextDataModel::hasDynamicPorts(QtNodes::PortType portType) const
 {
+  if(portType == QtNodes::PortType::Out && node_.category == CONTEXT_ROOT_TYPE)
+  {
+    return true;
+  }
+
   return false;
 }
 
@@ -296,20 +301,19 @@ QJsonObject ContextDataModel::save() const
   // if ports are dynamics, write their value when saved.
   // when restored, model need to update the dynamic value.
 
-//   if(hasDynamicPorts(PortType::In))
-//   { 
-//     int n_ports = static_cast<int>(nPorts(PortType::In));
-//     if (n_ports > 0) n_ports--;
-//     node_json["dynamic_inputs"]  = n_ports;
-//   }
+  if(hasDynamicPorts(PortType::In))
+  { 
+    int n_ports = static_cast<int>(nPorts(PortType::In));
+    if (n_ports > 0) n_ports--;
+    node_json["dynamic_inputs"]  = n_ports;
+  }
 
-//   if(hasDynamicPorts(PortType::Out))
-//   {
-//     int n_ports = static_cast<int>(nPorts(PortType::Out));
-//     if (n_ports > 0) n_ports--;
-//     node_json["dynamic_outputs"] = n_ports;
-//   }
-
+  if(hasDynamicPorts(PortType::Out))
+  {
+    int n_ports = static_cast<int>(nPorts(PortType::Out));
+    if (n_ports > 0) n_ports--;
+    node_json["dynamic_outputs"] = n_ports;
+  }
 
   return node_json;
 }
@@ -322,11 +326,11 @@ void ContextDataModel::restore(QJsonObject const &modelJson)
   node_.id = modelJson["id"].toString();
   node_.category = modelJson["category"].toString();
 
-//   int n_outs = modelJson["dynamic_outputs"].toInt();
-//   if(n_outs > 0)
-//   {
-//     children_list_.resize(n_outs);
-//   }
+  int n_outs = modelJson["dynamic_outputs"].toInt();
+  if(n_outs > 0)
+  {
+    contexts_.resize(n_outs);
+  }
 
   Init();
   setNodeName(node_.name);

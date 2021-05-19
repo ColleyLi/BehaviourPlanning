@@ -47,8 +47,9 @@ public:
 
     void loadBTPlan();
     void saveBTPlan();
-
     void saveBTPlanProtobuf();
+    
+    void clearCanvas();
 
 private:
     // TODO: refactor to make generic
@@ -61,7 +62,9 @@ private:
     void createScene(const FlowSceneType& scene_type, const QString& scene_id, const QString& parent_scene_id, const QString& parent_name);
     void setScene(const FlowSceneType& scene_type, const QString& scene_id);
 
-    void saveProtobuf(const QString& file_name);
+    void loadBTPlanFromJSON(const QJsonObject& btplan_json);
+    void saveBTPlanToFile(const QString& file_name);
+    void saveBTPlanProtobufToFile(const QString& file_name);
 
 private:
     std::unordered_map<QString, std::shared_ptr<BTVizContextFlowScene>> context_scenes_;

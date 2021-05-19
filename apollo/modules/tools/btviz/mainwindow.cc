@@ -24,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     loadDefaultStyle();
 
     btviz_canvas_ = std::make_unique<BTVizCanvas>(this);
+
+    // ui->treeWidget
     
     ui->frameLayout->addWidget(btviz_canvas_.get());
     ui->frameLayout->setContentsMargins(0, 0, 0, 0);

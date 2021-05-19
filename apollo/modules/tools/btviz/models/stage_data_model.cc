@@ -162,7 +162,8 @@ unsigned int StageDataModel::nPorts(PortType portType) const
     }
     else
     {
-      result = out_list_.size() + 1;
+      // result = out_list_.size() + 1;
+      result = 1;
     }
   }
   else if( portType == QtNodes::PortType::In)
@@ -173,7 +174,8 @@ unsigned int StageDataModel::nPorts(PortType portType) const
     }
     else
     {
-      result = in_list_.size() + 1;
+      // result = in_list_.size() + 1;
+      result = 1;
     }
   }
 
@@ -220,11 +222,10 @@ void StageDataModel::outputConnectionDeleted(Connection const& c)
 
 bool StageDataModel::hasDynamicPorts(QtNodes::PortType portType) const
 {
-  qDebug() << node_.category;
-  if(portType == PortType::Out && node_.category != STAGE_ROOT_TYPE)
-  {
-    return true;
-  }
+  // if(portType == PortType::Out && node_.category != STAGE_ROOT_TYPE)
+  // {
+  //   return true;
+  // }
 
   return false;
 }
