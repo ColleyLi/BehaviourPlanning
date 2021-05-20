@@ -25,8 +25,9 @@
 #include <unordered_set>
 #include <vector>
 
-#include "gflags/gflags.h"
 #include "gtest/gtest_prod.h"
+
+#include "gflags/gflags.h"
 
 #include "modules/common/vehicle_state/proto/vehicle_state.pb.h"
 #include "modules/routing/proto/routing.pb.h"
@@ -120,9 +121,13 @@ class PncMap {
    */
   std::vector<int> GetNeighborPassages(const routing::RoadSegment &road,
                                        int start_passage) const;
-  
-  std::vector<int> GenerateNeighborPassages(routing::RoadSegment &road_segment, 
-                                            int current_passage_index) const;
+
+  std::vector<int> GenerateNeighborPassages(routing::RoadSegment &road_segment,
+                                            int current_passage_index);
+
+  bool LaneIsAlreadyIn(const routing::RoadSegment &road_segment,
+                       std::string lane_id,
+                       int *passage_index);
 
   /**
    * @brief convert a routing waypoint to lane waypoint

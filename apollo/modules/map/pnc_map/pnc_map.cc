@@ -349,9 +349,27 @@ bool PncMap::PassageToSegments(routing::Passage passage,
   return !segments->empty();
 }
 
+bool PncMap::LaneIsAlreadyIn(const routing::RoadSegment &road_segment,
+                             std::string lane_id, int *passage_index) {
+  for (int i = 0; i < road_segment.passage_size(); ++i) {
+    auto current_passage = road_segment.passage(i);
+    RouteSegments current_segments;
+    if (!PassageToSegments(current_passage, &current_segments)) {
+      return false;
+    }
+    for (const auto &current_segment : current_segments) {
+      if (current_segment.lane->lane().id().id() == lane_id) {
+        *passage_index = i;
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 std::vector<int> PncMap::GenerateNeighborPassages(
-  routing::RoadSegment &road_segment, int current_passage_index) const
-{
+    routing::RoadSegment &road_segment, int current_passage_index) {
   // Check if current_passage_index is valid
   CHECK_GE(current_passage_index, 0);
   CHECK_LE(current_passage_index, road_segment.passage_size());
@@ -359,29 +377,33 @@ std::vector<int> PncMap::GenerateNeighborPassages(
   std::vector<int> result;
 
   const auto &current_passage = road_segment.passage(current_passage_index);
+  result.emplace_back(current_passage_index);
 
   RouteSegments current_segments;
-  if (!PassageToSegments(current_passage, &current_segments))
-  {
+  if (!PassageToSegments(current_passage, &current_segments)) {
     AERROR << "Failed to convert passage to segments";
     return result;
   }
 
-  auto* left_passage = road_segment.add_passage();
-  left_passage->set_change_lane_type(routing::RIGHT);
-  left_passage->set_can_exit(true);
+  routing::Passage *left_passage = nullptr;
+  routing::Passage *right_passage = nullptr;
+  int left_passage_index = -1;
+  int right_passage_index = -1;
+  for (const auto &segment : current_segments) {
+    for (const auto &right_id :
+         segment.lane->lane().right_neighbor_forward_lane_id()) {
+      int passage_index = -1;
+      if (LaneIsAlreadyIn(road_segment, right_id.id(), &passage_index)) {
+        result.emplace_back(passage_index);
+        continue;
+      }
 
-  auto* right_passage = road_segment.add_passage();
-  right_passage->set_change_lane_type(routing::LEFT);
-  right_passage->set_can_exit(true);
+      if (!right_passage) {
+        right_passage = road_segment.add_passage();
+        right_passage_index = road_segment.passage_size() - 1;
+      }
 
-  result.emplace_back(current_passage_index);
-
-  for (const auto &segment : current_segments)
-  {
-    for (const auto &right_id : segment.lane->lane().right_neighbor_forward_lane_id()) 
-    {
-      auto* segment = right_passage->add_segment();
+      auto *segment = right_passage->add_segment();
       auto lane_ptr = hdmap_->GetLaneById(hdmap::MakeMapId(right_id.id()));
 
       segment->set_id(right_id.id());
@@ -389,19 +411,39 @@ std::vector<int> PncMap::GenerateNeighborPassages(
       segment->set_end_s(lane_ptr->total_length());
     }
 
-    for (const auto &left_id : segment.lane->lane().left_neighbor_forward_lane_id()) 
-    {
-      auto* segment = left_passage->add_segment();
+    for (const auto &left_id :
+         segment.lane->lane().left_neighbor_forward_lane_id()) {
+      int passage_index = -1;
+      if (LaneIsAlreadyIn(road_segment, left_id.id(), &passage_index)) {
+        result.emplace_back(passage_index);
+        continue;
+      }
+
+      if (!left_passage) {
+        left_passage = road_segment.add_passage();
+        left_passage_index = road_segment.passage_size() - 1;
+      }
+
+      auto *segment = left_passage->add_segment();
       auto lane_ptr = hdmap_->GetLaneById(hdmap::MakeMapId(left_id.id()));
-     
+
       segment->set_id(left_id.id());
       segment->set_start_s(0.0);
       segment->set_end_s(lane_ptr->total_length());
     }
   }
 
-  if (left_passage->segment_size()) result.emplace_back(road_segment.passage_size() - 2);
-  if (right_passage->segment_size()) result.emplace_back(road_segment.passage_size() - 1);
+  if (left_passage) {
+    left_passage->set_change_lane_type(routing::RIGHT);
+    left_passage->set_can_exit(false);
+    result.emplace_back(left_passage_index);
+  }
+
+  if (right_passage) {
+    right_passage->set_change_lane_type(routing::LEFT);
+    right_passage->set_can_exit(false);
+    result.emplace_back(right_passage_index);
+  }
 
   return result;
 }
@@ -489,20 +531,17 @@ bool PncMap::GetRouteSegments(const VehicleState &vehicle_state,
   const auto &route_index = route_indices_[adc_route_index_].index;
   const int road_index = route_index[0];
   const int passage_index = route_index[1];
-  
+
   // Raw filter to find all neighboring passages
   std::vector<int> drive_passages;
-  if(FLAGS_btree_generate_neighbors)
-  {
+  if (FLAGS_btree_generate_neighbors) {
     auto mutable_road = routing_.mutable_road(road_index);
     drive_passages = GenerateNeighborPassages(*mutable_road, passage_index);
-  }
-  else
-  {
+  } else {
     const auto &road = routing_.road(road_index);
     drive_passages = GetNeighborPassages(road, passage_index);
   }
-  
+
   const auto &road = routing_.road(road_index);
 
   for (const int index : drive_passages) {
