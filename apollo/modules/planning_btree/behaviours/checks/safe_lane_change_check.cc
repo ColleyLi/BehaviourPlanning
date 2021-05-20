@@ -17,14 +17,14 @@ BTreeNodeState SafeLaneChangeCheck::Execute(BTreeFrame* frame) {
   if (!dynamic_reference_line->IsLaneChangePath() ||
       IsClearToChangeLane(dynamic_reference_line)) {
     if (dynamic_reference_line->IsLaneChangePath()) {
-     AERROR << "Is clear to change line!";
+     ADEBUG << "Is clear to change line!";
     } else {
-      AERROR << "This line does not want to change lane!";
+      ADEBUG << "This line does not want to change lane!";
     }
     state_ = BTreeNodeState::NODE_DONE;
     return state_;
   }
-  AERROR << "Lane change is not safe!";
+  ADEBUG << "Lane change is not safe!";
   state_ = BTreeNodeState::NODE_FAILED;
   return state_;
 }

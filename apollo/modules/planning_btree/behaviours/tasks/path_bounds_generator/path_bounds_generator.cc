@@ -62,7 +62,7 @@ BTreeNodeState PathBoundsGenerator::Execute(BTreeFrame* frame) {
         std::get<0>(lane_change_path_bound[0]), kPathBoundsStep,
         lane_change_path_bound_pair);
     candidate_path_boundaries.back().set_label("regular/lanechange");
-    AERROR << "Generated lane change bound";
+    ADEBUG << "Generated lane change bound";
 
     // for (size_t i = 0; i < lane_change_path_bound.size(); ++i) {
     //   AERROR << "idx " << i
@@ -93,7 +93,7 @@ BTreeNodeState PathBoundsGenerator::Execute(BTreeFrame* frame) {
                                              kPathBoundsStep,
                                              regular_path_bound_pair);
       candidate_path_boundaries.back().set_label("regular");
-      AERROR << "Generated regular bound";
+      ADEBUG << "Generated regular bound";
     }
   }
 

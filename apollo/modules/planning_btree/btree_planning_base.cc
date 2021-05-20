@@ -74,7 +74,7 @@ Status BTreePlanningBase::InitFrame(const uint32_t sequence_num,
                                     const VehicleState& vehicle_state) {
   frame_.reset(new BTreeFrame(sequence_num, planning_input_,
                               planning_start_point, vehicle_state,
-                              reference_line_provider_.get()));
+                              reference_line_provider_.get(), injector_));
 
   if (frame_ == nullptr) {
     return Status(ErrorCode::PLANNING_ERROR, "Failed to init frame: nullptr.");
@@ -168,11 +168,17 @@ void BTreePlanningBase::Execute(const PlanningInput& planning_input,
   const int trajectory_stitching_preserved_length =
       std::numeric_limits<uint32_t>::infinity();
   std::string replan_reason;
+  // TODO: understand TrajectoryStitcher and remove sim control shakes
   std::vector<TrajectoryPoint> stitching_trajectory =
       TrajectoryStitcher::ComputeStitchingTrajectory(
           vehicle_state, start_timestamp, planning_cycle_time,
           trajectory_stitching_preserved_length, true,
           last_publishable_trajectory_.get(), &replan_reason);
+
+  // AERROR << "stitching trajectory size: " << stitching_trajectory.size();
+  // AERROR << "replan reason: " << replan_reason;
+  // AERROR << "Front relative time: " << stitching_trajectory.front().relative_time();
+  // AERROR << "Back relative time: " << stitching_trajectory.back().relative_time();
 
   const uint32_t frame_num = static_cast<uint32_t>(seq_num_++);
   status = InitFrame(frame_num, stitching_trajectory.back(), vehicle_state);

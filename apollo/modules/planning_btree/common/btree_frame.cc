@@ -18,19 +18,22 @@ BTreeFrame::BTreeFrame(uint32_t sequence_num,
                        const PlanningInput &planning_input,
                        const common::TrajectoryPoint &planning_start_point,
                        const common::VehicleState &vehicle_state,
-                       ReferenceLineProvider *reference_line_provider)
+                       ReferenceLineProvider *reference_line_provider,
+                       const std::shared_ptr<DependencyInjector> &injector)
     : sequence_num_(sequence_num),
       planning_input_(planning_input),
       planning_start_point_(planning_start_point),
       vehicle_state_(vehicle_state),
-      reference_line_provider_(reference_line_provider) {}
+      reference_line_provider_(reference_line_provider),
+      injector_(injector) {}
 
 BTreeFrame::BTreeFrame(uint32_t sequence_num,
                        const PlanningInput &planning_input,
                        const common::TrajectoryPoint &planning_start_point,
-                       const common::VehicleState &vehicle_state)
+                       const common::VehicleState &vehicle_state,
+                       const std::shared_ptr<DependencyInjector> &injector)
     : BTreeFrame(sequence_num, planning_input, planning_start_point,
-                 vehicle_state, nullptr) {}
+                 vehicle_state, nullptr, injector) {}
 
 common::Status BTreeFrame::Init(
     const common::VehicleStateProvider *vehicle_state_provider,

@@ -16,8 +16,8 @@ namespace planning_btree {
 // TODO: move this to config
 namespace {
   constexpr bool kEnableTrajectoryStitcher = true;
-  constexpr double kReplanLateralDistanceThreshold = 0.0;
-  constexpr double kReplanLongitudinalDistanceThreshold = 0.0;
+  constexpr double kReplanLateralDistanceThreshold = 0.5;
+  constexpr double kReplanLongitudinalDistanceThreshold = 7.0;
 }
 
 using apollo::common::TrajectoryPoint;

@@ -46,11 +46,11 @@ bool SpeedGenerator::DPSTGraphOptimizer(
     return false;
   }
 
-  AERROR << "Speed data size: " << speed_data.size();
+  ADEBUG << "Speed data size: " << speed_data.size();
 
   *(dynamic_reference_line->GetMutableSpeedData()) = speed_data;
 
-  AERROR << "Set speed data for lane: "
+  ADEBUG << "Set speed data for lane: "
          << dynamic_reference_line->GetRouteSegments().Id();
   dynamic_reference_line->SetDrivable(true);
 

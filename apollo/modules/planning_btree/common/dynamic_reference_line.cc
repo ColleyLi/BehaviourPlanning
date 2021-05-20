@@ -261,7 +261,7 @@ bool DynamicReferenceLine::CombinePathAndSpeedProfiles(
   // use varied resolution to reduce data load but also provide enough data
   // point for control module
 
-  // TODO: move this to config
+  // TODO: tune and move this to config
   const double kDenseTimeResoltuion = 0.02;
   const double kSparseTimeResolution = 0.1;
   const double kDenseTimeSec = 1.0;
@@ -299,6 +299,7 @@ bool DynamicReferenceLine::CombinePathAndSpeedProfiles(
     trajectory_point.set_relative_time(speed_point.t() + relative_time);
     ptr_discretized_trajectory->AppendTrajectoryPoint(trajectory_point);
   }
+
   return true;
 }
 

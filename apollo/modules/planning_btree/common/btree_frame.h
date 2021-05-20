@@ -15,6 +15,7 @@
 #include "modules/common/vehicle_state/proto/vehicle_state.pb.h"
 // #include "modules/localization/proto/pose.pb.h"
 // #include "modules/planning/common/ego_info.h"
+#include "modules/planning_btree/common/dependency_injector.h"
 #include "modules/planning_btree/common/obstacle.h"
 #include "modules/planning_btree/common/planning_input.h"
 #include "modules/planning_btree/common/utils/indexed_queue.h"
@@ -40,11 +41,13 @@ class BTreeFrame {
   BTreeFrame(uint32_t sequence_num, const PlanningInput &planning_input,
              const common::TrajectoryPoint &planning_start_point,
              const common::VehicleState &vehicle_state,
-             ReferenceLineProvider *reference_line_provider);
+             ReferenceLineProvider *reference_line_provider,
+             const std::shared_ptr<DependencyInjector> &injector);
 
   BTreeFrame(uint32_t sequence_num, const PlanningInput &planning_input,
              const common::TrajectoryPoint &planning_start_point,
-             const common::VehicleState &vehicle_state);
+             const common::VehicleState &vehicle_state,
+             const std::shared_ptr<DependencyInjector> &injector);
 
   ~BTreeFrame() = default;
 
@@ -53,6 +56,10 @@ class BTreeFrame {
       const std::list<ReferenceLine> &reference_lines,
       const std::list<hdmap::RouteSegments> &segments,
       const std::vector<routing::LaneWaypoint> &future_route_waypoints);
+
+  const DependencyInjector &GetDependencyInjector() { return *injector_; }
+
+  const PlanningInput &GetPlanningINput() {return planning_input_; }
 
   const bool IsNearDestination() const { return is_near_destination_; }
 
@@ -103,6 +110,8 @@ class BTreeFrame {
   std::list<DynamicReferenceLine> dynamic_reference_lines_;
   DynamicReferenceLine *current_dynamic_reference_line_ = nullptr;
   const ReferenceLineProvider *reference_line_provider_ = nullptr;
+
+  std::shared_ptr<DependencyInjector> injector_;
 };
 
 class BTreeFrameHistory : public IndexedQueue<uint32_t, BTreeFrame> {

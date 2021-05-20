@@ -38,6 +38,7 @@ cc_library(
         "//modules/planning/proto:planning_cc_proto",
         "//modules/planning_btree/reference_line:reference_line_provider",
         ":obstacle",
+        ":dependency_injector",
         "@eigen",
     ],
 )

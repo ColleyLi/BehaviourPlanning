@@ -13,22 +13,22 @@ BTreeStageState LaneFollowStage::Init(const BTreeStageConfig& config)
 
 BTreeStageState LaneFollowStage::Execute(const TrajectoryPoint& planning_start_point, BTreeFrame* const frame)
 {
-    AERROR << "Number of dynamic reference lines:\t" << frame->GetDynamicReferenceLines().size(); 
+    ADEBUG << "Number of dynamic reference lines:\t" << frame->GetDynamicReferenceLines().size(); 
 
     auto status = behaviour_tree_->Execute(frame);
 
     if (status == BTreeNodeState::NODE_FAILED)
     {
-        AERROR << "Btree execution status: FAILED";
+        ADEBUG << "Btree execution status: FAILED";
     }
     else if (status == BTreeNodeState::NODE_DONE)
     {
-        AERROR << "Btree execution status: DONE";
+        ADEBUG << "Btree execution status: DONE";
     }
     
     for (auto& ref_line : *frame->GetMutableDynamicReferenceLines()) 
     {
-        AERROR << "Id: " << ref_line.GetRouteSegments().Id() << " Cost: " << ref_line.GetCost() << " Is Drivable: " << ref_line.IsDrivable() << " Is Lane Change: " << ref_line.IsLaneChangePath();
+        ADEBUG << "Id: " << ref_line.GetRouteSegments().Id() << " Cost: " << ref_line.GetCost() << " Is Drivable: " << ref_line.IsDrivable() << " Is Lane Change: " << ref_line.IsLaneChangePath();
         if (ref_line.IsDrivable())
         {
     //     ref_line.set_trajectory_type(ADCTrajectory::NORMAL);

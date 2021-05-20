@@ -22,14 +22,14 @@ using apollo::common::math::Gaussian;
 namespace {
 constexpr int kMaxIter = 4000;
 constexpr double kPathReferenceLWeight = 0.0;
-constexpr double kConfigLWeight = 1.0;
+constexpr double kConfigLWeight = 20.0;
 constexpr double kConfigDLWeight = 20.0;
 constexpr double kConfigDDLWeight = 1000.0;
-constexpr double kConfigDDDLWeight = 50000.0;
-constexpr double kConfigLWeightCL = 1.0;
+constexpr double kConfigDDDLWeight = 30000.0;
+constexpr double kConfigLWeightCL = 20.0;
 constexpr double kConfigDLWeightCL = 5.0;
-constexpr double kConfigDDLWeightCL = 800.0;
-constexpr double kConfigDDDLWeightCL = 30000.0;
+constexpr double kConfigDDLWeightCL = 500.0;
+constexpr double kConfigDDDLWeightCL = 5000.0;
 constexpr double kTrajectorySpaceResolution = 1.0;
 constexpr double kLateralDerivativeBoundDefault = 2.0;
 }  // namespace
