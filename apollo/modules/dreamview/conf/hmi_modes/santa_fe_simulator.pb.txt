@@ -43,6 +43,15 @@ cyber_modules
   }
 }
 
+cyber_modules 
+{
+  key: "Planning Btree"
+  value: 
+  {
+    dag_files: "/apollo/modules/planning_btree/dag/planning_btree.dag"
+  }
+}
+
 monitored_components 
 {
   key: "Localization"
