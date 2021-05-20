@@ -18,6 +18,16 @@ py_binary(
 )
 
 py_binary(
+    name = "fake_perception_writer",
+    srcs = ["fake_perception_writer.py"],
+    deps = [
+        "//cyber/python/cyber_py3:cyber",
+        "//cyber/python/cyber_py3:cyber_time",
+        "//modules/perception/proto:perception_obstacle_py_pb2",
+    ],
+)
+
+py_binary(
     name = "fake_routing_request_writer",
     srcs = ["fake_routing_request_writer.py"],
     deps = [

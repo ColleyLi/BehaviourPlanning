@@ -1,10 +1,9 @@
-import os
-import sys
 import time
 
 from cyber.python.cyber_py3 import cyber
 from cyber.python.cyber_py3 import cyber_time
 from modules.routing.proto import routing_pb2
+
 
 def main():
     node = cyber.Node("fake_routing_request_writer")
@@ -39,10 +38,9 @@ def main():
     routing_request.header.timestamp_sec = cyber_time.Time.now().to_sec()
     routing_request.header.sequence_num = sequence_num
     writer.write(routing_request)
-    
+
     while not cyber.is_shutdown():
         time.sleep(1)
-
 
 
 if __name__ == '__main__':

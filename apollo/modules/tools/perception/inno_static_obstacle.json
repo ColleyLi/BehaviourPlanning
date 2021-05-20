@@ -1,0 +1,32 @@
+[
+{
+    "id": 1,
+    "position": [358508.72, 6180759.0, 0],
+    "theta": -0.4,
+    "length": 4,
+    "width": 2,
+    "height": 1,
+    "speed": 0.0,
+    "tracking_time": 1.0,
+    "type": "UNKNOWN_UNMOVABLE"
+},
+
+{
+    "id": 2,
+    "position": [358515.72, 6180750.0, 0],
+    "theta": -0.4,
+    "length": 4,
+    "width": 2,
+    "height": 1,
+    "speed": 5.0,
+    "tracking_time": 1.0,
+    "type": "VEHICLE",
+    "trace": 
+    [
+        [3585020.72, 6180750.0, 0],
+        [3585025.72, 6180750.0, 0],
+        [3585030.72, 6180750.0, 0],
+        [3585035.72, 6180750.0, 0]
+    ]
+}
+]

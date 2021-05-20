@@ -1,5 +1,3 @@
-import os
-import sys
 import time
 
 from cyber.python.cyber_py3 import cyber
@@ -12,13 +10,14 @@ from modules.perception.proto.perception_obstacle_pb2 import (
 from modules.localization.proto.imu_pb2 import CorrectedImu
 from modules.drivers.gnss.proto.ins_pb2 import InsStat
 from modules.localization.proto.gps_pb2 import Gps
-from modules.localization.proto.localization_pb2 import LocalizationStatus 
+from modules.localization.proto.localization_pb2 import LocalizationStatus
 from modules.localization.proto.localization_pb2 import LocalizationEstimate
 from modules.canbus.proto.chassis_pb2 import Chassis
 
 COMPLETE_AUTO_DRIVE = 1
 GEAR_DRIVE = 1
 VEHICLE = 5
+
 
 def main():
     test_node = cyber.Node("fake_sim_writer")
@@ -140,7 +139,7 @@ def main():
     # Right side
     # odometry_msg.localization.position.x = 358627.72
     # odometry_msg.localization.position.y = 6180717.72
-    # odometry_msg.localization.position.z = 0.84 
+    # odometry_msg.localization.position.z = 0.84
 
     # Right lane (2 lanes)
     # odometry_msg.localization.position.x = 358504.72
@@ -213,49 +212,61 @@ def main():
     chassis_msg.chassis_gps.pdop = 0.0
     chassis_msg.chassis_gps.hdop = 0.0
     chassis_msg.chassis_gps.vdop = 0.0
-    chassis_msg.chassis_gps.heading = 115
+    # chassis_msg.chassis_gps.heading = -115
     chassis_msg.chassis_gps.num_satellites = 15
     chassis_msg.chassis_gps.gps_speed = 0.0
 
-
     localization_msg = LocalizationEstimate()
-    localization_msg.pose.position.x = 358621.64
-    localization_msg.pose.position.y = 6180720.4
-    localization_msg.pose.position.z = 203
+    # localization_msg.pose.position.x = 358621.64
+    # localization_msg.pose.position.y = 6180720.4
+    # localization_msg.pose.position.z = 203
 
-    localization_msg.pose.orientation.qx = 0.000681112
-    localization_msg.pose.orientation.qy = -0.005984223
-    localization_msg.pose.orientation.qz = 0.542498648
-    localization_msg.pose.orientation.qw = 0.840035141
-    
+    localization_msg.pose.position.x = 358504.72
+    localization_msg.pose.position.y = 6180757.72
+    localization_msg.pose.position.z = 0.84
+
+    # localization_msg.pose.orientation.qx = 0.000681112
+    # localization_msg.pose.orientation.qy = -0.005984223
+    # localization_msg.pose.orientation.qz = 0.542498648
+    # localization_msg.pose.orientation.qw = 0.840035141
+
+    # localization_msg.pose.orientation.qx = 0.005095433
+    # localization_msg.pose.orientation.qy = -0.011954642
+    # localization_msg.pose.orientation.qz = -0.843348324
+    # localization_msg.pose.orientation.qw = 0.537210107
+
     localization_msg.pose.linear_velocity.x = 0.0
     localization_msg.pose.linear_velocity.y = 0.0
     localization_msg.pose.linear_velocity.z = 0.0
-    
+
     localization_msg.pose.linear_acceleration.x = 0.0
     localization_msg.pose.linear_acceleration.y = 0.0
     localization_msg.pose.linear_acceleration.z = 9.81
-    
+
     localization_msg.pose.angular_velocity.x = 0.0
     localization_msg.pose.angular_velocity.y = 0.0
     localization_msg.pose.angular_velocity.z = 0.0
-
-    localization_msg.pose.heading = 2.7176
+    
+    localization_msg.pose.angular_velocity_vrf.x = 0.0
+    localization_msg.pose.angular_velocity_vrf.y = 0.0
+    localization_msg.pose.angular_velocity_vrf.z = 0.0
+    
+    localization_msg.pose.heading =  -0.4
 
     localization_msg.pose.linear_acceleration_vrf.x = 0.0
     localization_msg.pose.linear_acceleration_vrf.y = 0.0
-    
+
     localization_status = LocalizationStatus()
     localization_status.fusion_status = 0
-    localization_status.state_message = "" 
+    localization_status.state_message = ""
 
     sequence_num = 0
     while not cyber.is_shutdown():
         time.sleep(0.1)
 
-        timestamp = time.time()
+        timestamp = cyber_time.Time.now().to_sec()
 
-        obstacles_msg.header.timestamp_sec = timestamp
+        # obstacles_msg.header.timestamp_sec = timestamp
         # odometry_msg.header.timestamp_sec = timestamp
         # status_msg.header.timestamp_sec = timestamp
         # imu_msg.header.timestamp_sec = timestamp
@@ -267,7 +278,7 @@ def main():
         # odometry_msg.header.sequence_num = sequence_num
         localization_msg.header.sequence_num = sequence_num
 
-        obstacle_writer.write(obstacles_msg)
+        # obstacle_writer.write(obstacles_msg)
         localization_estimate_writer.write(localization_msg)
         localization_status_writer.write(localization_status)
         # odometry_writer.write(odometry_msg)
